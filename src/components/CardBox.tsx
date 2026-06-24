@@ -6,12 +6,12 @@ import { bgMap, isDaisyColor, DaisyColor } from "@/utils/color";
 
 interface CardBoxProps {
   children: React.ReactNode;
-  color?: DaisyColor | string; // Bisa "primary" atau class Tailwind murni seperti "bg-[#FFFDF6]"
-  rounded?: "full" | "box" | "3xl" | "2xl" | "xl" | "none"; // Variasi tingkat border-radius
-  shadowSize?: "sm" | "md" | "lg"; // Ketebalan bayangan pop cokelat tebal
-  href?: string; // Jika diisi, otomatis dirender menjadi Next.js <Link>
-  onClick?: () => void; // Jika diisi tanpa href, otomatis bertindak sebagai <button>
-  className?: string; // Untuk selipan layout tambahan (seperti flex, p-6, grid, dll)
+  color?: DaisyColor | string;
+  rounded?: "full" | "box" | "3xl" | "2xl" | "xl" | "none";
+  shadowSize?: "sm" | "md" | "lg";
+  href?: string;
+  onClick?: () => void;
+  className?: string;
 }
 
 export default function CardBox({
@@ -23,13 +23,11 @@ export default function CardBox({
   onClick,
   className = "",
 }: CardBoxProps) {
-  // 🎨 1. Tentukan skema warna latar belakang
   const bgClass = isDaisyColor(color) ? bgMap[color] : color;
 
-  // 📐 2. Tentukan ukuran melengkung border radius (bisa dibaca oleh utility DaisyUI)
   const roundedClassMap = {
     full: "rounded-full",
-    box: "rounded-box", // Mengikuti variabel --radius-box global
+    box: "rounded-box",
     "3xl": "rounded-[32px]",
     "2xl": "rounded-3xl",
     xl: "rounded-2xl",
@@ -37,7 +35,6 @@ export default function CardBox({
   };
   const roundedClass = roundedClassMap[rounded];
 
-  // 🧱 3. Tentukan ketebalan bayangan 3D pop cokelat tebal (#4A3E3D)
   const shadowClassMap = {
     sm: "shadow-[4px_4px_0px_rgba(74,62,61,1)] active:shadow-none active:translate-y-1",
     md: "shadow-[6px_6px_0px_rgba(74,62,61,1)] active:shadow-none active:translate-y-1",
@@ -45,7 +42,6 @@ export default function CardBox({
   };
   const shadowClass = shadowClassMap[shadowSize];
 
-  // ⚙️ 4. Tentukan tipe komponen wrapper secara dinamis (Polymorphic)
   const isLink = Boolean(href);
   const isButton = Boolean(onClick) && !isLink;
 
@@ -55,7 +51,6 @@ export default function CardBox({
     ${bgClass} ${roundedClass} ${shadowClass} ${className}
   `;
 
-  // Render jika bertindak sebagai Link antar halaman
   if (isLink && href) {
     return (
       <Link
@@ -67,7 +62,6 @@ export default function CardBox({
     );
   }
 
-  // Render jika bertindak sebagai Button aksi klik
   if (isButton) {
     return (
       <button onClick={onClick} className={baseStyles}>
@@ -76,6 +70,5 @@ export default function CardBox({
     );
   }
 
-  // Render sebagai block Div struktural biasa
   return <div className={baseStyles}>{children}</div>;
 }

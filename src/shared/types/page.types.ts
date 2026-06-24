@@ -25,6 +25,7 @@ export interface ApiResponse<T> {
 export type QueryParams = {
   page?: string;
   status?: string;
+  per_page?: string;
   schedule_start_date?: string;
   schedule_end_date?: string;
   name?: string;
@@ -48,6 +49,6 @@ export type QueryParams = {
   patient_id?: string;
 };
 
-export interface DynamicPageProps<T = {}> {
+export interface DynamicPageProps<T = Record<string, string>> {
   params: Promise<T>;
 }

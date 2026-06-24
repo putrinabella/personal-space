@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { foodService, FoodEntry } from "@/services/food.service";
+import { foodService, FoodEntry } from "@/features/food/services/food.service";
 
 export function useFood() {
   const [foods, setFoods] = useState<FoodEntry[]>([]);
