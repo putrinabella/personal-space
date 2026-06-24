@@ -1,4 +1,5 @@
 // src/db/schema.ts
+import { relations } from "drizzle-orm";
 import {
   pgTable,
   uuid,
@@ -85,3 +86,38 @@ export const foodEntryTags = pgTable(
   },
   (table) => [primaryKey({ columns: [table.foodEntryId, table.tagId] })],
 );
+
+// Relations for Food Entries
+export const foodEntriesRelations = relations(foodEntries, ({ one, many }) => ({
+  restaurant: one(restaurants, {
+    fields: [foodEntries.restaurantId],
+    references: [restaurants.id],
+  }),
+  category: one(categories, {
+    fields: [foodEntries.categoryId],
+    references: [categories.id],
+  }),
+  cuisine: one(cuisines, {
+    fields: [foodEntries.cuisineId],
+    references: [cuisines.id],
+  }),
+  diningType: one(diningTypes, {
+    fields: [foodEntries.diningTypeId],
+    references: [diningTypes.id],
+  }),
+  tags: many(foodEntryTags),
+}));
+
+// Relations for Restaurants
+export const restaurantsRelations = relations(restaurants, ({ many }) => ({
+  foodEntries: many(foodEntries),
+}));
+
+// Relations for Junction Table
+export const foodEntryTagsRelations = relations(foodEntryTags, ({ one }) => ({
+  foodEntry: one(foodEntries, {
+    fields: [foodEntryTags.foodEntryId],
+    references: [foodEntries.id],
+  }),
+  tag: one(tags, { fields: [foodEntryTags.tagId], references: [tags.id] }),
+}));
