@@ -1,26 +1,101 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@plugin "daisyui";
+
+@plugin "daisyui/theme" {
+  name: "light";
+  default: true;
+
+  --color-primary: #c5e384;
+  --color-primary-content: #4a3e3d;
+
+  --color-secondary: #fff1b5;
+  --color-secondary-content: #4a3e3d;
+
+  --color-accent: #a3d9ff;
+  --color-accent-content: #4a3e3d;
+
+  --color-neutral: #4a3e3d;
+
+  --color-base-100: #fffdf6;
+  --color-base-200: #eaf4d3;
+  --color-base-300: #dcecc2;
+  --color-base-content: #4a3e3d;
+
+  --color-info: #60a5fa;
+  --color-success: #34d399;
+  --color-warning: #fbbf24;
+  --color-error: #f87171;
+
+  --radius-box: 2rem;
+  --radius-btn: 1rem;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@plugin "daisyui/theme" {
+  name: "dark";
+
+  --color-primary: #93c5fd;
+  --color-primary-content: #1f1f1f;
+
+  --color-secondary: #86efac;
+  --color-secondary-content: #1f1f1f;
+
+  --color-accent: #a78bfa;
+  --color-accent-content: #1f1f1f;
+
+  --color-neutral: #2e2e2e;
+
+  --color-base-100: #1f1f1f;
+  --color-base-200: #272727;
+  --color-base-300: #323232;
+  --color-base-content: #e8e8e8;
+
+  --color-info: #60a5fa;
+  --color-success: #34d399;
+  --color-warning: #fbbf24;
+  --color-error: #f87171;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@theme {
+  --font-header: var(--font-header), sans-serif;
+  --font-body: var(--font-body), handwriting, sans-serif;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@utility heading-h1 {
+  @apply text-xl sm:text-2xl md:text-3xl lg:text-4xl font-header font-bold leading-tight;
+}
+
+@utility heading-h2 {
+  @apply text-lg sm:text-xl md:text-2xl lg:text-3xl font-header font-semibold leading-snug;
+}
+
+@utility heading-h3 {
+  @apply text-base sm:text-lg md:text-xl lg:text-2xl font-header font-semibold leading-snug;
+}
+
+@utility heading-h4 {
+  @apply text-base md:text-lg text-base-content font-header font-semibold leading-snug;
+}
+
+@utility text-subtitle {
+  @apply text-xs sm:text-sm md:text-base font-body text-base-content/70 leading-relaxed;
+}
+
+@utility text-body {
+  @apply text-sm md:text-base font-body text-base-content leading-relaxed;
+}
+
+@utility text-data-body {
+  @apply text-sm font-body text-base-content leading-relaxed;
+}
+
+@utility text-caption {
+  @apply text-xs font-body text-base-content/50 leading-normal;
+}
+
+@utility bg-cute-grid {
+  background-size: 40px 40px;
+  background-image:
+    linear-gradient(to right, rgba(74, 62, 61, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(74, 62, 61, 0.05) 1px, transparent 1px);
 }
