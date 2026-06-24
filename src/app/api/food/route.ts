@@ -1,37 +1,70 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { db } from "@/db";
 import { foodEntries, foodEntryTags } from "@/db/schema";
-import { and, ne, lte, eq } from "drizzle-orm";
+import { and, ne, lte, eq, sql } from "drizzle-orm";
+import { sendPaginatedResponse, sendStandardResponse } from "@/lib/apiResponse";
 
 // ==========================================
-// 1. READ (GET): Ambil Semua / Filter Data
+// 1. READ (GET) - Menggunakan Base Paginated
 // ==========================================
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const excludeCategoryId = searchParams.get("excludeCategory");
-    const maxPrice = searchParams.get("maxPrice");
 
+    // Ambil parameter page & per_page standard
+    const page = Math.max(1, parseInt(searchParams.get("page") || "1"));
+    const perPage = Math.max(1, parseInt(searchParams.get("per_page") || "15"));
+    const offset = (page - 1) * perPage;
+
+    // Filter logic bawaan kamu
     const conditions = [];
-    if (excludeCategoryId)
-      conditions.push(ne(foodEntries.categoryId, excludeCategoryId));
-    if (maxPrice) conditions.push(lte(foodEntries.price, maxPrice));
+    if (searchParams.get("excludeCategory"))
+      conditions.push(
+        ne(foodEntries.categoryId, searchParams.get("excludeCategory")!),
+      );
+    if (searchParams.get("maxPrice"))
+      conditions.push(lte(foodEntries.price, searchParams.get("maxPrice")!));
+    const whereCondition =
+      conditions.length > 0 ? and(...conditions) : undefined;
 
-    const entries = await db.query.foodEntries.findMany({
-      where: conditions.length > 0 ? and(...conditions) : undefined,
-      with: { restaurant: true, category: true, tags: { with: { tag: true } } },
-      orderBy: (entries, { desc }) => [desc(entries.dateVisited)],
+    // Query data secara paralel
+    const [totalQuery, entries] = await Promise.all([
+      db
+        .select({
+          count: sql<number>`cast(count(${foodEntries.id}) as integer)`,
+        })
+        .from(foodEntries)
+        .where(whereCondition),
+      db.query.foodEntries.findMany({
+        where: whereCondition,
+        with: {
+          restaurant: true,
+          category: true,
+          tags: { with: { tag: true } },
+        },
+        orderBy: (entries, { desc }) => [desc(entries.dateVisited)],
+        limit: perPage,
+        offset: offset,
+      }),
+    ]);
+
+    // Panggil helper reusable-mu! 🚀
+    return sendPaginatedResponse({
+      requestUrl: request.url,
+      items: entries,
+      totalItems: totalQuery[0]?.count || 0,
+      page,
+      perPage,
+      message: "Berhasil mengambil daftar ulasan makanan harian.",
     });
-
-    return NextResponse.json(entries);
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : "Database error";
-    return NextResponse.json({ error: msg }, { status: 500 });
+    return sendStandardResponse(null, msg, 500, "error");
   }
 }
 
 // ==========================================
-// 2. CREATE (POST): Tambah Makanan Baru
+// 2. CREATE (POST) - Menggunakan Base Standard
 // ==========================================
 export async function POST(request: NextRequest) {
   try {
@@ -71,22 +104,30 @@ export async function POST(request: NextRequest) {
       return newEntry;
     });
 
-    return NextResponse.json({ success: true, data: result }, { status: 201 });
+    return sendStandardResponse(
+      result,
+      "Catatan kuliner berhasil ditambahkan.",
+      201,
+    );
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Insert error";
-    return NextResponse.json({ error: msg }, { status: 500 });
+    return sendStandardResponse(
+      null,
+      err instanceof Error ? err.message : "Insert error",
+      500,
+      "error",
+    );
   }
 }
 
 // ==========================================
-// 3. UPDATE (PUT): Edit Data Makanan
+// 3. UPDATE (PUT)
 // ==========================================
 export async function PUT(request: NextRequest) {
   try {
     const body = await request.json();
-    const { id, foodName, price, ratingOverall } = body; // Ambil ID data yang mau diedit
+    const { id, foodName, price, ratingOverall } = body;
 
-    if (!id) return NextResponse.json({ error: "Missing ID" }, { status: 400 });
+    if (!id) return sendStandardResponse(null, "Missing ID", 400, "error");
 
     const [updatedEntry] = await db
       .update(foodEntries)
@@ -98,31 +139,39 @@ export async function PUT(request: NextRequest) {
       .where(eq(foodEntries.id, id))
       .returning();
 
-    return NextResponse.json({ success: true, data: updatedEntry });
+    return sendStandardResponse(updatedEntry, "Data kuliner berhasil diubah.");
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Update error";
-    return NextResponse.json({ error: msg }, { status: 500 });
+    return sendStandardResponse(
+      null,
+      err instanceof Error ? err.message : "Update error",
+      500,
+      "error",
+    );
   }
 }
 
 // ==========================================
-// 4. DELETE (DELETE): Hapus Makanan
+// 4. DELETE (DELETE)
 // ==========================================
 export async function DELETE(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const id = searchParams.get("id"); // Ambil ?id=UUID dari URL
+    const id = searchParams.get("id");
 
-    if (!id) return NextResponse.json({ error: "Missing ID" }, { status: 400 });
+    if (!id) return sendStandardResponse(null, "Missing ID", 400, "error");
 
     await db.delete(foodEntries).where(eq(foodEntries.id, id));
 
-    return NextResponse.json({
-      success: true,
-      message: "Entry deleted successfully",
-    });
+    return sendStandardResponse(
+      null,
+      "Catatan kuliner telah dihapus dari diary.",
+    );
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Delete error";
-    return NextResponse.json({ error: msg }, { status: 500 });
+    return sendStandardResponse(
+      null,
+      err instanceof Error ? err.message : "Delete error",
+      500,
+      "error",
+    );
   }
 }
