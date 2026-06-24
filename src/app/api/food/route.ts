@@ -1,31 +1,82 @@
 import { NextRequest } from "next/server";
 import { db } from "@/db";
 import { foodEntries, foodEntryTags } from "@/db/schema";
-import { and, ne, lte, eq, sql } from "drizzle-orm";
+import { and, ne, lte, eq, sql, isNull } from "drizzle-orm";
 import { sendPaginatedResponse, sendStandardResponse } from "@/lib/apiResponse";
 
 // ==========================================
-// 1. READ (GET) - Menggunakan Base Paginated
+// 1. READ (GET) - Detail ID / Get All / Pagination 👑
 // ==========================================
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
+    const id = searchParams.get("id");
 
-    // Ambil parameter page & per_page standard
+    // Filter standar: Hanya mengambil data yang BELUM di-soft-delete 🛡️
+    const baseConditions = [isNull(foodEntries.deletedAt)];
+
+    // Tambahan filter logic bawaan Yang Mulia
+    if (searchParams.get("excludeCategory")) {
+      baseConditions.push(
+        ne(foodEntries.categoryId, searchParams.get("excludeCategory")!),
+      );
+    }
+    if (searchParams.get("maxPrice")) {
+      baseConditions.push(
+        lte(foodEntries.price, searchParams.get("maxPrice")!),
+      );
+    }
+
+    // A. LOGIKA: GET DETAIL BY ID 🆕
+    if (id) {
+      const item = await db.query.foodEntries.findFirst({
+        where: and(eq(foodEntries.id, id), ...baseConditions),
+        with: {
+          restaurant: true,
+          category: true,
+          tags: { with: { tag: true } },
+        },
+      });
+
+      if (!item) {
+        return sendStandardResponse(
+          null,
+          "Catatan kuliner tidak ditemukan atau telah dihapus.",
+          404,
+          "error",
+        );
+      }
+
+      return sendStandardResponse(
+        item,
+        "Berhasil mengambil detail catatan kuliner.",
+      );
+    }
+
+    // B. LOGIKA: GET ALL TANPA PAGINATION 🆕
+    // Terpicu jika Yang Mulia tidak menyertakan query parameter (?page=...)
+    if (!searchParams.has("page")) {
+      const allEntries = await db.query.foodEntries.findMany({
+        where: and(...baseConditions),
+        with: {
+          restaurant: true,
+          category: true,
+          tags: { with: { tag: true } },
+        },
+        orderBy: (entries, { desc }) => [desc(entries.dateVisited)],
+      });
+
+      return sendStandardResponse(
+        allEntries,
+        "Berhasil mengambil seluruh diary kuliner tanpa pagination.",
+      );
+    }
+
+    // C. LOGIKA: GET WITH PAGINATION
     const page = Math.max(1, parseInt(searchParams.get("page") || "1"));
     const perPage = Math.max(1, parseInt(searchParams.get("per_page") || "15"));
     const offset = (page - 1) * perPage;
-
-    // Filter logic bawaan kamu
-    const conditions = [];
-    if (searchParams.get("excludeCategory"))
-      conditions.push(
-        ne(foodEntries.categoryId, searchParams.get("excludeCategory")!),
-      );
-    if (searchParams.get("maxPrice"))
-      conditions.push(lte(foodEntries.price, searchParams.get("maxPrice")!));
-    const whereCondition =
-      conditions.length > 0 ? and(...conditions) : undefined;
+    const whereCondition = and(...baseConditions);
 
     // Query data secara paralel
     const [totalQuery, entries] = await Promise.all([
@@ -48,14 +99,14 @@ export async function GET(request: NextRequest) {
       }),
     ]);
 
-    // Panggil helper reusable-mu! 🚀
     return sendPaginatedResponse({
       requestUrl: request.url,
       items: entries,
       totalItems: totalQuery[0]?.count || 0,
       page,
       perPage,
-      message: "Berhasil mengambil daftar ulasan makanan harian.",
+      message:
+        "Berhasil mengambil daftar ulasan makanan harian ber-pagination.",
     });
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : "Database error";
@@ -151,7 +202,7 @@ export async function PUT(request: NextRequest) {
 }
 
 // ==========================================
-// 4. DELETE (DELETE)
+// 4. DELETE (DELETE) - Soft Delete Berbasis Waktu 🆕
 // ==========================================
 export async function DELETE(request: NextRequest) {
   try {
@@ -160,11 +211,15 @@ export async function DELETE(request: NextRequest) {
 
     if (!id) return sendStandardResponse(null, "Missing ID", 400, "error");
 
-    await db.delete(foodEntries).where(eq(foodEntries.id, id));
+    // Soft Delete: Hanya mengisi kolom deletedAt dengan waktu saat ini 🛡️
+    await db
+      .update(foodEntries)
+      .set({ deletedAt: new Date() })
+      .where(eq(foodEntries.id, id));
 
     return sendStandardResponse(
       null,
-      "Catatan kuliner telah dihapus dari diary.",
+      "Catatan kuliner telah disembunyikan ke dalam arsip atas perintah Ratu.",
     );
   } catch (err: unknown) {
     return sendStandardResponse(

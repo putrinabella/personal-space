@@ -9,6 +9,7 @@ import {
   date,
   boolean,
   primaryKey,
+  timestamp,
 } from "drizzle-orm/pg-core";
 
 // 1. LOOKUP TABLES
@@ -16,22 +17,54 @@ export const categories = pgTable("categories", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: text("name").notNull().unique(),
   iconSlug: text("icon_slug"),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .$onUpdate(() => new Date())
+    .notNull(),
+  deletedAt: timestamp("deleted_at", { withTimezone: true }),
 });
 
 export const cuisines = pgTable("cuisines", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: text("name").notNull().unique(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .$onUpdate(() => new Date())
+    .notNull(),
+  deletedAt: timestamp("deleted_at", { withTimezone: true }),
 });
 
 export const diningTypes = pgTable("dining_types", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: text("name").notNull().unique(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .$onUpdate(() => new Date())
+    .notNull(),
+  deletedAt: timestamp("deleted_at", { withTimezone: true }),
 });
 
 export const tags = pgTable("tags", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: text("name").notNull().unique(),
   bgColor: text("bg_color"),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .$onUpdate(() => new Date())
+    .notNull(),
+  deletedAt: timestamp("deleted_at", { withTimezone: true }),
 });
 
 // 2. CORE OPERATIONAL TABLES
@@ -44,6 +77,14 @@ export const restaurants = pgTable("restaurants", {
     .default(false)
     .notNull(),
   isFavoriteCafe: boolean("is_favorite_cafe").default(false).notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .$onUpdate(() => new Date())
+    .notNull(),
+  deletedAt: timestamp("deleted_at", { withTimezone: true }),
 });
 
 export const foodEntries = pgTable("food_entries", {
@@ -71,6 +112,14 @@ export const foodEntries = pgTable("food_entries", {
   ratingAtmosphere: integer("rating_atmosphere"),
   isFavoriteFood: boolean("is_favorite_food").default(false).notNull(),
   isFavoriteDrink: boolean("is_favorite_drink").default(false).notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .$onUpdate(() => new Date())
+    .notNull(),
+  deletedAt: timestamp("deleted_at", { withTimezone: true }),
 });
 
 // 3. JUNCTION TABLE (Many-to-Many)
