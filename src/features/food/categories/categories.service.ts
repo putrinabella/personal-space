@@ -1,15 +1,9 @@
-import {} from "@/shared/service/createCrudService";
-import { PolyclinicItem } from "./types/polyclinic.types";
+import { createCrudService } from "@/shared/service/createCrudService";
+import { CategoriesItem } from "./categories.types";
 
-export const polyclinicService = createCrudService<PolyclinicItem>(
-  "/client/polyclinic",
+export const categoriesService = createCrudService<CategoriesItem>(
+  "/api/food/categories",
   {
-    tag: "polyclinic",
-  },
-);
-export const polyclinicDetailService = createCrudService<PolyclinicItem>(
-  "/client/all/polyclinic",
-  {
-    tag: "polyclinic/all",
+    tag: "categories",
   },
 );

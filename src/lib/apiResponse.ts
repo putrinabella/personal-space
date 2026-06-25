@@ -23,6 +23,15 @@ export interface PaginationMeta {
   to: number;
   total: number;
 }
+export interface PaginationResult<T> {
+  items: T[];
+  total: number;
+  currentPage: number;
+  lastPage: number;
+  perPage: number;
+  from?: number;
+  to?: number;
+}
 
 /**
  * Utility untuk mengirim response sukses ber-pagination (Standard Blueprint)
