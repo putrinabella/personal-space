@@ -36,35 +36,33 @@ export default function CardBox({
   const roundedClass = roundedClassMap[rounded];
 
   const shadowClassMap = {
-    sm: "shadow-[4px_4px_0px_rgba(74,62,61,1)] active:shadow-none active:translate-y-1",
-    md: "shadow-[6px_6px_0px_rgba(74,62,61,1)] active:shadow-none active:translate-y-1",
-    lg: "shadow-[8px_8px_0px_rgba(74,62,61,1)] active:shadow-none active:translate-y-1",
+    sm: "shadow-[4px_4px_0px_rgba(74,62,61,1)]",
+    md: "shadow-[6px_6px_0px_rgba(74,62,61,1)]",
+    lg: "shadow-[8px_8px_0px_rgba(74,62,61,1)]",
   };
   const shadowClass = shadowClassMap[shadowSize];
 
   const isLink = Boolean(href);
   const isButton = Boolean(onClick) && !isLink;
 
+  // HAPUS "transition-all duration-200 ease-out"
   const baseStyles = `
     border-4 border-neutral
-    transition-all duration-200 ease-out
     ${bgClass} ${roundedClass} ${shadowClass} ${className}
   `;
 
   if (isLink && href) {
     return (
-      <Link
-        href={href}
-        className={`${baseStyles} block hover:-translate-y-0.5`}
-      >
+      <Link href={href} className={`${baseStyles} block`}>
         {children}
       </Link>
     );
   }
 
   if (isButton) {
+    // Tambahkan cursor-pointer jika tombol, atau hapus jika ingin benar-benar statis
     return (
-      <button onClick={onClick} className={baseStyles}>
+      <button onClick={onClick} className={`${baseStyles} cursor-pointer`}>
         {children}
       </button>
     );

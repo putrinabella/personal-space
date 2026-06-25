@@ -147,17 +147,17 @@ export const colorSchemeMap: Record<DaisyColor, ColorSchemeConfig> = {
 
 // Map lainnya disesuaikan dengan tipe DaisyColor baru
 export const bgMap: Record<DaisyColor, string> = {
-  primary: "bg-primary/20 hover:bg-primary/30",
-  secondary: "bg-secondary/20 hover:bg-secondary/30",
-  accent: "bg-accent/20 hover:bg-accent/30",
-  info: "bg-info/20 hover:bg-info/30",
-  success: "bg-success/20 hover:bg-success/30",
-  warning: "bg-warning/20 hover:bg-warning/30",
-  error: "bg-error/20 hover:bg-error/30",
-  neutral: "bg-neutral/20 hover:bg-neutral/30",
-  "base-100": "bg-base-100 hover:bg-base-200",
-  "base-200": "bg-base-200 hover:bg-base-300",
-  "base-300": "bg-base-300 hover:bg-base-content/10",
+  primary: "bg-primary text-primary-content",
+  secondary: "bg-secondary text-secondary-content",
+  accent: "bg-accent text-accent-content",
+  neutral: "bg-neutral text-neutral-content",
+  info: "bg-info text-info-content",
+  success: "bg-success text-success-content",
+  warning: "bg-warning text-warning-content",
+  error: "bg-error text-error-content",
+  "base-100": "bg-base-100 text-base-content",
+  "base-200": "bg-base-200 text-base-content",
+  "base-300": "bg-base-300 text-base-content",
 };
 
 export const cardBaseMap: Record<DaisyColor, string> = {

@@ -29,13 +29,3 @@
 //     return res.json();
 //   },
 // };
-import { createCrudService } from "@/shared/service/createCrudService";
-import { McuPackageItem } from "../types/mcu.package.types";
-
-export const mcuPackageService = createCrudService<McuPackageItem>(
-  "/promotions/mcu-packages",
-  {
-    tag: "mcu-packages",
-    urlType: "promotion",
-  },
-);

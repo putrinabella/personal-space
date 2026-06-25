@@ -1,36 +1,11 @@
 import { NextResponse } from "next/server";
-
+import { PaginatedMeta } from "@/shared/types/common";
 // 1. Ekspor interface agar bisa dipakai ulang di client-side components!
 export interface PaginationLinks {
   first: string;
   last: string;
   prev: string | null;
   next: string | null;
-}
-
-export interface PaginationMeta {
-  current_page: number;
-  from: number;
-  last_page: number;
-  links: Array<{
-    url: string | null;
-    label: string;
-    page: number | null;
-    active: boolean;
-  }>;
-  path: string;
-  per_page: number;
-  to: number;
-  total: number;
-}
-export interface PaginationResult<T> {
-  items: T[];
-  total: number;
-  currentPage: number;
-  lastPage: number;
-  perPage: number;
-  from?: number;
-  to?: number;
 }
 
 /**
@@ -118,7 +93,7 @@ export function sendPaginatedResponse<T>({
         per_page: perPage,
         to: toItem,
         total: totalItems,
-      } as PaginationMeta,
+      } as PaginatedMeta,
     },
   });
 }

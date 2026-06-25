@@ -15,7 +15,6 @@ interface CardSectionProps {
   className?: string;
   align?: "left" | "center";
   headerClassName?: string;
-  // ✨ Prop Baru untuk Mengatur Ukuran Judul:
   variant?: "heading" | "normal";
 }
 
