@@ -16,6 +16,7 @@ interface CardSectionProps {
   align?: "left" | "center";
   headerClassName?: string;
   variant?: "heading" | "normal";
+  action?: React.ReactNode;
 }
 
 export default function CardSection({
@@ -29,7 +30,8 @@ export default function CardSection({
   className = "",
   align = "left",
   headerClassName = "",
-  variant = "heading", // ✨ Default tetap menggunakan style heading yang megah
+  variant = "heading",
+  action,
 }: CardSectionProps) {
   const isCenter = align === "center";
   const isHeading = variant === "heading";
@@ -74,6 +76,7 @@ export default function CardSection({
           )}
           {title}
         </h2>
+        {action && <div className="ml-auto">{action}</div>}
       </div>
 
       {/* 📝 CONTENT AREA */}
