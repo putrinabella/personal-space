@@ -2,9 +2,18 @@
 
 import CardHeader from "@/components/CardHeader";
 import CardSection from "@/components/CardSection";
+import Pagination from "@/components/Pagination";
+import { useCategoriesList } from "@/features/food/categories/hooks/useCategoriesList";
 import { Paintbrush, Sliders } from "lucide-react";
+import { useState } from "react";
 
 export default function SettingsPage() {
+  const [page, setPage] = useState(1);
+  const { data, loading, error, total, lastPage, perPage } =
+    useCategoriesList(page);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Terjadi kesalahan saat memuat data.</div>;
   return (
     <div className="flex flex-col gap-6">
       <CardHeader title="S E T T I N G S" icon={Sliders} color="accent" />
@@ -38,7 +47,25 @@ export default function SettingsPage() {
           <div>Konten kanan bawah</div>
         </div>
       </div>
+      <CardSection title="Daftar Kategori">
+        <div className="grid gap-4">
+          {data.map((category) => (
+            <div key={category.id} className="p-4 border rounded-lg">
+              <h3 className="font-bold">{category.name}</h3>
+              <p className="text-sm">Slug: {category.iconSlug}</p>
+            </div>
+          ))}
+        </div>
 
+        {/* 5. Implementasi Pagination */}
+        <Pagination
+          page={page}
+          lastPage={lastPage}
+          total={total}
+          perPage={perPage}
+          onPageChange={(newPage) => setPage(newPage)} // Update state saat pindah halaman
+        />
+      </CardSection>
       <CardSection
         title="Info Tambahan"
         headerColor="base-200"
