@@ -1,5 +1,5 @@
-export interface CategoriesItem {
-  id: string;
-  name: string;
+import { BaseItem } from "../foods/food.types";
+
+export interface categoriesTypes extends BaseItem {
   iconSlug: string;
 }

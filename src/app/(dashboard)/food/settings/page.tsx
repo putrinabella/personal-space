@@ -9,19 +9,21 @@ import { useCuisinesList } from "@/features/food/cuisines/hooks/useCuisinesList"
 import { Paintbrush, Sliders, List, Grid, Plus } from "lucide-react";
 import DataRenderer from "@/components/DataRender";
 import ActionButton from "@/components/ActionButton";
-import { ListIcon, SquaresFour, SquaresFourIcon } from "@phosphor-icons/react";
+import { SquaresFour } from "@phosphor-icons/react";
 import { useDiningTypeList } from "@/features/food/diningTypes/hooks/useDiningTypeList";
+import { useTagsList } from "@/features/food/tags/hooks/useTagasList";
 
 const TAB_CONFIG = [
   { id: "categories", label: "Categories" },
   { id: "cuisines", label: "Cuisines" },
   { id: "diningType", label: "Dining Type" },
+  { id: "tags", label: "Tag" },
 ] as const;
 
 export default function SettingsPage() {
   // 1. State untuk navigasi dan tampilan
   const [activeTab, setActiveTab] = useState<
-    "categories" | "cuisines" | "diningType"
+    "categories" | "cuisines" | "diningType" | "tags"
   >("categories");
 
   const [viewType, setViewType] = useState<"list" | "card">("card");
@@ -30,11 +32,13 @@ export default function SettingsPage() {
   const categoriesQuery = useCategoriesList(page);
   const cuisinesQuery = useCuisinesList(page);
   const diningTypeQuery = useDiningTypeList(page);
+  const tagsQuery = useTagsList(page);
   // Pastikan semua query terdaftar di sini
   const queries = {
     categories: categoriesQuery,
     cuisines: cuisinesQuery,
-    diningType: diningTypeQuery, // <-- Pastikan ini ada
+    diningType: diningTypeQuery,
+    tags: tagsQuery,
   };
 
   // Ambil data yang aktif secara dinamis
@@ -72,37 +76,7 @@ export default function SettingsPage() {
             >
               {renderNavButtons()}
             </CardSection>
-            {/* <CardSection
-              title="Data Management"
-              headerColor="primary"
-              rounded="3xl"
-            >
-              <div className="flex flex-col gap-2">
-                <ActionButton
-                  label="Categories"
-                  size={14}
-                  className="w-full"
-                  disabled={activeTab === "categories"}
-                  color={activeTab === "categories" ? "primary" : "secondary"}
-                  onClick={() => {
-                    setActiveTab("categories");
-                    setPage(1);
-                  }}
-                />
 
-                <ActionButton
-                  label="Cuisines"
-                  size={14}
-                  className="w-full"
-                  disabled={activeTab === "cuisines"}
-                  color={activeTab === "cuisines" ? "primary" : "secondary"}
-                  onClick={() => {
-                    setActiveTab("cuisines");
-                    setPage(1);
-                  }}
-                />
-              </div>
-            </CardSection> */}
             <CardSection
               title="View Options"
               headerColor="secondary"
@@ -141,13 +115,10 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        {/* KANAN: KONTEN DINAMIS */}
         <div className="md:col-span-2">
           <div className="flex flex-col gap-6">
             <CardSection
-              title={
-                activeTab === "categories" ? "Categories List" : "Cuisines List"
-              }
+              title={`${TAB_CONFIG.find((t) => t.id === activeTab)?.label} List`}
               action={
                 <ActionButton
                   label="Add New"
@@ -177,21 +148,6 @@ export default function SettingsPage() {
                 perPage={activeData.perPage}
                 onPageChange={(newPage) => setPage(newPage)}
               />
-            </CardSection>
-
-            {/* Bagian Bawah */}
-            <CardSection
-              title="Additional Information"
-              headerColor="base-200"
-              variant="normal"
-            >
-              <p>Supporting content goes here...</p>
-            </CardSection>
-
-            <CardSection title="THEME & APPEARANCE" icon={Paintbrush}>
-              <p className="text-sm font-bold text-neutral/70">
-                Theme customization options will be available soon! ✨
-              </p>
             </CardSection>
           </div>
         </div>
