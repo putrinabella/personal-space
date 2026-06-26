@@ -38,7 +38,7 @@ export default function FoodView() {
         {/* Tombol dengan Bayangan Tebal Hitam khas Retro */}
         <div className="flex items-center gap-4">
           <Link
-            href="/dashboard/settings"
+            href="/food/settings"
             className="flex items-center gap-2 px-5 py-3 bg-white border-3 border-[#2D2A2A] text-[#2D2A2A] rounded-2xl font-bold shadow-[4px_4px_0px_#2D2A2A] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_#2D2A2A] transition-all text-sm"
           >
             <Settings className="w-4 h-4 text-[#2D2A2A]" />

@@ -7,7 +7,7 @@ import {
   tags,
   restaurants,
 } from "@/db/schema";
-import { sql, and, eq, AnyColumn, isNull } from "drizzle-orm";
+import { sql, and, eq, AnyColumn, isNull, ilike } from "drizzle-orm";
 import { sendPaginatedResponse, sendStandardResponse } from "@/lib/apiResponse";
 
 // Helper internal untuk memetakan parameter string URL [type] ke objek tabel Drizzle asli
@@ -31,6 +31,9 @@ function getTableSchema(type: string) {
 // ==========================================
 // 1. READ (GET): Detail ID / Get All / Pagination
 // ==========================================
+// ==========================================
+// 1. READ (GET): Detail ID / Get All / Pagination
+// ==========================================
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ type: string }> },
@@ -51,21 +54,16 @@ export async function GET(
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
 
-    // Jembatan Type-Safe melewati 'unknown' demi membungkam eror TypeScript
-    const tableFields = target.table as unknown as {
-      id: AnyColumn;
-      deletedAt: AnyColumn;
-    };
-
-    // 🛡️ FILTER UTAMA: Hanya ambil data yang BELUM di-soft-delete (deletedAt IS NULL)
-    const baseCondition = isNull(tableFields.deletedAt);
+    // Gunakan 'any' agar Drizzle bisa mengakses properti dinamis tanpa error TS
+    const table: any = target.table;
+    const baseCondition = isNull(table.deletedAt);
 
     // A. LOGIKA: GET DETAIL BY ID
     if (id) {
       const [item] = await db
         .select()
         .from(target.table)
-        .where(and(eq(tableFields.id, id), baseCondition))
+        .where(and(eq(table.id, id), baseCondition))
         .limit(1);
 
       if (!item) {
@@ -76,14 +74,13 @@ export async function GET(
           "error",
         );
       }
-
       return sendStandardResponse(
         item,
         `Berhasil mengambil detail ${target.label}.`,
       );
     }
 
-    // B. LOGIKA: GET ALL TANPA PAGINATION (Jika tidak ada query parameter 'page')
+    // B. LOGIKA: GET ALL TANPA PAGINATION
     if (!searchParams.has("page")) {
       const allItems = await db
         .select()
@@ -92,24 +89,40 @@ export async function GET(
 
       return sendStandardResponse(
         allItems,
-        `Berhasil mengambil seluruh daftar ${target.label} tanpa pagination.`,
+        `Berhasil mengambil seluruh daftar ${target.label}.`,
       );
     }
 
-    // C. LOGIKA: GET WITH PAGINATION
+    // C. LOGIKA: GET WITH PAGINATION & FILTER
     const page = Math.max(1, parseInt(searchParams.get("page") || "1"));
     const perPage = Math.max(1, parseInt(searchParams.get("per_page") || "15"));
     const offset = (page - 1) * perPage;
+
+    const search = searchParams.get("search");
+    const isFav = searchParams.get("isFavoriteRestaurant");
+
+    const filters = [baseCondition];
+
+    // Filter dinamis dengan pengecekan kolom
+    if (search && table.name && table.address) {
+      filters.push(
+        sql`(${table.name} ILIKE ${`%${search}%`} OR ${table.address} ILIKE ${`%${search}%`})`,
+      );
+    }
+
+    if (isFav !== null && table.isFavoriteRestaurant !== undefined) {
+      filters.push(eq(table.isFavoriteRestaurant, isFav === "true"));
+    }
 
     const [totalQuery, items] = await Promise.all([
       db
         .select({ count: sql<number>`cast(count(*) as integer)` })
         .from(target.table)
-        .where(baseCondition),
+        .where(and(...filters)),
       db
         .select()
         .from(target.table)
-        .where(baseCondition)
+        .where(and(...filters))
         .limit(perPage)
         .offset(offset),
     ]);
@@ -126,9 +139,7 @@ export async function GET(
     const msg = err instanceof Error ? err.message : "Database error";
     return sendStandardResponse(null, msg, 500, "error");
   }
-}
-
-// ==========================================
+} // ==========================================
 // 2. CREATE (POST): Tambah opsi data baru
 // ==========================================
 export async function POST(

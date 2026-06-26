@@ -6,7 +6,7 @@ import CardSection from "@/components/CardSection";
 import Pagination from "@/components/Pagination";
 import { useCategoriesList } from "@/features/food/categories/hooks/useCategoriesList";
 import { useCuisinesList } from "@/features/food/cuisines/hooks/useCuisinesList";
-import { Paintbrush, Sliders, List, Grid, Plus } from "lucide-react";
+import { Sliders, List, Plus } from "lucide-react";
 import DataRenderer from "@/components/DataRender";
 import ActionButton from "@/components/ActionButton";
 import { SquaresFour } from "@phosphor-icons/react";

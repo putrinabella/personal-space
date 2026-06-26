@@ -4,13 +4,34 @@ import { restaurantsService } from "../restaurants.service";
 import { PaginatedParams } from "@/shared/types/common";
 import { restaurantsTypes } from "../restaurants.types";
 
-export function useRestaurantsList(page = 1, title?: string) {
-  const params: PaginatedParams = {
+// export function useRestaurantsList(page = 1, title?: string) {
+//   const params: PaginatedParams = {
+//     page,
+//     search: title,
+//   };
+
+//   return useBaseList<restaurantsTypes, PaginatedParams>({
+//     queryKey: queryKeys.restaurants.list(params),
+//     fetcher: (p) => restaurantsService.getPaginated(p),
+//     params,
+//   });
+// }
+
+export interface RestaurantsFilterParams extends PaginatedParams {
+  search?: string;
+  isFavoriteRestaurant?: string;
+}
+
+export function useRestaurantsList(
+  page = 1,
+  filters: Partial<RestaurantsFilterParams> = {},
+) {
+  const params: RestaurantsFilterParams = {
     page,
-    search: title,
+    ...filters,
   };
 
-  return useBaseList<restaurantsTypes, PaginatedParams>({
+  return useBaseList<restaurantsTypes, RestaurantsFilterParams>({
     queryKey: queryKeys.restaurants.list(params),
     fetcher: (p) => restaurantsService.getPaginated(p),
     params,

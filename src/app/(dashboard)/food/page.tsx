@@ -1,67 +1,79 @@
 "use client";
 
-import React, { useState } from "react";
-import Link from "next/link";
+import CardBox from "@/components/CardBox";
 import {
-  Utensils,
-  MapPin,
   Calendar,
-  Settings,
-  Plus,
+  ForkKnifeIcon,
+  GearSixIcon,
+  Hamburger,
+  MapPin,
+  MapPinAreaIcon,
+  PlusIcon,
   Star,
-  TrendingUp,
-  ChevronRight,
-  Home,
-  CreditCard,
-  Film,
-} from "lucide-react";
+} from "@phosphor-icons/react";
+import Link from "next/link";
+import { useState } from "react";
 
 export default function FoodView() {
   const [isInputModalOpen, setIsInputModalOpen] = useState(false);
 
   return (
-    // Latar belakang kertas grid cream khas sesuai gambar image_7aedd2.png
-    <div className="min-h-screen bg-[#FAF9F5] bg-[linear-gradient(to_right,#EAE7DD_1px,transparent_1px),linear-gradient(to_bottom,#EAE7DD_1px,transparent_1px)] bg-[size:24px_24px] p-6 md:p-10 text-[#2D2A2A] font-sans selection:bg-[#99D9EA]">
-      {/* ==========================================
-          HEADER AREA (Neo-Brutalist Style)
-         ========================================== */}
-      <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-12">
+    <div className="flex flex-col gap-6">
+      <header className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
         <div>
-          <h1 className="text-3xl md:text-5xl font-black tracking-tight uppercase text-[#2D2A2A] drop-shadow-[2px_2px_0px_#FFF]">
-            Istana Kuliner Ratu 👑
+          {/* Breadcrumb sederhana untuk navigasi Eounia */}
+          <span className="text-xs font-bold tracking-[0.2em] uppercase text-slate-400 mb-2 block">
+            Eounia / Food Diary
+          </span>
+          <h1 className="text-4xl md:text-5xl font-black tracking-tighter uppercase text-[#2D2A2A]">
+            Culinary Archive
           </h1>
-          <p className="text-slate-500 mt-2 text-sm md:text-base font-medium">
-            Koleksi review makanan dan catatan diary rasa estetik-mu!
+          <p className="text-slate-500 mt-2 text-sm md:text-base font-medium italic">
+            "Curating flavors, documenting the soul of every bite."
           </p>
         </div>
 
-        {/* Tombol dengan Bayangan Tebal Hitam khas Retro */}
-        <div className="flex items-center gap-4">
-          <Link
+        {/* Tombol dengan layout responsif */}
+        <div className="flex flex-wrap items-center gap-3">
+          <CardBox
+            className="px-4 py-2 flex items-center gap-2 text-sm md:text-base font-bold"
+            rounded="xl"
+            color="base-300"
             href="/food/settings"
-            className="flex items-center gap-2 px-5 py-3 bg-white border-3 border-[#2D2A2A] text-[#2D2A2A] rounded-2xl font-bold shadow-[4px_4px_0px_#2D2A2A] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_#2D2A2A] transition-all text-sm"
+            pressable
           >
-            <Settings className="w-4 h-4 text-[#2D2A2A]" />
-            Settings
-          </Link>
+            <GearSixIcon weight="bold" size={18} />
+            <span>Config</span>
+          </CardBox>
 
-          <button
-            onClick={() => setIsInputModalOpen(true)}
-            className="flex items-center gap-2 px-6 py-3 bg-[#99D9EA] border-3 border-[#2D2A2A] text-[#2D2A2A] rounded-2xl font-black shadow-[4px_4px_0px_#2D2A2A] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_#2D2A2A] transition-all text-sm"
+          <CardBox
+            className="px-4 py-2 flex items-center gap-2 text-sm md:text-base font-bold"
+            rounded="xl"
+            color="secondary"
+            href="/food/restaurant"
+            pressable
           >
-            <Plus className="w-5 h-5 stroke-[3]" />
-            TAMBAH DIARY
-          </button>
+            <MapPinAreaIcon weight="bold" size={18} />
+            <span>Places</span>
+          </CardBox>
+
+          <CardBox
+            className="px-4 py-2 flex items-center gap-2 text-sm md:text-base font-bold"
+            rounded="xl"
+            color="accent"
+            onClick={() => setIsInputModalOpen(true)}
+            pressable
+          >
+            <ForkKnifeIcon weight="bold" size={18} />
+            <span>New Entry</span>
+          </CardBox>
         </div>
       </header>
 
-      {/* ==========================================
-          STATS SECTION: Kotak Pastel Berbingkai Tebal
-         ========================================== */}
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
         <div className="bg-[#FFF] border-3 border-[#2D2A2A] p-6 rounded-2xl shadow-[4px_4px_0px_#2D2A2A] flex items-center gap-4">
           <div className="p-3 bg-[#C3E6CB] border-2 border-[#2D2A2A] rounded-xl text-[#2D2A2A]">
-            <Utensils className="w-6 h-6" />
+            <Hamburger className="w-6 h-6" />
           </div>
           <div>
             <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">
@@ -85,7 +97,7 @@ export default function FoodView() {
 
         <div className="bg-[#FFF] border-3 border-[#2D2A2A] p-6 rounded-2xl shadow-[4px_4px_0px_#2D2A2A] flex items-center gap-4">
           <div className="p-3 bg-[#99D9EA] border-2 border-[#2D2A2A] rounded-xl text-[#2D2A2A]">
-            <TrendingUp className="w-6 h-6" />
+            <Star className="w-6 h-6" />
           </div>
           <div>
             <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">
@@ -107,7 +119,6 @@ export default function FoodView() {
           </div>
         </div>
       </section>
-
       {/* ==========================================
           MAIN WIDGETS: Model Tiket / Blok Box Popcorn
          ========================================== */}
@@ -128,7 +139,7 @@ export default function FoodView() {
             <div className="w-14 h-14 bg-[#99D9EA] border-2 border-[#2D2A2A] text-[#2D2A2A] rounded-xl flex items-center justify-center font-black text-lg shadow-[2px_2px_0px_#2D2A2A] mb-4">
               24
             </div>
-            <p className="font-bold text-sm">Hari ini Ratu belum makan luar?</p>
+            <p className="font-bold text-sm">Hari ini belum makan luar?</p>
             <p className="text-xs text-slate-400 mt-1 max-w-[180px]">
               Silakan catat petualangan kuliner estetikmu hari ini!
             </p>
@@ -156,11 +167,9 @@ export default function FoodView() {
           </div>
         </div>
       </section>
-
       {/* ==========================================
           FLOATING BOTTOM NAV BAR (Sesuai Persis image_7aedd2.png)
          ========================================== */}
-
       {/* ==========================================
           MODAL BOX: Input Bertema Retro Tiket
          ========================================== */}
@@ -215,11 +224,11 @@ export default function FoodView() {
 
               <div>
                 <label className="block text-xs font-black uppercase text-[#2D2A2A] tracking-wider mb-1.5">
-                  Ulasan Ratu
+                  Ulasan
                 </label>
                 <textarea
                   rows={3}
-                  placeholder="Bagaimana rasanya, Yang Mulia Ratu?..."
+                  placeholder="Bagaimana rasanya, Yang Mulia ?..."
                   className="w-full px-3 py-2.5 bg-white border-2 border-[#2D2A2A] rounded-xl text-sm font-medium focus:outline-none focus:bg-amber-50"
                 />
               </div>
