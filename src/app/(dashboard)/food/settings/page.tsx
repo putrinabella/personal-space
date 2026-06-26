@@ -10,30 +10,69 @@ import { Paintbrush, Sliders, List, Grid, Plus } from "lucide-react";
 import DataRenderer from "@/components/DataRender";
 import ActionButton from "@/components/ActionButton";
 import { ListIcon, SquaresFour, SquaresFourIcon } from "@phosphor-icons/react";
+import { useDiningTypeList } from "@/features/food/diningTypes/hooks/useDiningTypeList";
+
+const TAB_CONFIG = [
+  { id: "categories", label: "Categories" },
+  { id: "cuisines", label: "Cuisines" },
+  { id: "diningType", label: "Dining Type" },
+] as const;
 
 export default function SettingsPage() {
   // 1. State untuk navigasi dan tampilan
-  const [activeTab, setActiveTab] = useState<"categories" | "cuisines">(
-    "categories",
-  );
+  const [activeTab, setActiveTab] = useState<
+    "categories" | "cuisines" | "diningType"
+  >("categories");
+
   const [viewType, setViewType] = useState<"list" | "card">("card");
   const [page, setPage] = useState(1);
 
   const categoriesQuery = useCategoriesList(page);
   const cuisinesQuery = useCuisinesList(page);
+  const diningTypeQuery = useDiningTypeList(page);
+  // Pastikan semua query terdaftar di sini
+  const queries = {
+    categories: categoriesQuery,
+    cuisines: cuisinesQuery,
+    diningType: diningTypeQuery, // <-- Pastikan ini ada
+  };
 
-  const activeData =
-    activeTab === "categories" ? categoriesQuery : cuisinesQuery;
+  // Ambil data yang aktif secara dinamis
+  const activeData = queries[activeTab];
+  const renderNavButtons = () => (
+    <div className="flex flex-col gap-2">
+      {TAB_CONFIG.map((tab) => (
+        <ActionButton
+          key={tab.id}
+          label={tab.label}
+          size={14}
+          className="w-full"
+          disabled={activeTab === tab.id}
+          color={activeTab === tab.id ? "primary" : "secondary"}
+          onClick={() => {
+            setActiveTab(tab.id as any);
+            setPage(1);
+          }}
+        />
+      ))}
+    </div>
+  );
 
   return (
     <div className="flex flex-col gap-6">
       <CardHeader title="S E T T I N G S" icon={Sliders} color="accent" />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* KIRI: MENU NAVIGASI */}
         <div className="md:col-span-1 flex flex-col gap-6">
           <div className="flex flex-col gap-6">
             <CardSection
+              title="Data Management"
+              headerColor="primary"
+              rounded="3xl"
+            >
+              {renderNavButtons()}
+            </CardSection>
+            {/* <CardSection
               title="Data Management"
               headerColor="primary"
               rounded="3xl"
@@ -63,7 +102,7 @@ export default function SettingsPage() {
                   }}
                 />
               </div>
-            </CardSection>
+            </CardSection> */}
             <CardSection
               title="View Options"
               headerColor="secondary"
