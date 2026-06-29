@@ -77,6 +77,7 @@ export function useBaseDelete({
       confirmButtonText: "Hapus",
       confirmButtonColor: "error" as DaisyColor,
       cancelButtonText: "Batal",
+      cancelButtonColor: "base-300" as DaisyColor,
     });
 
     // Menggunakan isConfirmed untuk membatalkan aksi

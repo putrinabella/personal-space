@@ -13,7 +13,7 @@ interface UseBaseFormProps<T> {
   defaultValues: T;
   queryKey?: readonly unknown[];
   invalidateQueryKey?: readonly unknown[];
-  getDetail?: (id: string) => Promise<T>;
+  getDetail?: (id: string) => Promise<T | null | undefined>;
   createFn: (data: Partial<T>) => Promise<T>;
   updateFn: (id: string, data: Partial<T>) => Promise<T>;
   validate?: (data: T) => string[];
@@ -56,7 +56,10 @@ export function useBaseForm<T>({
     queryFn: async () => {
       if (!id || !getDetail)
         throw new Error("ID atau getDetail tidak tersedia");
-      return getDetail(id);
+
+      const result = await getDetail(id);
+      if (!result) throw new Error("Data tidak ditemukan"); // Tambahkan ini
+      return result;
     },
     enabled: !!id && !!getDetail,
   });
