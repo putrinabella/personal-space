@@ -40,7 +40,7 @@ export const cuisines = pgTable("cuisines", {
   deletedAt: timestamp("deleted_at", { withTimezone: true }),
 });
 
-export const diningTypes = pgTable("dining_types", {
+export const DiningTypesEntry = pgTable("dining_types", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: text("name").notNull().unique(),
   createdAt: timestamp("created_at", { withTimezone: true })
@@ -99,7 +99,7 @@ export const foodEntries = pgTable("food_entries", {
     .references(() => cuisines.id, { onDelete: "restrict" })
     .notNull(),
   diningTypeId: uuid("dining_type_id")
-    .references(() => diningTypes.id, { onDelete: "restrict" })
+    .references(() => DiningTypesEntry.id, { onDelete: "restrict" })
     .notNull(),
   foodName: text("food_name").notNull(),
   price: numeric("price", { precision: 12, scale: 2 }).notNull(),
@@ -150,9 +150,9 @@ export const foodEntriesRelations = relations(foodEntries, ({ one, many }) => ({
     fields: [foodEntries.cuisineId],
     references: [cuisines.id],
   }),
-  diningType: one(diningTypes, {
+  diningType: one(DiningTypesEntry, {
     fields: [foodEntries.diningTypeId],
-    references: [diningTypes.id],
+    references: [DiningTypesEntry.id],
   }),
   tags: many(foodEntryTags),
 }));

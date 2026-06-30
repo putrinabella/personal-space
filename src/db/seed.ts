@@ -17,7 +17,7 @@ async function main() {
     await db.delete(schema.restaurants);
     await db.delete(schema.categories);
     await db.delete(schema.cuisines);
-    await db.delete(schema.diningTypes);
+    await db.delete(schema.DiningTypesEntry);
     await db.delete(schema.tags);
 
     console.log("🌱 Mulai proses seeding data lookup...");
@@ -48,7 +48,7 @@ async function main() {
 
     // 3. Seed Dining Types
     const insertedDiningTypes = await db
-      .insert(schema.diningTypes)
+      .insert(schema.DiningTypesEntry)
       .values([
         { name: "Dine In" },
         { name: "Takeaway" },

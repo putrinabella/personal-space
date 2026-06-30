@@ -3,7 +3,7 @@ import { createQueryKeys } from "./queryKeyFactory";
 export const queryKeys = {
   categories: createQueryKeys("categories"),
   cuisines: createQueryKeys("cuisines"),
-  diningTypes: createQueryKeys("diningTypes"),
+  DiningTypesEntry: createQueryKeys("DiningTypesEntry"),
   tags: createQueryKeys("tags"),
   restaurants: createQueryKeys("restaurants"),
 };

@@ -10,7 +10,7 @@ export interface RestaurantFormData {
 }
 
 // Tipe data lengkap (untuk list/tampilan)
-export interface restaurantsTypes extends BaseItem, RestaurantFormData {}
+export interface RestaurantEntry extends BaseItem, RestaurantFormData {}
 
 export const defaultRestaurants: RestaurantFormData = {
   name: "",

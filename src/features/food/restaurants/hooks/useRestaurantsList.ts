@@ -2,7 +2,7 @@ import { useBaseList } from "@/shared/hooks/core/use-base-list";
 import { queryKeys } from "@/lib/queryKeys";
 import { restaurantsService } from "../restaurants.service";
 import { PaginatedParams } from "@/shared/types/common";
-import { restaurantsTypes } from "../restaurants.types";
+import { RestaurantEntry } from "../restaurants.types";
 
 export interface RestaurantsFilterParams extends PaginatedParams {
   search?: string;
@@ -18,7 +18,7 @@ export function useRestaurantsList(
     ...filters,
   };
 
-  return useBaseList<restaurantsTypes, RestaurantsFilterParams>({
+  return useBaseList<RestaurantEntry, RestaurantsFilterParams>({
     queryKey: queryKeys.restaurants.list(params),
     fetcher: (p) => restaurantsService.getPaginated(p),
     params,

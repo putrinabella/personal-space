@@ -3,7 +3,7 @@ import { db } from "@/db";
 import {
   categories,
   cuisines,
-  diningTypes,
+  DiningTypesEntry,
   tags,
   restaurants,
 } from "@/db/schema";
@@ -17,8 +17,8 @@ function getTableSchema(type: string) {
       return { table: categories, label: "Kategori" };
     case "cuisines":
       return { table: cuisines, label: "Cuisine" };
-    case "diningTypes":
-      return { table: diningTypes, label: "Tipe Dining" };
+    case "DiningTypesEntry":
+      return { table: DiningTypesEntry, label: "Tipe Dining" };
     case "tags":
       return { table: tags, label: "Tag" };
     case "restaurants":

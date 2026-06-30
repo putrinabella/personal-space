@@ -1,5 +1,5 @@
 import { BaseItem } from "@/features/food/foods/food.types";
 
-export interface tagsTypes extends BaseItem {
+export interface TagEntry extends BaseItem {
   bgColor: string;
 }

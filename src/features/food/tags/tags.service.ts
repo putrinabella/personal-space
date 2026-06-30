@@ -1,6 +1,6 @@
 import { createCrudService } from "@/shared/service/createCrudService";
-import { tagsTypes } from "./tags.types";
+import { TagEntry } from "./tags.types";
 
-export const tagsService = createCrudService<tagsTypes>("/api/food/tags", {
+export const tagsService = createCrudService<TagEntry>("/api/food/tags", {
   tag: "tags",
 });

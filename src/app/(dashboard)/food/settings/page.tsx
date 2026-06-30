@@ -10,8 +10,8 @@ import { Sliders, List, Plus } from "lucide-react";
 import DataRenderer from "@/components/DataRender";
 import ActionButton from "@/components/ActionButton";
 import { SquaresFour } from "@phosphor-icons/react";
-import { useDiningTypeList } from "@/features/food/diningTypes/hooks/useDiningTypeList";
 import { useTagsList } from "@/features/food/tags/hooks/useTagasList";
+import { useDiningTypeList } from "@/features/food/diningTypes/hooks/useDiningTypeList";
 
 const TAB_CONFIG = [
   { id: "categories", label: "Categories" },

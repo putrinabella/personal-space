@@ -1,5 +1,5 @@
 import { BaseItem } from "../foods/food.types";
 
-export interface categoriesTypes extends BaseItem {
+export interface CategoriesEntry extends BaseItem {
   iconSlug: string;
 }

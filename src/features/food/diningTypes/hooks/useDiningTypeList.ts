@@ -1,7 +1,7 @@
 import { useBaseList } from "@/shared/hooks/core/use-base-list";
 import { queryKeys } from "@/lib/queryKeys";
-import { diningTypes } from "../dining.types";
-import { diningTypesService } from "../dining.service";
+import { DiningTypesEntry } from "../dining.types";
+import { DiningTypesEntryService } from "../dining.service";
 import { PaginatedParams } from "@/shared/types/common";
 
 export function useDiningTypeList(page = 1, title?: string) {
@@ -10,9 +10,9 @@ export function useDiningTypeList(page = 1, title?: string) {
     search: title,
   };
 
-  return useBaseList<diningTypes, PaginatedParams>({
-    queryKey: queryKeys.diningTypes.list(params),
-    fetcher: (p) => diningTypesService.getPaginated(p),
+  return useBaseList<DiningTypesEntry, PaginatedParams>({
+    queryKey: queryKeys.DiningTypesEntry.list(params),
+    fetcher: (p) => DiningTypesEntryService.getPaginated(p),
     params,
   });
 }
