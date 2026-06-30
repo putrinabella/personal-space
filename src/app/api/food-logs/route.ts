@@ -4,39 +4,6 @@ import { foods, foodLogs, foodLogTags } from "@/db/schema";
 import { eq, desc, and, sql } from "drizzle-orm";
 import { sendPaginatedResponse, sendStandardResponse } from "@/lib/apiResponse";
 
-// 1. GET: Standard Fetch
-// export async function GET(request: NextRequest) {
-//   try {
-//     const { searchParams } = new URL(request.url);
-//     const id = searchParams.get("id");
-
-//     if (id) {
-//       const item = await db.query.foodLogs.findFirst({
-//         where: eq(foodLogs.id, id),
-//         with: {
-//           food: { with: { restaurant: true, category: true, cuisine: true } },
-//           tags: { with: { tag: true } },
-//         },
-//       });
-//       return item
-//         ? sendStandardResponse(item, "Detail log found.")
-//         : sendStandardResponse(null, "Log not found.", 404, "error");
-//     }
-
-//     const allLogs = await db.query.foodLogs.findMany({
-//       with: {
-//         food: { with: { restaurant: true, category: true } },
-//         tags: { with: { tag: true } },
-//       },
-//       orderBy: [desc(foodLogs.dateVisited)],
-//     });
-
-//     return sendStandardResponse(allLogs, "Successfully retrieved food logs.");
-//   } catch (err: any) {
-//     return sendStandardResponse(null, err.message, 500, "error");
-//   }
-// }
-
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -108,36 +75,90 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { foodId, price, ratingHis, ratingHer, reviewText, tagIds } = body;
+    // Gunakan body langsung untuk akses isNewFood jika destructuring di atas ragu
+    const isNewFood = !!body.isNewFood;
+    const formData = body; // Ambil semua data termasuk yang di dalamnya
 
     const result = await db.transaction(async (tx) => {
+      let activeFoodId = formData.foodId;
+
+      // Gunakan variabel isNewFood yang sudah dipastikan boolean
+      if (isNewFood) {
+        const [newFood] = await tx
+          .insert(foods)
+          .values({
+            restaurantId: formData.restaurantId,
+            categoryId: formData.categoryId,
+            cuisineId: formData.cuisineId,
+            diningTypeId: formData.diningTypeId,
+            foodName: formData.foodName,
+            isFavoriteFood: !!formData.isFavoriteFood,
+            isFavoriteDrink: !!formData.isFavoriteDrink,
+          })
+          .returning();
+        activeFoodId = newFood.id;
+      }
+
+      if (!activeFoodId) {
+        throw new Error(
+          "Food ID tidak ditemukan. Makanan gagal dibuat/dipilih.",
+        );
+      }
+
       const [newLog] = await tx
         .insert(foodLogs)
         .values({
-          foodId,
-          price: String(price),
-          ratingHis,
-          ratingHer,
-          reviewText,
-          dateVisited: new Date().toISOString().split("T")[0], // Force today
+          foodId: activeFoodId,
+          price: String(formData.price),
+          ratingHis: Number(formData.ratingHis),
+          ratingHer: Number(formData.ratingHer),
+          reviewText: formData.reviewText,
+          dateVisited:
+            formData.dateVisited || new Date().toISOString().split("T")[0],
         })
         .returning();
 
-      if (tagIds && Array.isArray(tagIds) && tagIds.length > 0) {
-        await tx
-          .insert(foodLogTags)
-          .values(
-            tagIds.map((tId: string) => ({ foodLogId: newLog.id, tagId: tId })),
-          );
-      }
       return newLog;
     });
 
-    return sendStandardResponse(result, "Log saved successfully.", 201);
+    return sendStandardResponse(result, "Log & Food saved successfully.", 201);
   } catch (err: any) {
     return sendStandardResponse(null, err.message, 500, "error");
   }
 }
+// export async function POST(request: NextRequest) {
+//   try {
+//     const body = await request.json();
+//     const { foodId, price, ratingHis, ratingHer, reviewText, tagIds } = body;
+
+//     const result = await db.transaction(async (tx) => {
+//       const [newLog] = await tx
+//         .insert(foodLogs)
+//         .values({
+//           foodId,
+//           price: String(price),
+//           ratingHis,
+//           ratingHer,
+//           reviewText,
+//           dateVisited: new Date().toISOString().split("T")[0], // Force today
+//         })
+//         .returning();
+
+//       if (tagIds && Array.isArray(tagIds) && tagIds.length > 0) {
+//         await tx
+//           .insert(foodLogTags)
+//           .values(
+//             tagIds.map((tId: string) => ({ foodLogId: newLog.id, tagId: tId })),
+//           );
+//       }
+//       return newLog;
+//     });
+
+//     return sendStandardResponse(result, "Log saved successfully.", 201);
+//   } catch (err: any) {
+//     return sendStandardResponse(null, err.message, 500, "error");
+//   }
+// }
 
 // 3. PUT: Update log AND Sync Tags (The "Fix")
 export async function PUT(request: NextRequest) {

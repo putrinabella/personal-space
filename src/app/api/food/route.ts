@@ -3,19 +3,26 @@ import { db } from "@/db";
 import { foods } from "@/db/schema";
 import { eq, sql, desc, and } from "drizzle-orm";
 import { sendPaginatedResponse, sendStandardResponse } from "@/lib/apiResponse";
-
+import { validate as validateUuid } from "uuid";
 // 1. GET: Mengambil daftar menu berdasarkan restoran
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
     const restaurantId = searchParams.get("restaurantId");
-
+    if (restaurantId && !validateUuid(restaurantId)) {
+      return sendStandardResponse(
+        null,
+        "Format ID Restoran tidak valid.",
+        400,
+        "error",
+      );
+    }
     // 1. GET DETAIL BY ID
     if (id) {
       const item = await db.query.foods.findFirst({
         where: eq(foods.id, id),
-        with: { restaurant: true, category: true, cuisine: true },
+        with: { restaurant: true, category: true, cuisine: true, logs: true },
       });
       return item
         ? sendStandardResponse(item, "Detail menu found.")
@@ -26,7 +33,7 @@ export async function GET(request: NextRequest) {
     if (!searchParams.has("page")) {
       const data = await db.query.foods.findMany({
         where: restaurantId ? eq(foods.restaurantId, restaurantId) : undefined,
-        with: { restaurant: true, category: true, cuisine: true },
+        with: { restaurant: true, category: true, cuisine: true, logs: true },
         orderBy: [desc(foods.foodName)],
       });
       return sendStandardResponse(
@@ -49,7 +56,7 @@ export async function GET(request: NextRequest) {
         where: restaurantId ? eq(foods.restaurantId, restaurantId) : undefined,
         limit: perPage,
         offset: offset,
-        with: { restaurant: true, category: true, cuisine: true },
+        with: { restaurant: true, category: true, cuisine: true, logs: true },
         orderBy: [desc(foods.foodName)],
       }),
     ]);

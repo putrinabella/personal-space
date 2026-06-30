@@ -4,6 +4,11 @@ import CardBox from "@/components/CardBox";
 import Pagination from "@/components/Pagination";
 import { useFoodsList } from "@/features/food/foods/hooks/useFoodList";
 import {
+  CalendarDots,
+  CaretDown,
+  CaretUp,
+  ChatText,
+  CurrencyCircleDollar,
   ForkKnifeIcon,
   GearSixIcon,
   MapPinAreaIcon,
@@ -11,7 +16,7 @@ import {
 import { useState } from "react";
 
 export default function FoodView() {
-  const [isInputModalOpen, setIsInputModalOpen] = useState(false);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
   const [page, setPage] = useState(1);
   const {
     data: foodData,
@@ -83,43 +88,91 @@ export default function FoodView() {
         ) : (
           <div className="flex flex-col gap-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {foodData?.map((food) => (
-                <CardBox
-                  key={food.id}
-                  className="p-6 flex flex-col gap-4"
-                  rounded="2xl"
-                  color="base-100"
-                  pressable
-                >
-                  {/* Header: Food Name & Category */}
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="text-lg font-black uppercase text-slate-800">
-                        {food.foodName}
-                      </h3>
-                      <p className="text-xs font-bold text-accent uppercase tracking-wider">
-                        {food.restaurant?.name || "Unknown Place"}
-                      </p>
-                    </div>
-                    {/* Badge Kategori */}
-                    <div className="text-[10px] font-bold bg-slate-100 px-2 py-1 rounded-lg text-slate-600">
-                      {food.category?.name || "General"}
-                    </div>
-                  </div>
+              {foodData?.map((food) => {
+                // Sort logs: Terbaru (dateVisited) di atas
+                const sortedLogs = [...(food.logs || [])].sort(
+                  (a, b) =>
+                    new Date(b.dateVisited).getTime() -
+                    new Date(a.dateVisited).getTime(),
+                );
+                const latestLog = sortedLogs[0];
+                const isExpanded = expandedId === food.id;
 
-                  {/* Metadata: Cuisine & Flags */}
-                  <div className="flex items-center gap-3 pt-3 border-t">
-                    <span className="text-xs font-bold text-slate-500 bg-slate-50 px-2 py-1 rounded">
-                      {food.cuisine?.name}
-                    </span>
-                    {food.isFavoriteFood && (
-                      <span className="text-[10px] font-black text-rose-500 uppercase bg-rose-50 px-2 py-1 rounded">
-                        Favorite
-                      </span>
+                return (
+                  <CardBox
+                    key={food.id}
+                    className="p-6 flex flex-col gap-4 border-l-4 border-l-accent"
+                    rounded="2xl"
+                    color="base-100"
+                    onClick={() => setExpandedId(food.id)} // Buka modal
+                    pressable
+                  >
+                    {/* Header: Nama Makanan & Resto */}
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h3 className="text-xl font-black uppercase text-slate-800">
+                          {food.foodName}
+                        </h3>
+                        <p className="text-sm font-bold text-slate-500 flex items-center gap-1">
+                          <MapPinAreaIcon size={14} /> {food.restaurant?.name}
+                        </p>
+                      </div>
+                      <div className="flex flex-col items-end gap-1">
+                        <span className="text-[10px] font-black bg-slate-100 px-2 py-1 rounded-md uppercase">
+                          {food.category?.name}
+                        </span>
+                        <span className="text-[10px] font-black bg-slate-100 px-2 py-1 rounded-md uppercase">
+                          {food.cuisine?.name}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Info Bar: Harga, Rating, Tanggal (dari Log Terbaru) */}
+                    {latestLog && (
+                      <div className="grid grid-cols-3 gap-2 bg-slate-50 p-3 rounded-xl">
+                        <div className="flex flex-col items-center">
+                          <span className="text-[10px] text-slate-400 font-bold uppercase">
+                            Last Price
+                          </span>
+                          <span className="text-sm font-black text-slate-800">
+                            Rp {Number(latestLog.price).toLocaleString()}
+                          </span>
+                        </div>
+                        <div className="flex flex-col items-center border-x border-slate-200">
+                          <span className="text-[10px] text-slate-400 font-bold uppercase">
+                            Rating
+                          </span>
+                          <span className="text-sm font-black text-accent">
+                            {latestLog.ratingHis} / {latestLog.ratingHer}
+                          </span>
+                        </div>
+                        <div className="flex flex-col items-center">
+                          <span className="text-[10px] text-slate-400 font-bold uppercase">
+                            Visited
+                          </span>
+                          <span className="text-sm font-black text-slate-800">
+                            {latestLog.dateVisited}
+                          </span>
+                        </div>
+                      </div>
                     )}
-                  </div>
-                </CardBox>
-              ))}
+
+                    {/* Tags & Favorites */}
+                    <div className="flex flex-wrap gap-2">
+                      {food.isFavoriteFood && (
+                        <span className="text-[10px] font-black text-rose-500 uppercase bg-rose-50 px-2 py-1 rounded-lg">
+                          ❤ Food
+                        </span>
+                      )}
+                      {food.isFavoriteDrink && (
+                        <span className="text-[10px] font-black text-blue-500 uppercase bg-blue-50 px-2 py-1 rounded-lg">
+                          ☕ Drink
+                        </span>
+                      )}
+                    </div>
+                  </CardBox>
+                );
+              })}
             </div>
 
             <Pagination
@@ -129,6 +182,35 @@ export default function FoodView() {
               perPage={perPage ?? 10}
               onPageChange={setPage}
             />
+          </div>
+        )}
+        {expandedId && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+            <CardBox
+              className="max-w-lg w-full max-h-[80vh] overflow-y-auto p-6"
+              rounded="2xl"
+            >
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-xl font-black uppercase">History Log</h2>
+                <button
+                  onClick={() => setExpandedId(null)}
+                  className="font-bold"
+                >
+                  Close
+                </button>
+              </div>
+
+              <div className="flex flex-col gap-4">
+                {foodData
+                  ?.find((f) => f.id === expandedId)
+                  ?.logs.map((log) => (
+                    <div key={log.id} className="border-b pb-4">
+                      <p className="font-bold">{log.dateVisited}</p>
+                      <p className="text-sm">{log.reviewText}</p>
+                    </div>
+                  ))}
+              </div>
+            </CardBox>
           </div>
         )}
       </div>

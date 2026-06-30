@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Check, ChevronDown, Eye, EyeOff, type LucideIcon } from "lucide-react";
 import type { ChangeEvent } from "react";
 
@@ -180,6 +180,23 @@ const FormInput = ({
     return o && o.toLowerCase().includes(query.toLowerCase());
   });
 
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setSelectOpen(false); // Sesuaikan dengan nama state kamu
+        setOpen(false); // Untuk searchable dropdown
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
   if (type === "switch") {
     const isOn = value === true || value === "1" || value === 1;
 
@@ -581,7 +598,7 @@ const FormInput = ({
         />
       ) : options ? (
         dropdownType === "profile" ? (
-          <div className="relative text-sm">
+          <div className="relative text-sm" ref={dropdownRef}>
             <button
               type="button"
               disabled={disabled}
@@ -679,7 +696,7 @@ const FormInput = ({
             )}
           </div>
         ) : dropdownType === "select" ? (
-          <div className="relative text-sm">
+          <div className="relative text-sm" ref={dropdownRef}>
             <button
               type="button"
               disabled={disabled}

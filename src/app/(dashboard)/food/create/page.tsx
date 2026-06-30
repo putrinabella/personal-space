@@ -9,20 +9,42 @@ import { useRouter } from "next/navigation";
 import { useCategoriesAll } from "@/features/food/categories/hooks/useCategoriesAll";
 import { useFoodAll } from "@/features/food/foods/hooks/useFoodAll";
 import { useFoodForm } from "@/features/food/foods/hooks/useFoodForm";
+import { useRestaurantAll } from "@/features/food/restaurants/hooks/useRestaurantAll";
+import { useLogForm } from "@/features/food/foods/log/hooks/useLogForm";
+import { useCuisinesAll } from "@/features/food/cuisines/hooks/useCuisinesAll";
+import { useDiningTypeList } from "@/features/food/diningTypes/hooks/useDiningTypeList";
+import { useDiningTypesAll } from "@/features/food/diningTypes/hooks/useDiningTypeAll";
 
 export default function CreateFoodEntryPage() {
   const router = useRouter();
   const [mode, setMode] = useState<"existing" | "new">("existing");
 
-  const { data, setField, handleSubmit, saving } = useFoodForm();
-  const { data: dataFood } = useFoodAll();
-  const { data: dataCategories } = useCategoriesAll();
+  // Gunakan SATU form saja yang mencakup data Log + data Food
+  const { data, setField, handleSubmit, saving } = useLogForm();
 
-  // const categoriesQuery = useCategoriesList(page);
-  // const cuisinesQuery = useCuisinesList(page);
-  // const diningTypeQuery = useDiningTypeList(page);
-  // const tagsQuery = useTagsList(page);
+  const { data: dataRestaurant, isLoading: loadingRestaurant } =
+    useRestaurantAll();
+  const { data: dataCategories, isLoading: loadingCategories } =
+    useCategoriesAll();
+  const { data: dataCuisines, isLoading: loadingCuisines } = useCuisinesAll();
+  const { data: dataDiningTypes, isLoading: loadingDiningTypes } =
+    useDiningTypesAll();
+  // Fetch menu berdasarkan restoran yang dipilih
+  const { data: dataFood, isLoading: loadingFood } = useFoodAll(
+    data.restaurantId,
+  );
 
+  const onSave = async () => {
+    // Pastikan field 'isNewFood' ada di state form
+    setField("isNewFood", mode === "new");
+
+    // Jika mode existing, pastikan foodId ada.
+    // Jika mode new, pastikan data food lengkap.
+
+    // handleSubmit ini akan mengambil seluruh state 'data'
+    // yang sekarang sudah mencakup 'isNewFood'
+    await handleSubmit();
+  };
   return (
     <div className="flex flex-col gap-8 max-w-3xl mx-auto px-4">
       <CardHeader
@@ -47,42 +69,111 @@ export default function CreateFoodEntryPage() {
             Create New Menu
           </button>
         </div>
-
+        <FormInput
+          label="Restaurant"
+          options={dataRestaurant.map((r) => ({ label: r.name, value: r.id }))}
+          dropdownType="select"
+          value={data.restaurantId}
+          onChange={(val) => {
+            setField("restaurantId", val);
+            setField("foodId", ""); // Reset saat restoran ganti
+          }}
+          placeholder="Select restaurant"
+          disabled={loadingRestaurant}
+        />
         {mode === "existing" ? (
           <div className="flex flex-col gap-4">
             <FormInput
               label="Menu"
-              options={dataFood.map((food) => ({
-                label: food.foodName,
-                value: food.id,
+              disabled={!data.restaurantId}
+              options={dataFood.map((f) => ({
+                label: f.foodName,
+                value: f.id,
               }))}
               dropdownType="select"
-              value={data.foodName}
-              onChange={(val) => setField("foodName", val)}
-              placeholder={"Select food"}
+              value={data.foodId} // Pastikan field ini ada di LogFormData
+              onChange={(val) => setField("foodId", val)}
+              placeholder={loadingFood ? "Loading..." : "Select food"}
             />
           </div>
         ) : (
           <div className="flex flex-col gap-4 p-4 border border-primary/20 rounded-xl bg-primary/5">
             <p className="font-bold text-primary">New Menu Details</p>
+
             <FormInput
               label="Food Name"
+              value={data.foodName}
+              onChange={(val) => setField("foodName", val)}
               placeholder="e.g. Special Beef Ramen"
             />
+
             <div className="grid grid-cols-2 gap-4">
               <FormInput
                 label="Categories"
                 required
-                options={dataCategories.map((categories) => ({
-                  label: categories.name,
-                  value: categories.id,
+                options={dataCategories.map((c) => ({
+                  label: c.name,
+                  value: c.id,
                 }))}
                 dropdownType="select"
                 value={data.categoryId}
                 onChange={(val) => setField("categoryId", val)}
-                placeholder={"Select categories"}
+                placeholder="Select category"
+                disabled={loadingCategories}
               />
-              <FormInput label="Cuisine" placeholder="e.g. Japanese" />
+              <FormInput
+                label="Cuisine"
+                required
+                options={dataCuisines.map((c) => ({
+                  label: c.name,
+                  value: c.id,
+                }))}
+                dropdownType="select"
+                value={data.cuisineId}
+                onChange={(val) => setField("cuisineId", val)}
+                placeholder="Select cuisine"
+                disabled={loadingCuisines}
+              />
+            </div>
+
+            {/* Tambahan untuk Dining Type */}
+            <FormInput
+              label="Dining Type"
+              required
+              options={dataDiningTypes.map((d) => ({
+                label: d.name,
+                value: d.id,
+              }))}
+              dropdownType="select"
+              value={data.diningTypeId}
+              onChange={(val) => setField("diningTypeId", val)}
+              placeholder="Select dining type"
+              disabled={loadingDiningTypes}
+            />
+
+            {/* Toggle untuk Favorite Food & Drink */}
+            <div className="flex gap-6 mt-2">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  className="toggle toggle-primary"
+                  checked={data.isFavoriteFood}
+                  onChange={(e) => setField("isFavoriteFood", e.target.checked)}
+                />
+                <span className="text-sm font-medium">Favorite Food</span>
+              </label>
+
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  className="toggle toggle-primary"
+                  checked={data.isFavoriteDrink}
+                  onChange={(e) =>
+                    setField("isFavoriteDrink", e.target.checked)
+                  }
+                />
+                <span className="text-sm font-medium">Favorite Drink</span>
+              </label>
             </div>
           </div>
         )}
@@ -92,23 +183,50 @@ export default function CreateFoodEntryPage() {
         {/* Transaction Log Details */}
         <p className="font-bold">Visit Details</p>
         <div className="grid grid-cols-2 gap-4">
-          <FormInput label="Price" placeholder="Rp 0" />
-          <FormInput label="Date" type="date" />
+          <FormInput
+            label="Price"
+            placeholder="Rp 0"
+            value={data.price}
+            onChange={(val) => setField("price", val)}
+          />
+          <FormInput
+            label="Date"
+            type="date"
+            value={data.dateVisited}
+            onChange={(val) => setField("dateVisited", val)}
+          />
         </div>
 
         <div className="grid grid-cols-2 gap-4">
-          <FormInput label="His Rating" type="number" placeholder="0-10" />
-          <FormInput label="Her Rating" type="number" placeholder="0-10" />
+          <FormInput
+            label="His Rating"
+            type="number"
+            placeholder="0-10"
+            value={data.ratingHis}
+            onChange={(val) => setField("ratingHis", val)}
+          />
+          <FormInput
+            label="Her Rating"
+            type="number"
+            placeholder="0-10"
+            value={data.ratingHer}
+            onChange={(val) => setField("ratingHer", val)}
+          />
         </div>
 
-        <FormInput label="Review" placeholder="How was it today?" />
+        <FormInput
+          label="Review"
+          placeholder="How was it today?"
+          value={data.reviewText}
+          onChange={(val) => setField("reviewText", val)}
+        />
 
         <div className="flex flex-col md:flex-row gap-4 pt-4">
           <CardBox
             className="px-6 py-3 flex items-center justify-center gap-2 font-bold flex-1"
             rounded="xl"
             color="accent"
-            onClick={handleSubmit}
+            onClick={onSave}
             pressable
             // disabled={saving}
           >

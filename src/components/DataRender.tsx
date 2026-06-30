@@ -1,7 +1,7 @@
-import { BaseItem } from "@/features/food/foods/food.types";
 import IconRenderer from "./IconRenderer";
 import ActionButton from "./ActionButton";
 import { Pencil, Trash } from "@phosphor-icons/react";
+import { BaseItem } from "@/shared/types/base.types";
 
 type Props<T extends BaseItem> = {
   data: T[];
