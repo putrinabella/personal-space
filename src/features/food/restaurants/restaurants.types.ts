@@ -1,4 +1,4 @@
-import { BaseItem } from "@/features/food/foods/food.types";
+import { BaseItem } from "@/shared/types/base.types";
 
 // Tipe data yang dikirim ke form/API (Tanpa field otomatis DB)
 export interface RestaurantFormData {

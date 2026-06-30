@@ -10,7 +10,7 @@ import { Sliders, List, Plus } from "lucide-react";
 import DataRenderer from "@/components/DataRender";
 import ActionButton from "@/components/ActionButton";
 import { SquaresFour } from "@phosphor-icons/react";
-import { useTagsList } from "@/features/food/tags/hooks/useTagasList";
+import { useTagsList } from "@/features/food/tags/hooks/useTagList";
 import { useDiningTypeList } from "@/features/food/diningTypes/hooks/useDiningTypeList";
 
 const TAB_CONFIG = [

@@ -12,12 +12,13 @@ async function main() {
   try {
     console.log("⏳ Menghapus data lama jika ada...");
     // Hapus data dengan urutan yang benar (junction & operational dulu baru lookup)
-    await db.delete(schema.foodEntryTags);
-    await db.delete(schema.foodEntries);
+    await db.delete(schema.foodLogTags);
+    await db.delete(schema.foodLogs);
+    await db.delete(schema.foods);
     await db.delete(schema.restaurants);
     await db.delete(schema.categories);
     await db.delete(schema.cuisines);
-    await db.delete(schema.DiningTypesEntry);
+    await db.delete(schema.diningTypes);
     await db.delete(schema.tags);
 
     console.log("🌱 Mulai proses seeding data lookup...");
@@ -48,7 +49,7 @@ async function main() {
 
     // 3. Seed Dining Types
     const insertedDiningTypes = await db
-      .insert(schema.DiningTypesEntry)
+      .insert(schema.diningTypes)
       .values([
         { name: "Dine In" },
         { name: "Takeaway" },
@@ -80,37 +81,44 @@ async function main() {
       .returning();
 
     // 6. Seed 1 Contoh Makanan beserta Junction Tag-nya
-    const [sampleFood] = await db
-      .insert(schema.foodEntries)
+    const [food] = await db
+      .insert(schema.foods)
       .values({
         restaurantId: sampleRestaurant.id,
-        categoryId: insertedCategories[0].id, // Noodle & Pasta
-        cuisineId: insertedCuisines[0].id, // 🚀 Menggunakan hasil return langsung, menghemat 1 query await db.query!
-        diningTypeId: insertedDiningTypes[0].id, // 🚀 Menggunakan hasil return langsung, menghemat 1 query await db.query!
+        categoryId: insertedCategories[0].id,
+        cuisineId: insertedCuisines[0].id,
+        diningTypeId: insertedDiningTypes[0].id,
         foodName: "Bakmi Ayam Cah Jamur",
-        price: "38500.00",
-        ratingOverall: 9,
-        reviewText: "Tekstur mienya kenyal pas, kuahnya gurih gurih nyoy!",
         isFavoriteFood: true,
       })
       .returning();
 
-    // Sambungkan makanan ke Tag "Porsi Kenyang" dan "Murah Meriah"
-    await db.insert(schema.foodEntryTags).values([
-      { foodEntryId: sampleFood.id, tagId: insertedTags[1].id },
-      { foodEntryId: sampleFood.id, tagId: insertedTags[2].id },
+    // 4. Seed Food Log (Transaksi/Kunjungan)
+    const [log] = await db
+      .insert(schema.foodLogs)
+      .values({
+        foodId: food.id,
+        price: "38500.00",
+        ratingHis: 9,
+        ratingHer: 8,
+        reviewText: "Tekstur mienya kenyal pas, kuahnya gurih gurih nyoy!",
+        dateVisited: new Date().toISOString().split("T")[0],
+      })
+      .returning();
+
+    // 5. Seed Junction Table (Tagging pada log kunjungan)
+    await db.insert(schema.foodLogTags).values([
+      { foodLogId: log.id, tagId: insertedTags[0].id },
+      { foodLogId: log.id, tagId: insertedTags[1].id },
     ]);
 
     console.log("✅ Seeding selesai dengan sukses!");
   } catch (err) {
-    console.error("❌ Seeding gagal di tengah jalan:", err);
-    throw err; // Lempar ke blok penanganan luar untuk ditutup koneksinya
+    console.error("❌ Seeding gagal:", err);
+    throw err;
   } finally {
-    console.log("🔌 Memutus aliansi koneksi database...");
-    await client.end(); // 🛡️ WAJIB: Menutup koneksi postgres-js agar proses exit bersih!
+    await client.end();
   }
 }
 
-main()
-  .then(() => process.exit(0))
-  .catch(() => process.exit(1));
+main();

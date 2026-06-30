@@ -13,7 +13,7 @@ export async function GET() {
     ] = await Promise.all([
       db.query.categories.findMany(),
       db.query.cuisines.findMany(),
-      db.query.DiningTypesEntry.findMany(),
+      db.query.diningTypes.findMany(),
       db.query.tags.findMany(),
       db.query.restaurants.findMany(),
     ]);
@@ -21,7 +21,7 @@ export async function GET() {
     return NextResponse.json({
       categories: allCategories,
       cuisines: allCuisines,
-      DiningTypesEntry: allDiningTypes,
+      diningTypes: allDiningTypes,
       tags: allTags,
       restaurants: allRestaurants,
     });

@@ -1,14 +1,8 @@
+import { BaseItem } from "@/shared/types/base.types";
 import { CategoriesEntry } from "../categories/categories.types";
 import { RestaurantEntry } from "../restaurants/restaurants.types";
 import { TagEntry } from "../tags/tags.types";
-
-export interface BaseItem {
-  id: string;
-  name: string;
-  createdAt: string;
-  updatedAt: string;
-  deletedAt: string | null;
-}
+import { CuisinesEntry } from "../cuisines/cuisines.types";
 
 export interface FoodTag {
   foodEntryId: string;
@@ -16,23 +10,42 @@ export interface FoodTag {
   tag: TagEntry;
 }
 
-export interface FoodEntry extends BaseItem {
+export interface FoodFormData {
   restaurantId: string;
   categoryId: string;
   cuisineId: string;
   diningTypeId: string;
   foodName: string;
-  price: string;
-  dateVisited: string;
-  reviewText: string;
-  ratingOverall: number | null;
-  ratingTaste: number | null;
-  ratingPortion: number | null;
-  ratingValue: number | null;
-  ratingAtmosphere: number | null;
+  isFavoriteFood: boolean;
+  isFavoriteDrink: boolean;
+}
+
+export const defaultFood: FoodFormData = {
+  restaurantId: "",
+  categoryId: "",
+  cuisineId: "",
+  diningTypeId: "",
+  foodName: "",
+  isFavoriteFood: false,
+  isFavoriteDrink: false,
+};
+
+export const validateFood = (payload: FoodFormData): string[] => {
+  const errors: string[] = [];
+  if (!payload.foodName) errors.push("Nama makanan wajib diisi.");
+  return errors;
+};
+
+export interface FoodEntry extends BaseItem, FoodFormData {
+  restaurantId: string;
+  categoryId: string;
+  cuisineId: string;
+  diningTypeId: string;
+  foodName: string;
   isFavoriteFood: boolean;
   isFavoriteDrink: boolean;
   restaurant: RestaurantEntry;
   category: CategoriesEntry;
-  tags: FoodTag[];
+  cuisine: CuisinesEntry;
+  // tags: FoodTag[];
 }

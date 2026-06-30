@@ -89,7 +89,7 @@ export default function CreateRestaurantPage() {
               "Menyimpan..."
             ) : (
               <>
-                <Check size={18} /> Simpan Data
+                <Check size={18} /> Save
               </>
             )}
           </CardBox>{" "}
@@ -100,7 +100,7 @@ export default function CreateRestaurantPage() {
             onClick={() => router.back()}
             pressable
           >
-            <ArrowLeft size={18} /> Batal
+            <ArrowLeft size={18} /> Cancel
           </CardBox>
         </div>
       </CardBox>

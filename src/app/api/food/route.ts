@@ -1,122 +1,73 @@
 import { NextRequest } from "next/server";
 import { db } from "@/db";
-import { foodEntries, foodEntryTags } from "@/db/schema";
-import { and, ne, lte, eq, sql, isNull } from "drizzle-orm";
+import { foods } from "@/db/schema";
+import { eq, sql, desc, and } from "drizzle-orm";
 import { sendPaginatedResponse, sendStandardResponse } from "@/lib/apiResponse";
 
-// ==========================================
-// 1. READ (GET) - Detail ID / Get All / Pagination 👑
-// ==========================================
+// 1. GET: Mengambil daftar menu berdasarkan restoran
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
+    const restaurantId = searchParams.get("restaurantId");
 
-    // Filter standar: Hanya mengambil data yang BELUM di-soft-delete 🛡️
-    const baseConditions = [isNull(foodEntries.deletedAt)];
-
-    // Tambahan filter logic bawaan Yang Mulia
-    if (searchParams.get("excludeCategory")) {
-      baseConditions.push(
-        ne(foodEntries.categoryId, searchParams.get("excludeCategory")!),
-      );
-    }
-    if (searchParams.get("maxPrice")) {
-      baseConditions.push(
-        lte(foodEntries.price, searchParams.get("maxPrice")!),
-      );
-    }
-
-    // A. LOGIKA: GET DETAIL BY ID 🆕
+    // 1. GET DETAIL BY ID
     if (id) {
-      const item = await db.query.foodEntries.findFirst({
-        where: and(eq(foodEntries.id, id), ...baseConditions),
-        with: {
-          restaurant: true,
-          category: true,
-          tags: { with: { tag: true } },
-        },
+      const item = await db.query.foods.findFirst({
+        where: eq(foods.id, id),
+        with: { restaurant: true, category: true, cuisine: true },
       });
-
-      if (!item) {
-        return sendStandardResponse(
-          null,
-          "Catatan kuliner tidak ditemukan atau telah dihapus.",
-          404,
-          "error",
-        );
-      }
-
-      return sendStandardResponse(
-        item,
-        "Berhasil mengambil detail catatan kuliner.",
-      );
+      return item
+        ? sendStandardResponse(item, "Detail menu found.")
+        : sendStandardResponse(null, "Menu not found.", 404, "error");
     }
 
-    // B. LOGIKA: GET ALL TANPA PAGINATION 🆕
-    // Terpicu jika Yang Mulia tidak menyertakan query parameter (?page=...)
+    // 2. GET ALL (Tanpa pagination - biasanya untuk kebutuhan dropdown/select)
     if (!searchParams.has("page")) {
-      const allEntries = await db.query.foodEntries.findMany({
-        where: and(...baseConditions),
-        with: {
-          restaurant: true,
-          category: true,
-          tags: { with: { tag: true } },
-        },
-        orderBy: (entries, { desc }) => [desc(entries.dateVisited)],
+      const data = await db.query.foods.findMany({
+        where: restaurantId ? eq(foods.restaurantId, restaurantId) : undefined,
+        with: { restaurant: true, category: true, cuisine: true },
+        orderBy: [desc(foods.foodName)],
       });
-
       return sendStandardResponse(
-        allEntries,
-        "Berhasil mengambil seluruh diary kuliner tanpa pagination.",
+        data,
+        "Berhasil mengambil seluruh daftar menu.",
       );
     }
 
-    // C. LOGIKA: GET WITH PAGINATION
+    // 3. GET PAGINATED (Untuk tabel admin/manajemen menu)
     const page = Math.max(1, parseInt(searchParams.get("page") || "1"));
     const perPage = Math.max(1, parseInt(searchParams.get("per_page") || "15"));
     const offset = (page - 1) * perPage;
-    const whereCondition = and(...baseConditions);
 
-    // Query data secara paralel
-    const [totalQuery, entries] = await Promise.all([
+    const [totalQuery, items] = await Promise.all([
       db
-        .select({
-          count: sql<number>`cast(count(${foodEntries.id}) as integer)`,
-        })
-        .from(foodEntries)
-        .where(whereCondition),
-      db.query.foodEntries.findMany({
-        where: whereCondition,
-        with: {
-          restaurant: true,
-          category: true,
-          tags: { with: { tag: true } },
-        },
-        orderBy: (entries, { desc }) => [desc(entries.dateVisited)],
+        .select({ count: sql<number>`cast(count(*) as integer)` })
+        .from(foods)
+        .where(restaurantId ? eq(foods.restaurantId, restaurantId) : undefined),
+      db.query.foods.findMany({
+        where: restaurantId ? eq(foods.restaurantId, restaurantId) : undefined,
         limit: perPage,
         offset: offset,
+        with: { restaurant: true, category: true, cuisine: true },
+        orderBy: [desc(foods.foodName)],
       }),
     ]);
 
     return sendPaginatedResponse({
       requestUrl: request.url,
-      items: entries,
+      items: items,
       totalItems: totalQuery[0]?.count || 0,
       page,
       perPage,
-      message:
-        "Berhasil mengambil daftar ulasan makanan harian ber-pagination.",
+      message: "Berhasil mengambil daftar menu ber-pagination.",
     });
-  } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Database error";
-    return sendStandardResponse(null, msg, 500, "error");
+  } catch (err: any) {
+    return sendStandardResponse(null, err.message, 500, "error");
   }
 }
 
-// ==========================================
-// 2. CREATE (POST) - Menggunakan Base Standard
-// ==========================================
+// 2. POST: Menambah menu baru ke master data
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -126,107 +77,49 @@ export async function POST(request: NextRequest) {
       cuisineId,
       diningTypeId,
       foodName,
-      price,
-      ratingOverall,
-      tagIds,
+      isFavoriteFood,
+      isFavoriteDrink,
     } = body;
 
-    const result = await db.transaction(async (tx) => {
-      const [newEntry] = await tx
-        .insert(foodEntries)
-        .values({
-          restaurantId,
-          categoryId,
-          cuisineId,
-          diningTypeId,
-          foodName,
-          price: String(price),
-          ratingOverall,
-        })
-        .returning();
-
-      if (tagIds && tagIds.length > 0) {
-        const structuralTags = tagIds.map((id: string) => ({
-          foodEntryId: newEntry.id,
-          tagId: id,
-        }));
-        await tx.insert(foodEntryTags).values(structuralTags);
-      }
-      return newEntry;
-    });
-
-    return sendStandardResponse(
-      result,
-      "Catatan kuliner berhasil ditambahkan.",
-      201,
-    );
-  } catch (err: unknown) {
-    return sendStandardResponse(
-      null,
-      err instanceof Error ? err.message : "Insert error",
-      500,
-      "error",
-    );
-  }
-}
-
-// ==========================================
-// 3. UPDATE (PUT)
-// ==========================================
-export async function PUT(request: NextRequest) {
-  try {
-    const body = await request.json();
-    const { id, foodName, price, ratingOverall } = body;
-
-    if (!id) return sendStandardResponse(null, "Missing ID", 400, "error");
-
-    const [updatedEntry] = await db
-      .update(foodEntries)
-      .set({
+    const [newFood] = await db
+      .insert(foods)
+      .values({
+        restaurantId,
+        categoryId,
+        cuisineId,
+        diningTypeId,
         foodName,
-        price: price ? String(price) : undefined,
-        ratingOverall,
+        isFavoriteFood: !!isFavoriteFood,
+        isFavoriteDrink: !!isFavoriteDrink,
       })
-      .where(eq(foodEntries.id, id))
       .returning();
 
-    return sendStandardResponse(updatedEntry, "Data kuliner berhasil diubah.");
-  } catch (err: unknown) {
     return sendStandardResponse(
-      null,
-      err instanceof Error ? err.message : "Update error",
-      500,
-      "error",
+      newFood,
+      "Menu baru berhasil ditambahkan ke master.",
+      201,
     );
+  } catch (err: any) {
+    return sendStandardResponse(null, err.message, 500, "error");
   }
 }
 
-// ==========================================
-// 4. DELETE (DELETE) - Soft Delete Berbasis Waktu 🆕
-// ==========================================
-export async function DELETE(request: NextRequest) {
+// 3. PUT: Update status menu (misal: ubah jadi favorit)
+export async function PUT(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
-    const id = searchParams.get("id");
+    const { id, isFavoriteFood, isFavoriteDrink } = await request.json();
 
-    if (!id) return sendStandardResponse(null, "Missing ID", 400, "error");
+    if (!id)
+      return sendStandardResponse(null, "ID menu diperlukan.", 400, "error");
 
-    // Soft Delete: Hanya mengisi kolom deletedAt dengan waktu saat ini 🛡️
-    await db
-      .update(foodEntries)
-      .set({ deletedAt: new Date() })
-      .where(eq(foodEntries.id, id));
+    const [updated] = await db
+      .update(foods)
+      .set({ isFavoriteFood, isFavoriteDrink })
+      .where(eq(foods.id, id))
+      .returning();
 
-    return sendStandardResponse(
-      null,
-      "Catatan kuliner telah disembunyikan ke dalam arsip atas perintah Ratu.",
-    );
-  } catch (err: unknown) {
-    return sendStandardResponse(
-      null,
-      err instanceof Error ? err.message : "Delete error",
-      500,
-      "error",
-    );
+    return sendStandardResponse(updated, "Status menu berhasil diperbarui.");
+  } catch (err: any) {
+    return sendStandardResponse(null, err.message, 500, "error");
   }
 }

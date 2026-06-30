@@ -174,9 +174,11 @@ const FormInput = ({
   };
 
   const flatOptions = flattenOptions();
-  const filtered = flatOptions.filter((o) =>
-    o.toLowerCase().includes(query.toLowerCase()),
-  );
+  const filtered = flatOptions.filter((o) => {
+    // 1. Pastikan 'o' ada dan 'o' adalah string
+    // 2. Gunakan optional chaining atau pengecekan manual
+    return o && o.toLowerCase().includes(query.toLowerCase());
+  });
 
   if (type === "switch") {
     const isOn = value === true || value === "1" || value === 1;
@@ -669,7 +671,7 @@ const FormInput = ({
                     })
                   ) : (
                     <li className="px-3 py-2 text-base-content/60">
-                      Tidak ada data
+                      No matching results found
                     </li>
                   )}
                 </ul>
@@ -731,7 +733,7 @@ const FormInput = ({
                     ))
                   ) : (
                     <li className="px-3 py-2 text-base-content/60">
-                      Tidak ada data
+                      No matching results found
                     </li>
                   )}
                 </ul>
@@ -780,7 +782,7 @@ const FormInput = ({
                   </div>
                 ) : (
                   <div className="px-4 py-2 text-base-content/70">
-                    Tidak ada data
+                    No matching results found
                   </div>
                 )}
               </div>
