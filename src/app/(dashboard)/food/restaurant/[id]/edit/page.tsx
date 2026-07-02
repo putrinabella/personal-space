@@ -24,7 +24,7 @@ export default function EditRestaurantPage({
   if (loading) return <div className="p-20 text-center">Memuat data...</div>;
 
   return (
-    <div className="flex flex-col gap-8 max-w-3xl mx-auto px-4 md:px-0">
+    <div className="flex flex-col gap-8 max-w-3xl mx-auto ">
       <CardHeader title="EDIT RESTORAN" icon={MapPinAreaIcon} color="warning" />
 
       <CardBox className="p-8 flex flex-col gap-6" rounded="2xl">

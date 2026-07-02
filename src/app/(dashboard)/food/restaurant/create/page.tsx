@@ -13,7 +13,7 @@ export default function CreateRestaurantPage() {
   const { data, setField, handleSubmit, saving } = useRestaurantsForm();
 
   return (
-    <div className="flex flex-col gap-8 max-w-3xl mx-auto px-4 md:px-0">
+    <div className="flex flex-col gap-8 max-w-3xl mx-auto ">
       <CardHeader
         title="TAMBAH RESTORAN BARU"
         icon={MapPinAreaIcon}

@@ -1,9 +1,11 @@
 "use client";
 
 import CardBox from "@/components/CardBox";
+import FormInput from "@/components/FormInput";
 import Pagination from "@/components/Pagination";
 import { useFoodsList } from "@/features/food/foods/hooks/useFoodList";
 import {
+  ArrowClockwiseIcon,
   CalendarDots,
   CaretDown,
   CaretUp,
@@ -12,6 +14,7 @@ import {
   ForkKnifeIcon,
   GearSixIcon,
   MapPinAreaIcon,
+  Plus,
 } from "@phosphor-icons/react";
 import { useState } from "react";
 
@@ -27,8 +30,8 @@ export default function FoodView() {
     perPage,
   } = useFoodsList(page);
   return (
-    <div className="flex flex-col gap-6">
-      <header className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
+    <div className="flex flex-col gap-8 max-w-7xl mx-auto">
+      <header className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
         <div>
           {/* Breadcrumb sederhana untuk navigasi Eounia */}
           <span className="text-xs font-bold tracking-[0.2em] uppercase text-slate-400 mb-2 block">
@@ -79,6 +82,75 @@ export default function FoodView() {
           </CardBox>
         </div>
       </header>
+
+      <CardBox className="grid grid-cols-1 md:grid-cols-6 gap-4 items-end p-6">
+        <div className="md:col-span-3">
+          <FormInput
+            label="Search Name or Address"
+            // value={searchTitle}
+            // onChange={handleSearchChange}
+            placeholder="Type name or address..."
+          />
+        </div>
+
+        <div className="md:col-span-1">
+          <FormInput
+            label="Status"
+            // value={filters.isFavoriteRestaurant}
+            // onChange={(val) => handleFilterChange("isFavoriteRestaurant", val)}
+            // options={statusOptions}
+            dropdownType="select"
+            placeholder="All"
+            searchable={false}
+          />
+        </div>
+        <div className="hidden md:flex md:col-span-2 gap-2">
+          <CardBox
+            className="px-4 py-2 flex items-center justify-center gap-2 text-base font-bold flex-1"
+            rounded="xl"
+            color="base-300"
+            // onClick={resetFilters}
+            pressable
+          >
+            <ArrowClockwiseIcon weight="bold" size={18} />
+            <span>Reset</span>
+          </CardBox>
+
+          <CardBox
+            className="px-4 py-2 flex items-center justify-center gap-2 text-base font-bold flex-1"
+            rounded="xl"
+            color="accent"
+            href="/food/restaurant/create"
+            pressable
+          >
+            <Plus weight="bold" size={18} />
+            <span>Add New</span>
+          </CardBox>
+        </div>
+        <div className="md:hidden flex gap-2 w-full">
+          <CardBox
+            className="px-4 py-2 flex items-center justify-center gap-2 text-sm font-bold flex-1"
+            rounded="xl"
+            color="base-300"
+            // onClick={resetFilters}
+            pressable
+          >
+            <ArrowClockwiseIcon weight="bold" size={18} />
+            <span>Reset</span>
+          </CardBox>
+
+          <CardBox
+            className="px-4 py-2 flex items-center justify-center gap-2 text-sm font-bold flex-1"
+            rounded="xl"
+            color="accent"
+            href="/food/restaurant/create"
+            pressable
+          >
+            <Plus weight="bold" size={18} />
+            <span>Add New</span>
+          </CardBox>
+        </div>
+      </CardBox>
 
       <div>
         {loading ? (

@@ -49,7 +49,7 @@ export default function RestaurantPage() {
   ];
 
   return (
-    <div className="flex flex-col gap-8 max-w-7xl mx-auto px-4 md:px-0">
+    <div className="flex flex-col gap-8 max-w-7xl mx-auto ">
       <CardHeader
         title="R E S T A U R A N T S"
         icon={MapPinAreaIcon}
