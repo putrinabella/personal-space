@@ -6,8 +6,9 @@ import CardHeader from "@/components/CardHeader";
 import FormInput from "@/components/FormInput";
 import { Check, ArrowLeft, Plus } from "@phosphor-icons/react";
 import { useEntityForm } from "@/hooks/useEntityForm";
+import { EntityFields } from "@/features/food/utils/EntityField";
 
-export default function DynamicFormPage() {
+export default function CreatePage() {
   const router = useRouter();
   const params = useParams();
 
@@ -16,22 +17,13 @@ export default function DynamicFormPage() {
     | "cuisines"
     | "diningType"
     | "tags";
-  const id = params.id as string;
-  const isCreate = id === "create";
-
-  console.log(id);
-  console.log(isCreate);
-  const { data, setField, handleSubmit, saving } = useEntityForm(
-    entity,
-    isCreate ? undefined : id,
-  );
-
+  const { data, setField, handleSubmit, saving } = useEntityForm(entity);
   return (
     <div className="flex flex-col gap-8 max-w-7xl mx-auto">
       <CardHeader
-        title={`${isCreate ? "TAMBAH" : "EDIT"} ${entity.toUpperCase()}`}
+        title={`TAMBAH ${entity.toUpperCase()}`}
         icon={Plus}
-        color="secondary"
+        color="primary"
       />
 
       <CardBox className="p-8 flex flex-col gap-6" rounded="2xl">
@@ -66,43 +58,5 @@ export default function DynamicFormPage() {
         </div>
       </CardBox>
     </div>
-  );
-}
-
-// Komponen Helper untuk memisahkan field
-function EntityFields({ entity, data, setField }: any) {
-  return (
-    <>
-      {/* Semua memiliki nama */}
-      {(entity === "categories" ||
-        entity === "cuisines" ||
-        entity === "diningType" ||
-        entity === "tags") && (
-        <FormInput
-          label="Nama"
-          value={data.name || ""}
-          onChange={(val) => setField("name", val)}
-          required
-        />
-      )}
-
-      {/* Field Khusus */}
-      {entity === "categories" && (
-        <FormInput
-          label="Icon Slug"
-          value={data.iconSlug || ""}
-          onChange={(val) => setField("iconSlug", val)}
-        />
-      )}
-
-      {entity === "tags" && (
-        <FormInput
-          label="Background Color"
-          value={data.bgColor || ""}
-          onChange={(val) => setField("bgColor", val)}
-          placeholder="#FFFFFF"
-        />
-      )}
-    </>
   );
 }

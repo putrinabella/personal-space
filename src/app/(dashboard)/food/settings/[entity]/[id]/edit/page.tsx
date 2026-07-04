@@ -3,11 +3,16 @@
 import { useParams, useRouter } from "next/navigation";
 import CardBox from "@/components/CardBox";
 import CardHeader from "@/components/CardHeader";
-import FormInput from "@/components/FormInput";
-import { Check, ArrowLeft, Plus } from "@phosphor-icons/react";
+import {
+  Check,
+  ArrowLeft,
+  Plus,
+  PencilSimpleIcon,
+} from "@phosphor-icons/react";
 import { useEntityForm } from "@/hooks/useEntityForm";
+import { EntityFields } from "@/features/food/utils/EntityField";
 
-export default function DynamicFormPage() {
+export default function EditPage() {
   const router = useRouter();
   const params = useParams();
 
@@ -16,20 +21,15 @@ export default function DynamicFormPage() {
     | "cuisines"
     | "diningType"
     | "tags";
-  const id = params.id as string;
-  const isCreate = id === "create";
+  const id = params.id as string; // Ambil ID dari URL
 
-  console.log(id);
-  console.log(isCreate);
-  const { data, setField, handleSubmit, saving } = useEntityForm(
-    entity,
-    params.id as string, // Ini akan mengirim "create" atau "uuid"
-  );
+  // Kirimkan ID agar hook melakukan fetch data detail
+  const { data, setField, handleSubmit, saving } = useEntityForm(entity, id);
   return (
     <div className="flex flex-col gap-8 max-w-7xl mx-auto">
       <CardHeader
-        title={`${isCreate ? "TAMBAH" : "EDIT"} ${entity.toUpperCase()}`}
-        icon={Plus}
+        title={`EDIT ${entity.toUpperCase()}`}
+        icon={PencilSimpleIcon}
         color="secondary"
       />
 
@@ -65,43 +65,5 @@ export default function DynamicFormPage() {
         </div>
       </CardBox>
     </div>
-  );
-}
-
-// Komponen Helper untuk memisahkan field
-function EntityFields({ entity, data, setField }: any) {
-  return (
-    <>
-      {/* Semua memiliki nama */}
-      {(entity === "categories" ||
-        entity === "cuisines" ||
-        entity === "diningType" ||
-        entity === "tags") && (
-        <FormInput
-          label="Nama"
-          value={data.name || ""}
-          onChange={(val) => setField("name", val)}
-          required
-        />
-      )}
-
-      {/* Field Khusus */}
-      {entity === "categories" && (
-        <FormInput
-          label="Icon Slug"
-          value={data.iconSlug || ""}
-          onChange={(val) => setField("iconSlug", val)}
-        />
-      )}
-
-      {entity === "tags" && (
-        <FormInput
-          label="Background Color"
-          value={data.bgColor || ""}
-          onChange={(val) => setField("bgColor", val)}
-          placeholder="#FFFFFF"
-        />
-      )}
-    </>
   );
 }

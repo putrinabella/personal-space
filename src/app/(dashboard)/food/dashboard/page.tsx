@@ -46,7 +46,7 @@ export default function FoodView() {
 
         {/* Tombol dengan layout responsif */}
         <div className="flex flex-wrap items-center gap-3">
-          <CardBox
+          {/* <CardBox
             className="px-4 py-2 flex items-center gap-2 text-sm md:text-base font-bold"
             rounded="xl"
             color="base-300"
@@ -66,7 +66,7 @@ export default function FoodView() {
           >
             <MapPinAreaIcon weight="bold" size={18} />
             <span>Places</span>
-          </CardBox>
+          </CardBox> */}
 
           <CardBox
             className="px-4 py-2 flex items-center gap-2 text-sm md:text-base font-bold"

@@ -40,7 +40,7 @@ export function useBaseForm<T>({
 }: UseBaseFormProps<T>) {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const isEdit = Boolean(id);
+  const isEdit = Boolean(id && id !== "create");
 
   // 1. Simpan hanya perubahan lokal di sini
   const [localChanges, setLocalChanges] = useState<Partial<T>>({});
