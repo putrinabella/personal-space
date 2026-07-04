@@ -4,24 +4,19 @@ import { db } from "@/db";
 export async function GET() {
   try {
     // Run parallel queries to speed up server delivery execution speeds
-    const [
-      allCategories,
-      allCuisines,
-      allDiningTypes,
-      allTags,
-      allRestaurants,
-    ] = await Promise.all([
-      db.query.categories.findMany(),
-      db.query.cuisines.findMany(),
-      db.query.diningTypes.findMany(),
-      db.query.tags.findMany(),
-      db.query.restaurants.findMany(),
-    ]);
+    const [allCategories, allCuisines, allDiningType, allTags, allRestaurants] =
+      await Promise.all([
+        db.query.categories.findMany(),
+        db.query.cuisines.findMany(),
+        db.query.diningType.findMany(),
+        db.query.tags.findMany(),
+        db.query.restaurants.findMany(),
+      ]);
 
     return NextResponse.json({
       categories: allCategories,
       cuisines: allCuisines,
-      diningTypes: allDiningTypes,
+      diningType: allDiningType,
       tags: allTags,
       restaurants: allRestaurants,
     });

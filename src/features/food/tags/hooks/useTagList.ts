@@ -4,7 +4,7 @@ import { TagEntry } from "../tags.types";
 import { tagsService } from "../tags.service";
 import { PaginatedParams } from "@/shared/types/common";
 
-export function useTagsList(page = 1, title?: string) {
+export function useTagsList(page = 1, title?: string, enabled = true) {
   const params: PaginatedParams = {
     page,
     search: title,
@@ -15,5 +15,6 @@ export function useTagsList(page = 1, title?: string) {
     // Sekarang ini tidak akan error lagi
     fetcher: (p) => tagsService.getPaginated(p),
     params,
+    enabled,
   });
 }

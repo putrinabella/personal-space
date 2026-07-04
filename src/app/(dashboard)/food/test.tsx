@@ -2,7 +2,7 @@
 
 import CardBox from "@/components/CardBox";
 import Pagination from "@/components/Pagination";
-import { useLogsList } from "@/features/food/foods/log/hooks/useLogList";
+import { useLogsList } from "@/features/food/dashboard/log/hooks/useLogList";
 import {
   Calendar,
   ForkKnifeIcon,

@@ -4,7 +4,7 @@ import { CuisinesEntry } from "../cuisines.types";
 import { cuisinesService } from "../cuisines.service";
 import { PaginatedParams } from "@/shared/types/common";
 
-export function useCuisinesList(page = 1, title?: string) {
+export function useCuisinesList(page = 1, title?: string, enabled = true) {
   const params: PaginatedParams = {
     page,
     search: title,
@@ -15,5 +15,6 @@ export function useCuisinesList(page = 1, title?: string) {
     // Sekarang ini tidak akan error lagi
     fetcher: (p) => cuisinesService.getPaginated(p),
     params,
+    enabled,
   });
 }

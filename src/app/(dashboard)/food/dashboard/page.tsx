@@ -3,7 +3,7 @@
 import CardBox from "@/components/CardBox";
 import FormInput from "@/components/FormInput";
 import Pagination from "@/components/Pagination";
-import { useFoodsList } from "@/features/food/foods/hooks/useFoodList";
+import { useFoodsList } from "@/features/food/dashboard/hooks/useFoodList";
 import {
   ArrowClockwiseIcon,
   CalendarDots,
@@ -33,7 +33,6 @@ export default function FoodView() {
     <div className="flex flex-col gap-8 max-w-7xl mx-auto">
       <header className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
         <div>
-          {/* Breadcrumb sederhana untuk navigasi Eounia */}
           <span className="text-xs font-bold tracking-[0.2em] uppercase text-slate-400 mb-2 block">
             Eounia / Food Diary
           </span>
@@ -74,7 +73,7 @@ export default function FoodView() {
             rounded="xl"
             color="accent"
             // onClick={() => setIsInputModalOpen(true)}
-            href="/food/create"
+            href="/food/dashboard/create"
             pressable
           >
             <ForkKnifeIcon weight="bold" size={18} />

@@ -3,7 +3,7 @@ import { db } from "@/db";
 import {
   categories,
   cuisines,
-  diningTypes,
+  diningType,
   tags,
   restaurants,
 } from "@/db/schema";
@@ -17,8 +17,8 @@ function getTableSchema(type: string) {
       return { table: categories, label: "Kategori" };
     case "cuisines":
       return { table: cuisines, label: "Cuisine" };
-    case "diningTypes":
-      return { table: diningTypes, label: "Tipe Dining" };
+    case "diningType":
+      return { table: diningType, label: "Tipe Dining" };
     case "tags":
       return { table: tags, label: "Tag" };
     case "restaurants":
@@ -194,7 +194,7 @@ export async function PUT(
     }
 
     const body = await request.json();
-    const { id, ...updateData } = body;
+    const { id, createdAt, updatedAt, deletedAt, ...updateData } = body;
 
     if (!id) {
       return sendStandardResponse(
@@ -204,12 +204,14 @@ export async function PUT(
         "error",
       );
     }
-
     const tableWithId = target.table as unknown as { id: AnyColumn };
 
     const [updatedItem] = await db
       .update(target.table)
-      .set(updateData)
+      .set({
+        ...updateData,
+        updatedAt: new Date(), // <--- Biarkan backend yang menentukan waktu update
+      })
       .where(eq(tableWithId.id, id))
       .returning();
 

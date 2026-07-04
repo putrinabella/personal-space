@@ -11,7 +11,12 @@ import DataRenderer from "@/components/DataRender";
 import ActionButton from "@/components/ActionButton";
 import { SquaresFour } from "@phosphor-icons/react";
 import { useTagsList } from "@/features/food/tags/hooks/useTagList";
-import { useDiningTypeList } from "@/features/food/diningTypes/hooks/useDiningTypeList";
+import { useDiningTypeList } from "@/features/food/diningType/hooks/useDiningTypeList";
+import { useRouter } from "next/navigation";
+import { useCategoriesDelete } from "@/features/food/categories/hooks/useCategoriesDelete";
+import { useCuisinesDelete } from "@/features/food/cuisines/hooks/useCuisinesDelete";
+import { useDiningTypeDelete } from "@/features/food/diningType/hooks/useDiningTypeDelete";
+import { useTagDelete } from "@/features/food/tags/hooks/useTagDelete";
 
 const TAB_CONFIG = [
   { id: "categories", label: "Categories" },
@@ -21,6 +26,19 @@ const TAB_CONFIG = [
 ] as const;
 
 export default function SettingsPage() {
+  const router = useRouter();
+  const deleteCategories = useCategoriesDelete();
+  const deleteCuisines = useCuisinesDelete();
+  const deleteDiningType = useDiningTypeDelete();
+  const deleteTags = useTagDelete();
+
+  // Pemetaan untuk mempermudah akses
+  const deleteHandlers = {
+    categories: deleteCategories,
+    cuisines: deleteCuisines,
+    diningType: deleteDiningType,
+    tags: deleteTags,
+  };
   // 1. State untuk navigasi dan tampilan
   const [activeTab, setActiveTab] = useState<
     "categories" | "cuisines" | "diningType" | "tags"
@@ -29,10 +47,25 @@ export default function SettingsPage() {
   const [viewType, setViewType] = useState<"list" | "card">("card");
   const [page, setPage] = useState(1);
 
-  const categoriesQuery = useCategoriesList(page);
-  const cuisinesQuery = useCuisinesList(page);
-  const diningTypeQuery = useDiningTypeList(page);
-  const tagsQuery = useTagsList(page);
+  const categoriesQuery = useCategoriesList(
+    page,
+    undefined,
+    activeTab === "categories",
+  );
+
+  const cuisinesQuery = useCuisinesList(
+    page,
+    undefined,
+    activeTab === "cuisines",
+  );
+
+  const diningTypeQuery = useDiningTypeList(
+    page,
+    undefined,
+    activeTab === "diningType",
+  );
+
+  const tagsQuery = useTagsList(page, undefined, activeTab === "tags");
   // Pastikan semua query terdaftar di sini
   const queries = {
     categories: categoriesQuery,
@@ -124,9 +157,8 @@ export default function SettingsPage() {
                   label="Add New"
                   icon={Plus}
                   color="primary"
-                  onClick={() => {
-                    /* handle open modal */
-                  }}
+                  to={`/food/settings/${activeTab}/create`}
+                  // onClick={() => router.push(`/settings/${activeTab}/create`)}
                 />
               }
             >
@@ -136,8 +168,17 @@ export default function SettingsPage() {
                 <DataRenderer
                   data={activeData.data}
                   viewType={viewType}
-                  onEdit={(item) => console.log("Edit", item)}
-                  onDelete={(item) => console.log("Delete", item)}
+                  onEdit={(item) => {
+                    // Navigasi ke path edit berdasarkan ID item
+                    router.push(`/food/settings/${activeTab}/${item.id}/edit`);
+                  }}
+                  onDelete={(item) => {
+                    const handler = deleteHandlers[activeTab];
+                    if (handler) {
+                      // Panggil handleDelete, BUKAN .mutate()
+                      handler.handleDelete(item.id);
+                    }
+                  }}
                 />
               )}
 

@@ -1,11 +1,11 @@
 import { queryKeys } from "@/lib/queryKeys";
 import { useBaseAll } from "@/shared/hooks/core/use-base-all";
-import { DiningTypesEntry } from "../dining.types";
+import { DiningTypeEntry } from "../dining.types";
 import { diningTypeService } from "../dining.service";
 
-export function useDiningTypesAll() {
-  return useBaseAll<DiningTypesEntry>({
-    queryKey: queryKeys.diningTypes.all,
+export function useDiningTypeAll() {
+  return useBaseAll<DiningTypeEntry>({
+    queryKey: queryKeys.diningType.all,
 
     fetcher: diningTypeService.getAll,
   });

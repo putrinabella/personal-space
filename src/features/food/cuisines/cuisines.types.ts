@@ -1,6 +1,17 @@
 import { BaseItem } from "@/shared/types/base.types";
 
-export interface CuisinesEntry extends BaseItem {
-  // Jika ada properti khusus Cuisines, taruh di sini.
-  // Kalau tidak ada, biarkan kosong saja.
+export interface CuisinesFormData {
+  name: string;
 }
+
+export interface CuisinesEntry extends BaseItem, CuisinesFormData {}
+
+export const defaultCuisines: CuisinesFormData = {
+  name: "",
+};
+
+export const validateCuisines = (payload: CuisinesFormData): string[] => {
+  const errors: string[] = [];
+  if (!payload.name) errors.push("Nama kategori wajib diisi.");
+  return errors;
+};

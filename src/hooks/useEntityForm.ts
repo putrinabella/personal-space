@@ -1,0 +1,28 @@
+import { useCategoriesForm } from "@/features/food/categories/hooks/useCategoriesForm";
+import { useCuisinesForm } from "@/features/food/cuisines/hooks/useCuisinesForm";
+import { useDiningTypeForm } from "@/features/food/diningType/hooks/useDiningTypeForm";
+import { useTagForm } from "@/features/food/tags/hooks/useTagForm";
+
+export const useEntityForm = (entity: string, id?: string) => {
+  const isCreating = id === "create" || !id;
+  const safeId = isCreating ? undefined : id;
+
+  // HANYA aktifkan hook yang sesuai dengan entity saat ini
+  const categories = useCategoriesForm(safeId, entity === "categories");
+  const cuisines = useCuisinesForm(safeId, entity === "cuisines");
+  const diningType = useDiningTypeForm(safeId, entity === "diningType");
+  const tags = useTagForm(safeId, entity === "tags");
+
+  switch (entity) {
+    case "categories":
+      return categories;
+    case "cuisines":
+      return cuisines;
+    case "diningType":
+      return diningType;
+    case "tags":
+      return tags;
+    default:
+      throw new Error("Entity tidak ditemukan");
+  }
+};

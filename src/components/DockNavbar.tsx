@@ -20,7 +20,7 @@ export default function DockNavbar() {
   // 1. Definisikan sub-menu untuk setiap modul
   const subMenus: Record<string, any[]> = {
     "/food": [
-      { path: "/food", label: "Food", Icon: Hamburger },
+      { path: "/food/dashboard", label: "Food", Icon: Hamburger },
       { path: "/food/restaurant", label: "Places", Icon: MapPinArea },
       { path: "/food/settings", label: "Config", Icon: GearSix },
     ],
@@ -35,7 +35,7 @@ export default function DockNavbar() {
   const baseRoute = "/" + pathname.split("/")[1];
   const activeSubMenus = subMenus[baseRoute] || [
     { path: "/", label: "Home", Icon: House },
-    { path: "/food", label: "Food", Icon: Hamburger },
+    { path: "/food/dashboard", label: "Food", Icon: Hamburger },
     { path: "/finance", label: "Finance", Icon: Wallet },
     { path: "/movie", label: "Movie", Icon: FilmStrip },
   ];

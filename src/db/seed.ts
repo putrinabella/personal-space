@@ -18,7 +18,7 @@ async function main() {
     await db.delete(schema.restaurants);
     await db.delete(schema.categories);
     await db.delete(schema.cuisines);
-    await db.delete(schema.diningTypes);
+    await db.delete(schema.diningType);
     await db.delete(schema.tags);
 
     console.log("🌱 Mulai proses seeding data lookup...");
@@ -48,8 +48,8 @@ async function main() {
       .returning(); // 🆕 Hamba ubah agar mengembalikan data (efisiensi query bawah)
 
     // 3. Seed Dining Types
-    const insertedDiningTypes = await db
-      .insert(schema.diningTypes)
+    const insertedDiningType = await db
+      .insert(schema.diningType)
       .values([
         { name: "Dine In" },
         { name: "Takeaway" },
@@ -87,7 +87,7 @@ async function main() {
         restaurantId: sampleRestaurant.id,
         categoryId: insertedCategories[0].id,
         cuisineId: insertedCuisines[0].id,
-        diningTypeId: insertedDiningTypes[0].id,
+        diningTypeId: insertedDiningType[0].id,
         foodName: "Bakmi Ayam Cah Jamur",
         isFavoriteFood: true,
       })

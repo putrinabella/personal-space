@@ -4,7 +4,7 @@ import { CategoriesEntry } from "../categories.types";
 import { categoriesService } from "../categories.service";
 import { PaginatedParams } from "@/shared/types/common";
 
-export function useCategoriesList(page = 1, title?: string) {
+export function useCategoriesList(page = 1, title?: string, enabled = true) {
   const params: PaginatedParams = {
     page,
     search: title,
@@ -15,5 +15,6 @@ export function useCategoriesList(page = 1, title?: string) {
     // Sekarang ini tidak akan error lagi
     fetcher: (p) => categoriesService.getPaginated(p),
     params,
+    enabled,
   });
 }

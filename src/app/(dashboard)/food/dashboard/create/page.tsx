@@ -7,19 +7,15 @@ import FormInput from "@/components/FormInput";
 import { ForkKnife, Check, ArrowLeft } from "@phosphor-icons/react";
 import { useRouter } from "next/navigation";
 import { useCategoriesAll } from "@/features/food/categories/hooks/useCategoriesAll";
-import { useFoodAll } from "@/features/food/foods/hooks/useFoodAll";
-import { useFoodForm } from "@/features/food/foods/hooks/useFoodForm";
+import { useFoodAll } from "@/features/food/dashboard/hooks/useFoodAll";
 import { useRestaurantAll } from "@/features/food/restaurants/hooks/useRestaurantAll";
-import { useLogForm } from "@/features/food/foods/log/hooks/useLogForm";
+import { useLogForm } from "@/features/food/dashboard/log/hooks/useLogForm";
 import { useCuisinesAll } from "@/features/food/cuisines/hooks/useCuisinesAll";
-import { useDiningTypeList } from "@/features/food/diningTypes/hooks/useDiningTypeList";
-import { useDiningTypesAll } from "@/features/food/diningTypes/hooks/useDiningTypeAll";
+import { useDiningTypeAll } from "@/features/food/diningType/hooks/useDiningTypeAll";
 
 export default function CreateFoodEntryPage() {
   const router = useRouter();
   const [mode, setMode] = useState<"existing" | "new">("existing");
-
-  // Gunakan SATU form saja yang mencakup data Log + data Food
   const { data, setField, handleSubmit, saving } = useLogForm();
 
   const { data: dataRestaurant, isLoading: loadingRestaurant } =
@@ -27,26 +23,19 @@ export default function CreateFoodEntryPage() {
   const { data: dataCategories, isLoading: loadingCategories } =
     useCategoriesAll();
   const { data: dataCuisines, isLoading: loadingCuisines } = useCuisinesAll();
-  const { data: dataDiningTypes, isLoading: loadingDiningTypes } =
-    useDiningTypesAll();
-  // Fetch menu berdasarkan restoran yang dipilih
+  const { data: dataDiningType, isLoading: loadingDiningType } =
+    useDiningTypeAll();
   const { data: dataFood, isLoading: loadingFood } = useFoodAll(
     data.restaurantId,
   );
 
   const onSave = async () => {
-    // Pastikan field 'isNewFood' ada di state form
     setField("isNewFood", mode === "new");
-
-    // Jika mode existing, pastikan foodId ada.
-    // Jika mode new, pastikan data food lengkap.
-
-    // handleSubmit ini akan mengambil seluruh state 'data'
-    // yang sekarang sudah mencakup 'isNewFood'
     await handleSubmit();
   };
+
   return (
-    <div className="flex flex-col gap-8 max-w-3xl mx-auto px-4">
+    <div className="flex flex-col gap-8 max-w-7xl mx-auto">
       <CardHeader
         title="LOG NEW CULINARY ENTRY"
         icon={ForkKnife}
@@ -140,7 +129,7 @@ export default function CreateFoodEntryPage() {
             <FormInput
               label="Dining Type"
               required
-              options={dataDiningTypes.map((d) => ({
+              options={dataDiningType.map((d) => ({
                 label: d.name,
                 value: d.id,
               }))}
@@ -148,7 +137,7 @@ export default function CreateFoodEntryPage() {
               value={data.diningTypeId}
               onChange={(val) => setField("diningTypeId", val)}
               placeholder="Select dining type"
-              disabled={loadingDiningTypes}
+              disabled={loadingDiningType}
             />
 
             {/* Toggle untuk Favorite Food & Drink */}

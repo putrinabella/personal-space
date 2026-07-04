@@ -9,6 +9,7 @@ import { showAlert } from "@/components/Swal";
 
 interface UseBaseFormProps<T> {
   id?: string;
+  enabled?: boolean;
   entityName?: string;
   defaultValues: T;
   queryKey?: readonly unknown[];
@@ -24,6 +25,7 @@ interface UseBaseFormProps<T> {
 
 export function useBaseForm<T>({
   id,
+  enabled = true,
   entityName = "data",
   defaultValues,
   queryKey,
@@ -61,7 +63,7 @@ export function useBaseForm<T>({
       if (!result) throw new Error("Data tidak ditemukan"); // Tambahkan ini
       return result;
     },
-    enabled: !!id && !!getDetail,
+    enabled: enabled && !!id && !!getDetail,
   });
 
   // 2. Satu-satunya sumber data (Gabungan default + server + input user)
