@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { and, desc, eq, gte, ilike, lte, sql } from "drizzle-orm";
+import { and, desc, eq, gte, ilike, lte, sql, count } from "drizzle-orm";
 import { db } from "@/db";
 import {
   foods,
@@ -15,13 +15,13 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
 
-    // 1. Definisikan CTE (Common Table Expression) untuk latest log
     const latestLogCte = db.$with("latest_log").as(
       db
         .selectDistinctOn([foodLogs.foodId], {
           id: foodLogs.id,
           foodId: foodLogs.foodId,
           price: foodLogs.price,
+          reviewText: foodLogs.reviewText,
           ratingHis: foodLogs.ratingHis,
           ratingHer: foodLogs.ratingHer,
           dateVisited: foodLogs.dateVisited,
@@ -29,8 +29,15 @@ export async function GET(request: NextRequest) {
         .from(foodLogs)
         .orderBy(foodLogs.foodId, desc(foodLogs.dateVisited)),
     );
-
-    // 2. Persiapan Filter
+    const logCountCte = db.$with("log_counts").as(
+      db
+        .select({
+          foodId: foodLogs.foodId,
+          totalLogs: count(foodLogs.id).as("total_logs"),
+        })
+        .from(foodLogs)
+        .groupBy(foodLogs.foodId),
+    );
     const filters = [];
     if (searchParams.get("restaurantId"))
       filters.push(eq(foods.restaurantId, searchParams.get("restaurantId")!));
@@ -46,8 +53,6 @@ export async function GET(request: NextRequest) {
       filters.push(
         eq(foods.isFavoriteFood, searchParams.get("favorite") === "true"),
       );
-
-    // Filter Price & Rating (mengacu pada CTE latestLogCte)
     if (searchParams.get("minPrice"))
       filters.push(gte(latestLogCte.price, searchParams.get("minPrice")!));
     if (searchParams.get("maxPrice"))
@@ -57,27 +62,35 @@ export async function GET(request: NextRequest) {
         sql`(${latestLogCte.ratingHis} + ${latestLogCte.ratingHer}) / 2.0 >= ${Number(searchParams.get("minRating"))}`,
       );
     }
-
-    // 3. Base Query Builder
     const queryBase = db
-      .with(latestLogCte) // Menggunakan CTE di sini
+      .with(latestLogCte, logCountCte)
       .select({
-        food: foods,
-        restaurant: restaurants,
-        category: categories,
-        cuisine: cuisines,
-        diningType: diningType,
-        latestLog: latestLogCte,
+        food: {
+          ...foods, // Mengambil semua kolom tabel foods
+          restaurant: restaurants,
+          category: categories,
+          cuisine: cuisines,
+          diningType: diningType,
+          latestLog: {
+            id: latestLogCte.id,
+            foodId: latestLogCte.foodId,
+            price: latestLogCte.price,
+            reviewText: latestLogCte.reviewText,
+            ratingHis: latestLogCte.ratingHis,
+            ratingHer: latestLogCte.ratingHer,
+            dateVisited: latestLogCte.dateVisited,
+          },
+          totalLogs: sql<number>`COALESCE(${logCountCte.totalLogs}, 0)`,
+        },
       })
       .from(foods)
       .leftJoin(latestLogCte, eq(latestLogCte.foodId, foods.id))
+      .leftJoin(logCountCte, eq(logCountCte.foodId, foods.id))
       .leftJoin(restaurants, eq(restaurants.id, foods.restaurantId))
       .leftJoin(categories, eq(categories.id, foods.categoryId))
       .leftJoin(cuisines, eq(cuisines.id, foods.cuisineId))
       .leftJoin(diningType, eq(diningType.id, foods.diningTypeId))
       .where(filters.length ? and(...filters) : undefined);
-
-    // 4. Eksekusi
     if (!searchParams.has("page")) {
       const data = await queryBase;
       return sendStandardResponse(
@@ -91,7 +104,7 @@ export async function GET(request: NextRequest) {
 
     const [total, items] = await Promise.all([
       db
-        .with(latestLogCte)
+        .with(latestLogCte, logCountCte)
         .select({ count: sql<number>`count(*)` })
         .from(foods)
         .leftJoin(latestLogCte, eq(latestLogCte.foodId, foods.id))
