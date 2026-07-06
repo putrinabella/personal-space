@@ -47,11 +47,11 @@ export async function GET(request: NextRequest) {
       filters.push(eq(foods.cuisineId, searchParams.get("cuisineId")!));
     if (searchParams.get("diningTypeId"))
       filters.push(eq(foods.diningTypeId, searchParams.get("diningTypeId")!));
-    if (searchParams.get("keyword"))
-      filters.push(ilike(foods.foodName, `%${searchParams.get("keyword")}%`));
-    if (searchParams.has("favorite"))
+    if (searchParams.get("search"))
+      filters.push(ilike(foods.foodName, `%${searchParams.get("search")}%`));
+    if (searchParams.has("isFavorite"))
       filters.push(
-        eq(foods.isFavoriteFood, searchParams.get("favorite") === "true"),
+        eq(foods.isFavoriteFood, searchParams.get("isFavorite") === "true"),
       );
     if (searchParams.get("minPrice"))
       filters.push(gte(latestLogCte.price, searchParams.get("minPrice")!));

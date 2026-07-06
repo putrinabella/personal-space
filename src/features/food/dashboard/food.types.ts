@@ -4,6 +4,7 @@ import { RestaurantEntry } from "../restaurants/restaurants.types";
 import { TagEntry } from "../tags/tags.types";
 import { CuisinesEntry } from "../cuisines/cuisines.types";
 import { LogEntry } from "./log/log.types";
+import { DiningTypeEntry } from "../diningType/dining.types";
 
 export interface FoodTag {
   foodEntryId: string;
@@ -48,6 +49,7 @@ export interface FoodEntry extends BaseItem, FoodFormData {
   restaurant: RestaurantEntry;
   category: CategoriesEntry;
   cuisine: CuisinesEntry;
+  diningType: DiningTypeEntry;
   allLogs: LogEntry[];
   latestLog: LogEntry;
   totalLogs: number;
