@@ -62,35 +62,108 @@ export async function GET(request: NextRequest) {
         sql`(${latestLogCte.ratingHis} + ${latestLogCte.ratingHer}) / 2.0 >= ${Number(searchParams.get("minRating"))}`,
       );
     }
+    // const queryBase = db
+    //   .with(latestLogCte, logCountCte)
+    //   .select({
+    //     // Buka kolom foods satu per satu (atau gunakan cara di bawah)
+    //     id: foods.id,
+    //     restaurantId: foods.restaurantId,
+    //     categoryId: foods.categoryId,
+    //     cuisineId: foods.cuisineId,
+    //     diningTypeId: foods.diningTypeId,
+    //     foodName: foods.foodName,
+    //     isFavoriteFood: foods.isFavoriteFood,
+    //     isFavoriteDrink: foods.isFavoriteDrink,
+    //     createdAt: foods.createdAt,
+    //     updatedAt: foods.updatedAt,
+
+    //     // Relasi Objek
+    //     restaurant: restaurants,
+    //     category: categories,
+    //     cuisine: cuisines,
+    //     diningType: diningType,
+    //     latestLog: {
+    //       id: latestLogCte.id,
+    //       foodId: latestLogCte.foodId,
+    //       price: latestLogCte.price,
+    //       reviewText: latestLogCte.reviewText,
+    //       ratingHis: latestLogCte.ratingHis,
+    //       ratingHer: latestLogCte.ratingHer,
+    //       dateVisited: latestLogCte.dateVisited,
+    //     },
+
+    //     totalLogs: sql<number>`COALESCE(${logCountCte.totalLogs}, 0)`,
+    //   })
+    //   .from(foods)
+    //   .leftJoin(latestLogCte, eq(latestLogCte.foodId, foods.id))
+    //   .leftJoin(logCountCte, eq(logCountCte.foodId, foods.id))
+    //   .leftJoin(restaurants, eq(restaurants.id, foods.restaurantId))
+    //   .leftJoin(categories, eq(categories.id, foods.categoryId))
+    //   .leftJoin(cuisines, eq(cuisines.id, foods.cuisineId))
+    //   .leftJoin(diningType, eq(diningType.id, foods.diningTypeId))
+    //   .where(filters.length ? and(...filters) : undefined);
     const queryBase = db
       .with(latestLogCte, logCountCte)
       .select({
-        food: {
-          ...foods, // Mengambil semua kolom tabel foods
-          restaurant: restaurants,
-          category: categories,
-          cuisine: cuisines,
-          diningType: diningType,
-          latestLog: {
-            id: latestLogCte.id,
-            foodId: latestLogCte.foodId,
-            price: latestLogCte.price,
-            reviewText: latestLogCte.reviewText,
-            ratingHis: latestLogCte.ratingHis,
-            ratingHer: latestLogCte.ratingHer,
-            dateVisited: latestLogCte.dateVisited,
-          },
-          totalLogs: sql<number>`COALESCE(${logCountCte.totalLogs}, 0)`,
+        id: foods.id,
+        restaurantId: foods.restaurantId,
+        categoryId: foods.categoryId,
+        cuisineId: foods.cuisineId,
+        diningTypeId: foods.diningTypeId,
+        foodName: foods.foodName,
+        isFavoriteFood: foods.isFavoriteFood,
+        isFavoriteDrink: foods.isFavoriteDrink,
+        createdAt: foods.createdAt,
+        updatedAt: foods.updatedAt,
+        restaurant: restaurants,
+        category: categories,
+        cuisine: cuisines,
+        diningType: diningType,
+        latestLog: {
+          id: latestLogCte.id,
+          foodId: latestLogCte.foodId,
+          price: latestLogCte.price,
+          reviewText: latestLogCte.reviewText,
+          ratingHis: latestLogCte.ratingHis,
+          ratingHer: latestLogCte.ratingHer,
+          dateVisited: latestLogCte.dateVisited,
         },
+        allLogs: sql<any>`json_agg(
+      json_build_object(
+        'id', ${foodLogs.id},
+        'price', ${foodLogs.price},
+        'reviewText', ${foodLogs.reviewText},
+        'ratingHis', ${foodLogs.ratingHis},
+        'ratingHer', ${foodLogs.ratingHer},
+        'dateVisited', ${foodLogs.dateVisited}
+      )
+    ) FILTER (WHERE ${foodLogs.id} IS NOT NULL)`.as("all_logs"), // FILTER agar tidak error jika tidak ada log
+        totalLogs: sql<number>`COALESCE(${logCountCte.totalLogs}, 0)`,
       })
       .from(foods)
-      .leftJoin(latestLogCte, eq(latestLogCte.foodId, foods.id))
-      .leftJoin(logCountCte, eq(logCountCte.foodId, foods.id))
+      .leftJoin(foodLogs, eq(foodLogs.foodId, foods.id))
       .leftJoin(restaurants, eq(restaurants.id, foods.restaurantId))
       .leftJoin(categories, eq(categories.id, foods.categoryId))
       .leftJoin(cuisines, eq(cuisines.id, foods.cuisineId))
       .leftJoin(diningType, eq(diningType.id, foods.diningTypeId))
-      .where(filters.length ? and(...filters) : undefined);
+      .leftJoin(latestLogCte, eq(latestLogCte.foodId, foods.id))
+      .leftJoin(logCountCte, eq(logCountCte.foodId, foods.id))
+      .where(filters.length ? and(...filters) : undefined)
+      .groupBy(
+        foods.id,
+        restaurants.id,
+        categories.id,
+        cuisines.id,
+        diningType.id,
+        latestLogCte.id,
+        latestLogCte.foodId,
+        latestLogCte.price,
+        latestLogCte.reviewText,
+        latestLogCte.ratingHis,
+        latestLogCte.ratingHer,
+        latestLogCte.dateVisited,
+        logCountCte.totalLogs,
+      );
     if (!searchParams.has("page")) {
       const data = await queryBase;
       return sendStandardResponse(

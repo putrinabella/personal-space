@@ -3,6 +3,7 @@
 import CardBox from "@/components/CardBox";
 import FormInput from "@/components/FormInput";
 import Pagination from "@/components/Pagination";
+import { useDiscoverFoodsList } from "@/features/food/dashboard/hooks/useDiscoverList";
 import { useFoodsList } from "@/features/food/dashboard/hooks/useFoodList";
 import {
   ArrowClockwiseIcon,
@@ -28,7 +29,7 @@ export default function FoodView() {
     total,
     lastPage,
     perPage,
-  } = useFoodsList(page);
+  } = useDiscoverFoodsList(page);
   return (
     <div className="flex flex-col gap-8 max-w-7xl mx-auto">
       <header className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
@@ -160,22 +161,22 @@ export default function FoodView() {
           <div className="flex flex-col gap-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {foodData?.map((food) => {
-                // Sort logs: Terbaru (dateVisited) di atas
-                const sortedLogs = [...(food.logs || [])].sort(
+                // Sekarang gunakan food.allLogs yang datang dari database
+                const logs = food.allLogs || [];
+                // Sort manual di frontend agar selalu terbaru
+                const sortedLogs = [...logs].sort(
                   (a, b) =>
                     new Date(b.dateVisited).getTime() -
                     new Date(a.dateVisited).getTime(),
                 );
                 const latestLog = sortedLogs[0];
-                const isExpanded = expandedId === food.id;
-
                 return (
                   <CardBox
                     key={food.id}
                     className="p-6 flex flex-col gap-4 border-l-4 border-l-accent"
                     rounded="2xl"
                     color="base-100"
-                    onClick={() => setExpandedId(food.id)} // Buka modal
+                    onClick={() => setExpandedId(food.id)}
                     pressable
                   >
                     {/* Header: Nama Makanan & Resto */}
@@ -272,14 +273,38 @@ export default function FoodView() {
               </div>
 
               <div className="flex flex-col gap-4">
-                {foodData
-                  ?.find((f) => f.id === expandedId)
-                  ?.logs.map((log) => (
-                    <div key={log.id} className="border-b pb-4">
-                      <p className="font-bold">{log.dateVisited}</p>
-                      <p className="text-sm">{log.reviewText}</p>
-                    </div>
-                  ))}
+                {(() => {
+                  const selectedFood = foodData?.find(
+                    (f) => f.id === expandedId,
+                  );
+                  // Ambil dari allLogs yang dikirim backend
+                  const logs = selectedFood?.allLogs || [];
+
+                  return logs
+                    .sort(
+                      (a, b) =>
+                        new Date(b.dateVisited).getTime() -
+                        new Date(a.dateVisited).getTime(),
+                    )
+                    .map((log) => (
+                      <div key={log.id} className="border-b pb-4">
+                        <p className="font-bold text-sm text-slate-800">
+                          {log.dateVisited}
+                        </p>
+                        <p className="text-sm text-slate-600">
+                          {log.reviewText}
+                        </p>
+                        <div className="flex gap-4 mt-2">
+                          <span className="text-xs font-bold text-accent">
+                            Harga: Rp {Number(log.price).toLocaleString()}
+                          </span>
+                          <span className="text-xs font-bold text-slate-400">
+                            Rating: {log.ratingHis}/{log.ratingHer}
+                          </span>
+                        </div>
+                      </div>
+                    ));
+                })()}
               </div>
             </CardBox>
           </div>

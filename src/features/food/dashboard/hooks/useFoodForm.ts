@@ -1,6 +1,6 @@
 import { queryKeys } from "@/lib/queryKeys";
 import { useBaseForm } from "@/shared/hooks/core/use-base-form";
-import { foodService } from "../food.service";
+import { foodService } from "../service/food.service";
 import { defaultFood, FoodFormData, validateFood } from "../food.types";
 
 export function useFoodForm(foodId?: string) {
@@ -19,7 +19,7 @@ export function useFoodForm(foodId?: string) {
     createFn: foodService.create,
     updateFn: foodService.update,
     validate: validateFood,
-    redirectTo: "/food",
+    redirectTo: "/food/dashboard",
 
     messages: {
       createSuccess: "Makanan berhasil dibuat",

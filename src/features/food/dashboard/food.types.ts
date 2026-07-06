@@ -48,6 +48,7 @@ export interface FoodEntry extends BaseItem, FoodFormData {
   restaurant: RestaurantEntry;
   category: CategoriesEntry;
   cuisine: CuisinesEntry;
-  logs: LogEntry[];
-  // tags: FoodTag[];
+  allLogs: LogEntry[];
+  latestLog: LogEntry;
+  totalLogs: number;
 }

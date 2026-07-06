@@ -110,7 +110,11 @@ export default function DockNavbar() {
                     weight={isActive ? "fill" : "bold"}
                   />
                 ) : (
-                  <IconComponent size={24} strokeWidth={isActive ? 3 : 2} />
+                  <IconComponent
+                    size={24}
+                    strokeWidth={isActive ? 3 : 2}
+                    weight={isActive ? "fill" : "bold"}
+                  />
                 )}
 
                 {/* Teks Label - Hanya muncul di Desktop (md ke atas) */}
