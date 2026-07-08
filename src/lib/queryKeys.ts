@@ -8,4 +8,5 @@ export const queryKeys = {
   restaurants: createQueryKeys("restaurants"),
   log: createQueryKeys("food-logs"),
   food: createQueryKeys("food"),
+  discoverFoods: createQueryKeys("discover-foods"),
 };

@@ -7,3 +7,8 @@ export const discoverService = createCrudService<FoodEntry>(
     tag: "discover-foods",
   },
 );
+
+export const randomFoodService = createCrudService<FoodEntry>(
+  "/api/discover-foods?random=true",
+  { tag: "discover-foods" },
+);

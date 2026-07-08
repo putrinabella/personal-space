@@ -134,6 +134,15 @@ export async function GET(request: NextRequest) {
         latestLogCte.dateVisited,
         logCountCte.totalLogs,
       );
+
+    if (searchParams.get("random") === "true") {
+      const limit = parseInt(searchParams.get("limit") || "1");
+      const randomData = await queryBase.orderBy(sql`RANDOM()`).limit(limit);
+      return sendStandardResponse(
+        randomData,
+        "Berhasil mendapatkan menu acak.",
+      );
+    }
     if (!searchParams.has("page")) {
       const data = await queryBase;
       return sendStandardResponse(
@@ -144,16 +153,6 @@ export async function GET(request: NextRequest) {
 
     const page = Math.max(1, parseInt(searchParams.get("page") || "1"));
     const perPage = Math.max(1, parseInt(searchParams.get("per_page") || "12"));
-
-    // const [total, items] = await Promise.all([
-    //   db
-    //     .with(latestLogCte, logCountCte)
-    //     .select({ count: sql<number>`count(*)` })
-    //     .from(foods)
-    //     .leftJoin(latestLogCte, eq(latestLogCte.foodId, foods.id))
-    //     .where(filters.length ? and(...filters) : undefined),
-    //   queryBase.limit(perPage).offset((page - 1) * perPage),
-    // ]);
 
     const [total, items] = await Promise.all([
       db

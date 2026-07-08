@@ -85,7 +85,7 @@ export default function SettingsPage() {
           size={14}
           className="w-full"
           disabled={activeTab === tab.id}
-          color={activeTab === tab.id ? "primary" : "secondary"}
+          color={activeTab === tab.id ? "primary" : "accent"}
           onClick={() => {
             setActiveTab(tab.id as any);
             setPage(1);
@@ -112,7 +112,7 @@ export default function SettingsPage() {
 
             <CardSection
               title="View Options"
-              headerColor="secondary"
+              headerColor="primary"
               // variant="normal"
             >
               <div className="grid grid-cols-2 gap-2">

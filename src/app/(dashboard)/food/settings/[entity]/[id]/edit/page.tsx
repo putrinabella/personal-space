@@ -41,15 +41,6 @@ export default function EditPage() {
           <CardBox
             className="px-6 py-3 flex items-center justify-center gap-2 font-bold flex-1"
             rounded="xl"
-            color="base-300"
-            onClick={() => router.back()}
-            pressable
-          >
-            <ArrowLeft size={18} /> Batal
-          </CardBox>
-          <CardBox
-            className="px-6 py-3 flex items-center justify-center gap-2 font-bold flex-1"
-            rounded="xl"
             color="accent"
             onClick={handleSubmit}
             pressable
@@ -61,6 +52,15 @@ export default function EditPage() {
                 <Check size={18} /> Simpan
               </>
             )}
+          </CardBox>{" "}
+          <CardBox
+            className="px-6 py-3 flex items-center justify-center gap-2 font-bold flex-1"
+            rounded="xl"
+            color="base-300"
+            onClick={() => router.back()}
+            pressable
+          >
+            <ArrowLeft size={18} /> Batal
           </CardBox>
         </div>
       </CardBox>
