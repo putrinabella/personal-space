@@ -625,7 +625,7 @@ const FormInput = ({
             </button>
 
             {selectOpen && (
-              <div className="absolute z-50 mt-2 p-2 w-full bg-base-100 border border-base-300 rounded-xl shadow-lg flex flex-col gap-2">
+              <div className="absolute z-500 mt-2 p-2 w-full bg-base-100 border border-base-300 rounded-xl shadow-lg flex flex-col gap-2">
                 <input
                   type="text"
                   placeholder="Type to search"
@@ -717,7 +717,7 @@ const FormInput = ({
             </button>
 
             {selectOpen && (
-              <div className="absolute z-50 mt-2 p-2 w-full bg-base-100 border border-base-300 rounded-lg shadow-md flex flex-col gap-2">
+              <div className="absolute z-500 mt-2 p-2 w-full bg-base-100 border border-base-300 rounded-lg shadow-md flex flex-col gap-2">
                 <input
                   type="text"
                   placeholder="Type to search"
@@ -778,7 +778,7 @@ const FormInput = ({
             />
 
             {open && (
-              <div className="absolute mt-1 w-full bg-base-100 border border-base-300 rounded-lg shadow-2xl z-50 max-h-48 overflow-auto">
+              <div className="absolute mt-1 w-full bg-base-100 border border-base-300 rounded-lg shadow-2xl z-500 max-h-48 overflow-auto">
                 {filtered.length > 0 ? (
                   filtered.map((item, i) => (
                     <div
