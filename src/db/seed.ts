@@ -51,9 +51,18 @@ async function main() {
     const insertedDiningType = await db
       .insert(schema.diningType)
       .values([
-        { name: "Dine In" },
-        { name: "Takeaway" },
-        { name: "Delivery (Gofood/Grab)" },
+        {
+          name: "Delivery",
+          iconSlug: "Motorcycle",
+        },
+        {
+          name: "Take Away",
+          iconSlug: "Package",
+        },
+        {
+          name: "Dine In",
+          iconSlug: "ForkKnife",
+        },
       ])
       .returning(); // 🆕 Hamba ubah agar mengembalikan data (efisiensi query bawah)
 

@@ -1,20 +1,22 @@
+import { Fredoka, Quicksand, Inter } from "next/font/google";
 import type { Metadata } from "next";
-import { Fredoka, Playpen_Sans } from "next/font/google";
-import "./globals.css";
 import DockNavbar from "@/components/DockNavbar";
-// 1. Impor Provider yang baru Anda buat
 import QueryProvider from "@/providers/QueryProvider";
+import "./globals.css";
 
 const headerFont = Fredoka({
   subsets: ["latin"],
-  weight: ["600", "700"],
   variable: "--font-header",
 });
 
-const bodyFont = Playpen_Sans({
+const bodyFont = Quicksand({
   subsets: ["latin"],
-  weight: ["400", "600"],
-  variable: "--font-body",
+  variable: "--font-body", // Untuk teks utama
+});
+
+const captionFont = Inter({
+  subsets: ["latin"],
+  variable: "--font-caption", // Untuk data kecil/caption
 });
 
 export const metadata: Metadata = {
@@ -27,14 +29,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${headerFont.variable} ${bodyFont.variable}`}>
-      <body className="bg-base-100 bg-cute-grid text-base-content antialiased h-screen overflow-hidden flex flex-col relative">
-        {/* 2. Bungkus children dengan QueryProvider */}
+    <html
+      lang="en"
+      className={`${headerFont.variable} ${bodyFont.variable} ${captionFont.variable}`}
+    >
+      <body className="font-body bg-base-100 bg-cute-grid text-base-content antialiased h-screen overflow-hidden flex flex-col relative">
         <QueryProvider>
-          <div className="flex-1 overflow-y-auto w-full pb-36 mask-[linear-gradient(to_bottom,black_80%,transparent_98%)]">
+          <div className="flex-1 overflow-y-auto w-full pb-36 mask-[linear-gradient(to_bottom,black_90%,transparent_100%)]">
             {children}
           </div>
-
           <DockNavbar />
         </QueryProvider>
       </body>

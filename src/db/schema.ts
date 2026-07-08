@@ -42,6 +42,7 @@ export const cuisines = pgTable("cuisines", {
 export const diningType = pgTable("dining_types", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: text("name").notNull().unique(),
+  iconSlug: text("icon_slug"),
   createdAt: timestamp("created_at", { withTimezone: true })
     .defaultNow()
     .notNull(),

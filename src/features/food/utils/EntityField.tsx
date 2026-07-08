@@ -15,7 +15,7 @@ export function EntityFields({ entity, data, setField }: any) {
         />
       )}
 
-      {entity === "categories" && (
+      {(entity === "categories" || entity === "diningType") && (
         <FormInput
           label="Icon Slug"
           value={data.iconSlug || ""}

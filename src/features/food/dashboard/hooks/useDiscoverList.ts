@@ -22,7 +22,7 @@ export interface DiscoverFoodsParams extends PaginatedParams {
   categoryId?: string;
   cuisineId?: string;
   diningTypeId?: string;
-  keyword?: string;
+  search?: string;
   isFavorite?: string;
   minPrice?: string;
   maxPrice?: string;

@@ -58,7 +58,8 @@
 
 @theme {
   --font-header: var(--font-header), sans-serif;
-  --font-body: var(--font-body), handwriting, sans-serif;
+  --font-body: var(--font-body), sans-serif;
+  --font-caption: var(--font-caption), sans-serif;
 }
 
 @utility heading-h1 {
@@ -77,20 +78,19 @@
   @apply text-base md:text-lg text-base-content font-header font-semibold leading-snug;
 }
 
-@utility text-subtitle {
-  @apply text-xs sm:text-sm md:text-base font-body text-base-content/70 leading-relaxed;
-}
-
+/* Update Utility */
 @utility text-body {
   @apply text-sm md:text-base font-body text-base-content leading-relaxed;
 }
 
-@utility text-data-body {
-  @apply text-sm font-body text-base-content leading-relaxed;
+@utility text-caption {
+  /* Menggunakan font caption yang lebih bersih (Inter) */
+  @apply text-[10px] md:text-xs font-caption text-base-content/60 tracking-wide uppercase leading-normal;
 }
 
-@utility text-caption {
-  @apply text-xs font-body text-base-content/50 leading-normal;
+/* Tambahkan utilitas untuk data yang butuh keterbacaan tinggi */
+@utility text-data {
+  @apply text-xs font-caption font-bold text-base-content/80;
 }
 
 @utility bg-cute-grid {
