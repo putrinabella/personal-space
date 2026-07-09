@@ -17,21 +17,18 @@ import CardBox from "./CardBox";
 export default function DockNavbar() {
   const pathname = usePathname();
 
-  // 1. Definisikan sub-menu untuk setiap modul
   const subMenus: Record<string, any[]> = {
     "/food": [
       { path: "/food/dashboard", label: "Food", Icon: Hamburger },
       { path: "/food/restaurant", label: "Places", Icon: MapPinArea },
-      { path: "/food/settings", label: "Config", Icon: GearSix },
+      { path: "/food/settings", label: "Settings", Icon: GearSix },
     ],
     "/finance": [
       { path: "/finance", label: "Dashboard", Icon: ChartPieSlice },
       { path: "/finance/history", label: "History", Icon: Wallet },
     ],
-    // Tambahkan untuk /movie dsb
   };
 
-  // 2. Tentukan menu mana yang aktif
   const baseRoute = "/" + pathname.split("/")[1];
   const activeSubMenus = subMenus[baseRoute] || [
     { path: "/", label: "Home", Icon: House },
@@ -39,31 +36,6 @@ export default function DockNavbar() {
     { path: "/finance", label: "Finance", Icon: Wallet },
     { path: "/movie", label: "Movie", Icon: FilmStrip },
   ];
-  // const pathname = usePathname();
-
-  // const menus = [
-  //   {
-  //     path: "/",
-  //     label: "Home",
-  //     Icon: House,
-  //     isRoot: true,
-  //   },
-  //   {
-  //     path: "/food",
-  //     label: "Food",
-  //     Icon: Hamburger,
-  //   },
-  //   {
-  //     path: "/finance",
-  //     label: "Finance",
-  //     Icon: Wallet,
-  //   },
-  //   {
-  //     path: "/movie",
-  //     label: "Movie",
-  //     Icon: FilmStrip,
-  //   },
-  // ];
 
   return (
     <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-max pointer-events-none">

@@ -6,7 +6,7 @@ import CardHeader from "@/shared/components/CardHeader";
 import FormInput from "@/shared/components/FormInput";
 import { Check, ArrowLeft, Plus } from "@phosphor-icons/react";
 import { useEntityForm } from "@/features/food/hooks/useEntityForm";
-import { EntityFields } from "@/features/food/utils/EntityField";
+import { EntityFields } from "@/features/food/components/EntityField";
 
 export default function CreatePage() {
   const router = useRouter();

@@ -10,7 +10,7 @@ import {
   PencilSimpleIcon,
 } from "@phosphor-icons/react";
 import { useEntityForm } from "@/features/food/hooks/useEntityForm";
-import { EntityFields } from "@/features/food/utils/EntityField";
+import { EntityFields } from "@/features/food/components/EntityField";
 
 export default function EditPage() {
   const router = useRouter();

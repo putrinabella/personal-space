@@ -1,6 +1,8 @@
 "use client";
 
 import { useCategoriesAll } from "@/features/food/categories/hooks/useCategoriesAll";
+import { FoodCard } from "@/features/food/components/FoodCard";
+import { FoodDetailModal } from "@/features/food/components/FoodDetailModal";
 import { useCuisinesAll } from "@/features/food/cuisines/hooks/useCuisinesAll";
 import { useDiscoverFoodsList } from "@/features/food/dashboard/hooks/useDiscoverList";
 import { useRandomFood } from "@/features/food/dashboard/hooks/useRandomFood";
@@ -285,7 +287,7 @@ export default function FoodView() {
         ) : (
           <div className="flex flex-col gap-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {foodData.map((food) => {
+              {/* {foodData.map((food) => {
                 const isHisLow = food.latestLog.ratingHis <= 5;
                 const isHerLow = food.latestLog.ratingHer <= 5;
                 return (
@@ -438,7 +440,14 @@ export default function FoodView() {
                     </div>
                   </CardBox>
                 );
-              })}
+              })} */}
+              {foodData.map((food) => (
+                <FoodCard
+                  key={food.id}
+                  food={food}
+                  onDetailClick={(f) => setExpandedId(f.id)}
+                />
+              ))}
             </div>
 
             <Pagination
@@ -456,7 +465,7 @@ export default function FoodView() {
             className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm"
             onClick={() => setExpandedId(null)}
           >
-            <CardBox
+            {/* <CardBox
               className="max-w-lg w-full max-h-[80vh] overflow-y-auto p-6"
               rounded="2xl"
             >
@@ -568,7 +577,12 @@ export default function FoodView() {
                   </div>
                 );
               })()}
-            </CardBox>
+            </CardBox> */}
+            <FoodDetailModal
+              isOpen={!!expandedId}
+              food={selectedFood}
+              onClose={() => setExpandedId(null)}
+            />
           </div>
         )}
       </div>
