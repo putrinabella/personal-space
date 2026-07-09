@@ -93,8 +93,9 @@ export default function FoodView() {
     isFetching: loadingRandom,
   } = useRandomFood(showRandomModal);
 
-  const handleRoll = () => {
-    fetchRandom();
+  const handleRoll = (e?: React.MouseEvent) => {
+    e?.stopPropagation(); // Cegah jika ada aksi lain
+    fetchRandom(); // Panggil refetch saja
   };
 
   const activeFilterCount = [
@@ -333,109 +334,6 @@ export default function FoodView() {
           food={randomFood}
           loading={loadingRandom}
         />
-        // <div
-        //   className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm"
-        //   onClick={() => setShowRandomModal(false)}
-        // >
-        //   <div className="max-w-md w-full" onClick={(e) => e.stopPropagation()}>
-        //     <h3 className="text-xl font-black mb-4 text-center text-base-content">
-        //       Random Pick!
-        //     </h3>
-
-        //     {loadingRandom ? (
-        //       <CardBox className="p-12 text-center text-base-content">
-        //         Finding a delicious choice...
-        //       </CardBox>
-        //     ) : randomFood && randomFood.length > 0 ? (
-        //       (() => {
-        //         const food = randomFood[0];
-        //         const isHisLow = food.latestLog.ratingHis <= 5;
-        //         const isHerLow = food.latestLog.ratingHer <= 5;
-
-        //         return (
-        //           <CardBox
-        //             className="p-5 flex flex-col gap-4 border border-base-200 overflow-hidden"
-        //             rounded="2xl"
-        //             color="base-100"
-        //           >
-        //             <div className="flex items-start gap-3">
-        //               <div className="w-12 h-12 flex items-center justify-center shrink-0 bg-primary/40 text-base-content rounded-2xl">
-        //                 {getIcon(food.category?.iconSlug || "BowlSteam")}
-        //               </div>
-        //               <div className="flex flex-col items-start justify-start flex-1 min-w-0 text-left">
-        //                 <h3 className="font-extrabold tracking-tight text-base-content truncate w-full">
-        //                   {food.foodName}
-        //                 </h3>
-        //                 <p className="text-caption font-semibold uppercase tracking-wide text-base-content truncate w-full">
-        //                   {food.category?.name} • {food.cuisine?.name}
-        //                 </p>
-        //               </div>
-        //             </div>
-
-        //             {food.latestLog && (
-        //               <div className="flex items-center justify-center gap-6 py-1 border-y border-dashed border-base-300">
-        //                 <div className="flex flex-col items-center gap-1">
-        //                   <div
-        //                     className={`w-11 h-11 rounded-full border-2 flex items-center justify-center ${isHisLow ? "border-error" : "border-accent"}`}
-        //                   >
-        //                     <span
-        //                       className={`font-black ${isHisLow ? "text-error" : "text-accent"}`}
-        //                     >
-        //                       {food.latestLog.ratingHis}
-        //                     </span>
-        //                   </div>
-        //                   <span className="text-caption font-bold uppercase tracking-widest text-base-content">
-        //                     Yoga
-        //                   </span>
-        //                 </div>
-        //                 <div className="w-px h-8 bg-base-300" />
-        //                 <div className="flex flex-col items-center gap-1">
-        //                   <div
-        //                     className={`w-11 h-11 rounded-full border-2 flex items-center justify-center ${isHerLow ? "border-error" : "border-accent"}`}
-        //                   >
-        //                     <span
-        //                       className={`font-black ${isHerLow ? "text-error" : "text-accent"}`}
-        //                     >
-        //                       {food.latestLog.ratingHer}
-        //                     </span>
-        //                   </div>
-        //                   <span className="text-caption font-bold uppercase tracking-widest text-base-content">
-        //                     Putri
-        //                   </span>
-        //                 </div>
-        //               </div>
-        //             )}
-
-        //             <div className="flex gap-3 mt-2">
-        //               <CardBox
-        //                 className="px-4 h-11 flex items-center justify-center gap-2 text-sm font-bold flex-1 md:flex-none"
-        //                 rounded="xl"
-        //                 color="base-300"
-        //                 onClick={fetchRandom}
-        //                 pressable
-        //               >
-        //                 <DiceFourIcon weight="bold" size={18} />
-        //                 <span>Roll Again</span>
-        //               </CardBox>
-        //               <CardBox
-        //                 className="px-4 h-11 flex items-center justify-center gap-2 text-sm font-bold flex-1 md:flex-none"
-        //                 rounded="xl"
-        //                 color="base-300"
-        //                 onClick={() => setShowRandomModal(false)}
-        //                 pressable
-        //               >
-        //                 <XIcon weight="bold" size={18} />
-        //                 <span>Close</span>
-        //               </CardBox>
-        //             </div>
-        //           </CardBox>
-        //         );
-        //       })()
-        //     ) : (
-        //       <CardBox className="p-8 text-center">No food found.</CardBox>
-        //     )}
-        //   </div>
-        // </div>
       )}
     </div>
   );

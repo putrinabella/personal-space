@@ -22,60 +22,52 @@ export const FoodRandomModal = ({
       className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm"
       onClick={onClose}
     >
-      <CardBox
-        className="max-w-md w-full p-6 flex flex-col gap-6"
-        rounded="2xl"
-      >
-        {/* Header dengan Tombol Close */}
-        <div className="flex justify-between items-start gap-4">
-          <div>
-            <span className="text-caption font-bold uppercase tracking-widest text-base-content/60 block mb-1">
-              Random Pick
-            </span>
-            <h2 className="text-xl font-black text-base-content">
-              Today's Recommendation
-            </h2>
-          </div>
-          <button
-            onClick={onClose}
-            className="shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-base-200 text-base-content hover:bg-base-300 transition-colors"
-          >
-            <X size={16} weight="bold" />
-          </button>
-        </div>
-
-        {/* Content Area */}
-        {loading ? (
-          <div className="py-12 text-center text-base-content/60">
-            Finding a delicious choice...
-          </div>
-        ) : food ? (
-          <div className="flex flex-col gap-4">
-            {/* Panggil FoodCard Anda di sini */}
-            <FoodCard food={food} />
-
-            {/* Tombol Aksi */}
-            <div className="flex gap-3">
-              <button
-                onClick={onRoll}
-                className="flex-1 flex items-center justify-center gap-2 h-11 rounded-xl bg-primary text-primary-content font-bold text-sm hover:opacity-90 transition-all"
-              >
-                <DiceFour size={18} weight="bold" />
-                Roll Again
-              </button>
-              <button
-                onClick={onClose}
-                className="flex-1 flex items-center justify-center gap-2 h-11 rounded-xl bg-base-200 text-base-content font-bold text-sm hover:bg-base-300 transition-all"
-              >
-                <X size={18} weight="bold" />
-                Close
-              </button>
+      <div onClick={(e) => e.stopPropagation()}>
+        <CardBox
+          className="max-w-md w-full p-6 flex flex-col gap-6"
+          rounded="2xl"
+        >
+          <div className="flex justify-between items-start gap-4">
+            <div>
+              <span className="text-caption font-bold uppercase tracking-widest text-base-content/60 block mb-1">
+                Random Pick
+              </span>
+              <h2 className="text-xl font-black text-base-content">
+                Today's Recommendation
+              </h2>
             </div>
+            <button
+              onClick={onClose}
+              className="shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-base-200 text-base-content hover:bg-base-300 transition-colors"
+            >
+              <X size={16} weight="bold" />
+            </button>
           </div>
-        ) : (
-          <div className="py-8 text-center">No food found.</div>
-        )}
-      </CardBox>
+
+          {loading ? (
+            <div className="py-12 text-center text-base-content/60">
+              Finding a delicious choice...
+            </div>
+          ) : food ? (
+            <div className="flex flex-col gap-4">
+              <FoodCard food={food} />
+
+              <CardBox
+                className="px-4 py-2 flex items-center justify-center gap-2 text-data-body md:text-base font-bold"
+                rounded="xl"
+                color="accent"
+                onClick={onRoll}
+                pressable
+              >
+                <DiceFour weight="bold" size={18} />
+                <span>Roll Again</span>
+              </CardBox>
+            </div>
+          ) : (
+            <div className="py-8 text-center">No food found.</div>
+          )}
+        </CardBox>
+      </div>
     </div>
   );
 };
