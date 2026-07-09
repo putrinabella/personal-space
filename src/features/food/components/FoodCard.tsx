@@ -3,10 +3,11 @@ import { getIcon } from "@/shared/components/GetIcon";
 import { formatDateIndo } from "@/utils/dateFormatter";
 import { formatRupiah } from "@/utils/rupiahFormatter";
 import { ArrowUpRight, Heart, MapPinAreaIcon } from "@phosphor-icons/react";
+import { FoodEntry } from "../dashboard/food.types";
 
 interface FoodCardProps {
-  food: any; // Sebaiknya gunakan interface spesifik
-  onDetailClick?: (food: any) => void;
+  food: FoodEntry;
+  onDetailClick?: (food: FoodEntry) => void;
 }
 
 export const FoodCard = ({ food, onDetailClick }: FoodCardProps) => {

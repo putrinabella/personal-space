@@ -54,7 +54,7 @@ export async function GET(request: NextRequest) {
       filters.push(
         or(
           ilike(foods.foodName, searchTerm),
-          ilike(restaurants.address, searchTerm), // Ganti 'address' dengan 'name' jika ingin mencari nama restoran
+          ilike(restaurants.address, searchTerm),
         )!,
       );
     }
