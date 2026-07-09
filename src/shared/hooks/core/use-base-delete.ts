@@ -5,8 +5,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { handleApiError } from "@/lib/ErrorHandler";
 import type { DaisyColor } from "@/utils/color";
-import { showAlert } from "@/components/Swal";
 import { CrudMessages, defaultCrudMessages } from "@/utils/crudMessages";
+import { showAlert } from "@/shared/components/Swal";
 
 interface UseBaseDeleteProps {
   mutationFn: (id: string) => Promise<void>;

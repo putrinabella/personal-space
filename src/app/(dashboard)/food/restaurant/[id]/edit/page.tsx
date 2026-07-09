@@ -1,9 +1,9 @@
 "use client";
 
 import { use } from "react";
-import CardBox from "@/components/CardBox";
-import CardHeader from "@/components/CardHeader";
-import FormInput from "@/components/FormInput";
+import CardBox from "@/shared/components/CardBox";
+import CardHeader from "@/shared/components/CardHeader";
+import FormInput from "@/shared/components/FormInput";
 import { MapPinAreaIcon } from "@phosphor-icons/react/dist/ssr";
 import { Check, ArrowLeft } from "@phosphor-icons/react";
 import { useRouter } from "next/navigation";

@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import CardBox from "@/components/CardBox";
-import CardHeader from "@/components/CardHeader";
-import FormInput from "@/components/FormInput";
+import CardBox from "@/shared/components/CardBox";
+import CardHeader from "@/shared/components/CardHeader";
+import FormInput from "@/shared/components/FormInput";
 import { ForkKnife, Check, ArrowLeft } from "@phosphor-icons/react";
 import { useRouter } from "next/navigation";
 import { useCategoriesAll } from "@/features/food/categories/hooks/useCategoriesAll";

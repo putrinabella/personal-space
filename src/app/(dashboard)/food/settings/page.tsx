@@ -1,14 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import CardHeader from "@/components/CardHeader";
-import CardSection from "@/components/CardSection";
-import Pagination from "@/components/Pagination";
+import CardHeader from "@/shared/components/CardHeader";
+import CardSection from "@/shared/components/CardSection";
+import Pagination from "@/shared/components/Pagination";
 import { useCategoriesList } from "@/features/food/categories/hooks/useCategoriesList";
 import { useCuisinesList } from "@/features/food/cuisines/hooks/useCuisinesList";
 import { Sliders, List, Plus } from "lucide-react";
-import DataRenderer from "@/components/DataRender";
-import ActionButton from "@/components/ActionButton";
+import DataRenderer from "@/shared/components/DataRender";
+import ActionButton from "@/shared/components/ActionButton";
 import { SquaresFour } from "@phosphor-icons/react";
 import { useTagsList } from "@/features/food/tags/hooks/useTagList";
 import { useDiningTypeList } from "@/features/food/diningType/hooks/useDiningTypeList";

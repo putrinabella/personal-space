@@ -1,7 +1,7 @@
 "use client";
 
-import CardBox from "@/components/CardBox";
-import Pagination from "@/components/Pagination";
+import CardBox from "@/shared/components/CardBox";
+import Pagination from "@/shared/components/Pagination";
 import { useLogsList } from "@/features/food/dashboard/log/hooks/useLogList";
 import {
   Calendar,

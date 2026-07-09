@@ -1,6 +1,6 @@
 import { Fredoka, Quicksand, Inter } from "next/font/google";
 import type { Metadata } from "next";
-import DockNavbar from "@/components/DockNavbar";
+import DockNavbar from "@/shared/components/DockNavbar";
 import QueryProvider from "@/providers/QueryProvider";
 import "./globals.css";
 

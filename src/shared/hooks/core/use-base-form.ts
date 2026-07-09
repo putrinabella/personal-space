@@ -5,7 +5,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { handleApiError } from "@/lib/ErrorHandler";
 import { defaultCrudMessages, type CrudMessages } from "@/utils/crudMessages";
-import { showAlert } from "@/components/Swal";
+import { showAlert } from "@/shared/components/Swal";
 
 interface UseBaseFormProps<T> {
   id?: string;

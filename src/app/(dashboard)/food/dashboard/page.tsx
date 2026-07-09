@@ -1,15 +1,15 @@
 "use client";
 
-import CardBox from "@/components/CardBox";
-import FormInput from "@/components/FormInput";
-import { getIcon } from "@/components/GetIcon";
-import Pagination from "@/components/Pagination";
 import { useCategoriesAll } from "@/features/food/categories/hooks/useCategoriesAll";
 import { useCuisinesAll } from "@/features/food/cuisines/hooks/useCuisinesAll";
 import { useDiscoverFoodsList } from "@/features/food/dashboard/hooks/useDiscoverList";
 import { useRandomFood } from "@/features/food/dashboard/hooks/useRandomFood";
 import { useDiningTypeAll } from "@/features/food/diningType/hooks/useDiningTypeAll";
 import { useRestaurantAll } from "@/features/food/restaurants/hooks/useRestaurantAll";
+import CardBox from "@/shared/components/CardBox";
+import FormInput from "@/shared/components/FormInput";
+import { getIcon } from "@/shared/components/GetIcon";
+import Pagination from "@/shared/components/Pagination";
 import { useDataFilters } from "@/shared/hooks/use-data-filters";
 import { formatDateIndo } from "@/utils/dateFormatter";
 import { formatRupiah } from "@/utils/rupiahFormatter";

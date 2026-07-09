@@ -1,9 +1,9 @@
 "use client";
 
-import CardBox from "@/components/CardBox";
-import FormInput from "@/components/FormInput";
-import { getIcon } from "@/components/GetIcon";
-import Pagination from "@/components/Pagination";
+import CardBox from "@/shared/components/CardBox";
+import FormInput from "@/shared/components/FormInput";
+import { getIcon } from "@/shared/components/GetIcon";
+import Pagination from "@/shared/components/Pagination";
 import { useDiscoverFoodsList } from "@/features/food/dashboard/hooks/useDiscoverList";
 import { useDataFilters } from "@/shared/hooks/use-data-filters";
 import {

@@ -1,4 +1,4 @@
-import FormInput from "@/components/FormInput";
+import FormInput from "@/shared/components/FormInput";
 
 export function EntityFields({ entity, data, setField }: any) {
   return (

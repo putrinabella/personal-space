@@ -25,7 +25,7 @@ import {
   Target,
   Gift,
 } from "@phosphor-icons/react";
-import CardBox from "@/components/CardBox";
+import CardBox from "@/shared/components/CardBox";
 
 export default function CozyNotionDashboard() {
   // State interaktif untuk checklist Morning Routine harian

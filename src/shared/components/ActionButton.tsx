@@ -3,7 +3,7 @@
 import React, { ElementType } from "react";
 import Link from "next/link";
 import { DaisyColor, getButtonColorClass } from "@/utils/color";
-import IconRenderer from "@/components/IconRenderer";
+import IconRenderer from "./IconRenderer";
 
 type ActionButtonProps = {
   to?: string;

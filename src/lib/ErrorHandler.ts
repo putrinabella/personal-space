@@ -1,4 +1,4 @@
-import { showAlert } from "@/components/Swal";
+import { showAlert } from "@/shared/components/Swal";
 import { AxiosError } from "axios";
 
 interface ApiErrorResponse {

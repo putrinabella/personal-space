@@ -1,10 +1,10 @@
 "use client";
 
-import CardBox from "@/components/CardBox";
-import Pagination from "@/components/Pagination";
+import CardBox from "@/shared/components/CardBox";
+import Pagination from "@/shared/components/Pagination";
 import { Star } from "lucide-react";
 import { useRestaurantsList } from "@/features/food/restaurants/hooks/useRestaurantsList";
-import CardHeader from "@/components/CardHeader";
+import CardHeader from "@/shared/components/CardHeader";
 import { MapPinAreaIcon } from "@phosphor-icons/react/dist/ssr";
 import {
   ArrowClockwiseIcon,
@@ -13,9 +13,9 @@ import {
   Plus,
   Trash,
 } from "@phosphor-icons/react";
-import ActionButton from "@/components/ActionButton";
+import ActionButton from "@/shared/components/ActionButton";
 import { useDataFilters } from "@/shared/hooks/use-data-filters";
-import FormInput from "@/components/FormInput";
+import FormInput from "@/shared/components/FormInput";
 import { useRestaurantsDelete } from "@/features/food/restaurants/hooks/useRestaurantDelete";
 
 export default function RestaurantPage() {

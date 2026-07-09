@@ -1,15 +1,15 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import CardBox from "@/components/CardBox";
-import CardHeader from "@/components/CardHeader";
+import CardBox from "@/shared/components/CardBox";
+import CardHeader from "@/shared/components/CardHeader";
 import {
   Check,
   ArrowLeft,
   Plus,
   PencilSimpleIcon,
 } from "@phosphor-icons/react";
-import { useEntityForm } from "@/hooks/useEntityForm";
+import { useEntityForm } from "@/features/food/hooks/useEntityForm";
 import { EntityFields } from "@/features/food/utils/EntityField";
 
 export default function EditPage() {
