@@ -19,7 +19,7 @@ export function useLogForm(logId?: string) {
     createFn: logService.create,
     updateFn: logService.update,
     validate: validateLogs,
-    redirectTo: "/food",
+    redirectTo: "/food/dashboard",
 
     messages: {
       createSuccess: "Log berhasil dibuat",

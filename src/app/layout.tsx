@@ -1,6 +1,5 @@
 import { Fredoka, Quicksand, Inter } from "next/font/google";
 import type { Metadata } from "next";
-import DockNavbar from "@/shared/components/DockNavbar";
 import QueryProvider from "@/providers/QueryProvider";
 import "./globals.css";
 
@@ -33,12 +32,10 @@ export default function RootLayout({
       lang="en"
       className={`${headerFont.variable} ${bodyFont.variable} ${captionFont.variable}`}
     >
-      <body className="font-body bg-base-100 bg-cute-grid text-base-content antialiased h-screen overflow-hidden flex flex-col relative">
+      <body className="font-body bg-base-100 bg-cute-grid text-base-content antialiased h-screen flex flex-col">
         <QueryProvider>
-          <div className="flex-1 overflow-y-auto w-full pb-36 mask-[linear-gradient(to_bottom,black_90%,transparent_100%)]">
-            {children}
-          </div>
-          <DockNavbar />
+          {/* Hapus mask dan overflow di sini agar tidak mempengaruhi isi */}
+          <div className="flex-1 w-full h-full">{children}</div>
         </QueryProvider>
       </body>
     </html>

@@ -55,7 +55,7 @@ const Swal = ({
   timer,
   reverseButtons,
   confirmButtonColor = "primary",
-  cancelButtonColor = "neutral",
+  cancelButtonColor = "warning",
   verifyText,
   ...options
 }: SwalProps) => {

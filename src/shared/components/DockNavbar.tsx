@@ -20,6 +20,7 @@ export default function DockNavbar() {
   const subMenus: Record<string, any[]> = {
     "/food": [
       { path: "/food/dashboard", label: "Food", Icon: Hamburger },
+
       { path: "/food/restaurant", label: "Places", Icon: MapPinArea },
       { path: "/food/settings", label: "Settings", Icon: GearSix },
     ],

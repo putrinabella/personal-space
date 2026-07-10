@@ -9,9 +9,15 @@ import {
   boolean,
   primaryKey,
   timestamp,
+  pgSchema,
 } from "drizzle-orm/pg-core";
 
-// 1. LOOKUP TABLES
+const auth = pgSchema("auth");
+
+export const users = auth.table("users", {
+  id: uuid("id").primaryKey(),
+});
+
 export const categories = pgTable("categories", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: text("name").notNull().unique(),
@@ -67,9 +73,9 @@ export const tags = pgTable("tags", {
   deletedAt: timestamp("deleted_at", { withTimezone: true }),
 });
 
-// 2. CORE OPERATIONAL TABLES
 export const restaurants = pgTable("restaurants", {
   id: uuid("id").defaultRandom().primaryKey(),
+  createdById: uuid("created_by").references(() => users.id),
   name: text("name").notNull(),
   address: text("address"),
   googleMapsUrl: text("google_maps_url"),
@@ -132,7 +138,6 @@ export const foodLogs = pgTable("food_logs", {
     .notNull(),
 });
 
-// 3. JUNCTION TABLE
 export const foodLogTags = pgTable(
   "food_log_tags",
   {
@@ -146,7 +151,6 @@ export const foodLogTags = pgTable(
   (t) => [primaryKey({ columns: [t.foodLogId, t.tagId] })],
 );
 
-// RELATIONS
 export const foodsRelations = relations(foods, ({ one, many }) => ({
   restaurant: one(restaurants, {
     fields: [foods.restaurantId],
