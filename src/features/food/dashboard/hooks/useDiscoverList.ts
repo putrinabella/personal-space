@@ -4,19 +4,6 @@ import { FoodEntry } from "../food.types";
 import { PaginatedParams } from "@/shared/types/common";
 import { discoverService } from "../service/discover.service";
 
-// export function useDiscoverFoodsLista(page = 1, title?: string) {
-//   const params: PaginatedParams = {
-//     page,
-//     search: title,
-//   };
-
-//   return useBaseList<FoodEntry, PaginatedParams>({
-//     queryKey: queryKeys.food.list(params),
-//     fetcher: (p) => discoverService.getPaginated(p),
-//     params,
-//   });
-// }
-
 export interface DiscoverFoodsParams extends PaginatedParams {
   restaurantId?: string;
   categoryId?: string;

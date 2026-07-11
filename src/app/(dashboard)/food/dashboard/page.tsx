@@ -91,11 +91,11 @@ export default function FoodView() {
     data: randomFood,
     refetch: fetchRandom,
     isFetching: loadingRandom,
-  } = useRandomFood(showRandomModal);
+  } = useRandomFood(showRandomModal, activeFilters);
 
   const handleRoll = (e?: React.MouseEvent) => {
-    e?.stopPropagation(); // Cegah jika ada aksi lain
-    fetchRandom(); // Panggil refetch saja
+    e?.stopPropagation();
+    fetchRandom();
   };
 
   const activeFilterCount = [

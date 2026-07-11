@@ -105,7 +105,7 @@ export const FoodCard = ({ food, onDetailClick }: FoodCardProps) => {
       <div className="flex items-stretch bg-base-200 rounded-xl overflow-hidden text-caption">
         <div className="flex-1 flex flex-col items-center justify-center gap-0.5 py-3">
           <span className="font-bold uppercase tracking-widest text-base-content">
-            Harga
+            Price
           </span>
           <span className="text-data-body font-black text-base-content">
             {formatRupiah(food.latestLog?.price)}
@@ -114,7 +114,7 @@ export const FoodCard = ({ food, onDetailClick }: FoodCardProps) => {
         <div className="w-px bg-base-300" />
         <div className="flex-1 flex flex-col items-center justify-center gap-0.5 py-3">
           <span className=" font-bold uppercase tracking-widest text-base-content">
-            Kunjungan
+            Visits
           </span>
           <span className="text-data-body font-black text-base-content">
             {food.totalLogs}x

@@ -48,10 +48,11 @@ export const FoodRandomModal = ({
             <div className="py-12 text-center text-base-content/60">
               Finding a delicious choice...
             </div>
-          ) : food ? (
+          ) : food !== null &&
+            food !== undefined &&
+            Object.keys(food).length > 0 ? (
             <div className="flex flex-col gap-4">
               <FoodCard food={food} />
-
               <CardBox
                 className="px-4 py-2 flex items-center justify-center gap-2 text-data-body md:text-base font-bold"
                 rounded="xl"
@@ -64,7 +65,11 @@ export const FoodRandomModal = ({
               </CardBox>
             </div>
           ) : (
-            <div className="py-8 text-center">No food found.</div>
+            <div className="py-12 flex flex-col items-center gap-4 text-center">
+              <p className="text-base-content/70">
+                Oops! No food found with these filters.
+              </p>
+            </div>
           )}
         </CardBox>
       </div>

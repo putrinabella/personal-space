@@ -24,7 +24,7 @@ export const FoodDetailModal = ({ food, isOpen, onClose }: ModalProps) => {
         <div className="flex justify-between items-start mb-6 gap-4">
           <div>
             <span className="text-caption font-bold uppercase tracking-widest text-base-content block mb-1">
-              Riwayat Kunjungan
+              Visit History
             </span>
             <h2 className="heading-h3 font-black text-base-content">
               {food.foodName}
@@ -54,7 +54,7 @@ export const FoodDetailModal = ({ food, isOpen, onClose }: ModalProps) => {
               <div className="flex flex-col items-center gap-2 py-10 text-center">
                 <ForkKnife size={28} className="text-base-content/20" />
                 <p className="text-data-body text-base-content">
-                  Belum ada riwayat kunjungan tercatat.
+                  No visit history yet.
                 </p>
               </div>
             );
