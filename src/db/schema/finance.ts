@@ -26,14 +26,12 @@ export const pockets = financeSchema.table("pockets", {
   balance: numeric("balance", { precision: 15, scale: 2 })
     .default("0")
     .notNull(),
-
-  // Konfigurasi Saving
   isAutoAllocationActive: boolean("is_auto_allocation_active").default(false),
   monthlyAllocationAmount: numeric("monthly_amount", {
     precision: 15,
     scale: 2,
   }),
-  allocationDay: text("allocation_day"), // '01', '05', dst
+  allocationDay: text("allocation_day"),
 
   createdAt: timestamp("created_at", { withTimezone: true })
     .defaultNow()

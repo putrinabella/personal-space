@@ -10,7 +10,7 @@ const headerFont = Fredoka({
 
 const bodyFont = Quicksand({
   subsets: ["latin"],
-  variable: "--font-body", // Untuk teks utama
+  variable: "--font-body",
 });
 
 const captionFont = Inter({
@@ -19,7 +19,7 @@ const captionFont = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Eunoia 🎀",
+  title: "E U N O I A",
 };
 
 export default function RootLayout({

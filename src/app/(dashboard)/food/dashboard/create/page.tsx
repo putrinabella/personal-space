@@ -220,7 +220,7 @@ export default function CreateFoodEntryPage() {
             // disabled={saving}
           >
             {saving ? (
-              "Menyimpan..."
+              "Saving..."
             ) : (
               <>
                 <Check size={18} /> Save

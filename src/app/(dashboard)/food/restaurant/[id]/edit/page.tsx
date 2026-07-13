@@ -75,7 +75,7 @@ export default function EditRestaurantPage({
             pressable
           >
             {saving ? (
-              "Menyimpan..."
+              "Saving..."
             ) : (
               <>
                 <Check size={18} className="inline mr-2" /> Update Data

@@ -46,10 +46,10 @@ export default function EditPage() {
             pressable
           >
             {saving ? (
-              "Menyimpan..."
+              "Saving..."
             ) : (
               <>
-                <Check size={18} /> Simpan
+                <Check size={18} /> Save
               </>
             )}
           </CardBox>{" "}

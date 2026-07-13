@@ -86,7 +86,7 @@ export default function CreateRestaurantPage() {
             // disabled={saving}
           >
             {saving ? (
-              "Menyimpan..."
+              "Saving..."
             ) : (
               <>
                 <Check size={18} /> Save
