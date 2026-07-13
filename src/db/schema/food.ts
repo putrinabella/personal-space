@@ -1,6 +1,5 @@
 import { relations } from "drizzle-orm";
 import {
-  pgTable,
   uuid,
   text,
   numeric,
@@ -11,14 +10,11 @@ import {
   timestamp,
   pgSchema,
 } from "drizzle-orm/pg-core";
+import { users } from "./auth";
 
-const auth = pgSchema("auth");
+export const foodSchema = pgSchema("food");
 
-export const users = auth.table("users", {
-  id: uuid("id").primaryKey(),
-});
-
-export const categories = pgTable("categories", {
+export const categories = foodSchema.table("categories", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: text("name").notNull().unique(),
   iconSlug: text("icon_slug"),
@@ -32,7 +28,7 @@ export const categories = pgTable("categories", {
   deletedAt: timestamp("deleted_at", { withTimezone: true }),
 });
 
-export const cuisines = pgTable("cuisines", {
+export const cuisines = foodSchema.table("cuisines", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: text("name").notNull().unique(),
   createdAt: timestamp("created_at", { withTimezone: true })
@@ -45,7 +41,7 @@ export const cuisines = pgTable("cuisines", {
   deletedAt: timestamp("deleted_at", { withTimezone: true }),
 });
 
-export const diningType = pgTable("dining_types", {
+export const diningType = foodSchema.table("dining_types", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: text("name").notNull().unique(),
   iconSlug: text("icon_slug"),
@@ -59,7 +55,7 @@ export const diningType = pgTable("dining_types", {
   deletedAt: timestamp("deleted_at", { withTimezone: true }),
 });
 
-export const tags = pgTable("tags", {
+export const tags = foodSchema.table("tags", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: text("name").notNull().unique(),
   bgColor: text("bg_color"),
@@ -73,7 +69,7 @@ export const tags = pgTable("tags", {
   deletedAt: timestamp("deleted_at", { withTimezone: true }),
 });
 
-export const restaurants = pgTable("restaurants", {
+export const restaurants = foodSchema.table("restaurants", {
   id: uuid("id").defaultRandom().primaryKey(),
   createdById: uuid("created_by").references(() => users.id),
   name: text("name").notNull(),
@@ -93,7 +89,7 @@ export const restaurants = pgTable("restaurants", {
   deletedAt: timestamp("deleted_at", { withTimezone: true }),
 });
 
-export const foods = pgTable("foods", {
+export const foods = foodSchema.table("foods", {
   id: uuid("id").defaultRandom().primaryKey(),
   restaurantId: uuid("restaurant_id")
     .references(() => restaurants.id, { onDelete: "cascade" })
@@ -119,7 +115,7 @@ export const foods = pgTable("foods", {
     .notNull(),
 });
 
-export const foodLogs = pgTable("food_logs", {
+export const foodLogs = foodSchema.table("food_logs", {
   id: uuid("id").defaultRandom().primaryKey(),
   foodId: uuid("food_id")
     .references(() => foods.id, { onDelete: "cascade" })
@@ -138,7 +134,7 @@ export const foodLogs = pgTable("food_logs", {
     .notNull(),
 });
 
-export const foodLogTags = pgTable(
+export const foodLogTags = foodSchema.table(
   "food_log_tags",
   {
     foodLogId: uuid("food_log_id")

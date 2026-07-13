@@ -8,7 +8,7 @@ import {
   categories,
   cuisines,
   diningType,
-} from "@/db/schema";
+} from "@/db/schema/food";
 import { sendPaginatedResponse, sendStandardResponse } from "@/lib/apiResponse";
 
 export async function GET(request: NextRequest) {

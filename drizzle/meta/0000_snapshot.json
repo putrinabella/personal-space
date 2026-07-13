@@ -1,12 +1,31 @@
 {
-  "id": "08412934-3961-4616-869b-afa0f27c1357",
+  "id": "07f1df01-c440-4412-bca0-981dff380db1",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.categories": {
+    "auth.users": {
+      "name": "users",
+      "schema": "auth",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "food.categories": {
       "name": "categories",
-      "schema": "",
+      "schema": "food",
       "columns": {
         "id": {
           "name": "id",
@@ -64,9 +83,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.cuisines": {
+    "food.cuisines": {
       "name": "cuisines",
-      "schema": "",
+      "schema": "food",
       "columns": {
         "id": {
           "name": "id",
@@ -118,9 +137,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.dining_types": {
+    "food.dining_types": {
       "name": "dining_types",
-      "schema": "",
+      "schema": "food",
       "columns": {
         "id": {
           "name": "id",
@@ -134,6 +153,12 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "icon_slug": {
+          "name": "icon_slug",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         },
         "created_at": {
           "name": "created_at",
@@ -172,9 +197,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.food_log_tags": {
+    "food.food_log_tags": {
       "name": "food_log_tags",
-      "schema": "",
+      "schema": "food",
       "columns": {
         "food_log_id": {
           "name": "food_log_id",
@@ -195,6 +220,7 @@
           "name": "food_log_tags_food_log_id_food_logs_id_fk",
           "tableFrom": "food_log_tags",
           "tableTo": "food_logs",
+          "schemaTo": "food",
           "columnsFrom": [
             "food_log_id"
           ],
@@ -208,6 +234,7 @@
           "name": "food_log_tags_tag_id_tags_id_fk",
           "tableFrom": "food_log_tags",
           "tableTo": "tags",
+          "schemaTo": "food",
           "columnsFrom": [
             "tag_id"
           ],
@@ -232,9 +259,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.food_logs": {
+    "food.food_logs": {
       "name": "food_logs",
-      "schema": "",
+      "schema": "food",
       "columns": {
         "id": {
           "name": "id",
@@ -301,6 +328,7 @@
           "name": "food_logs_food_id_foods_id_fk",
           "tableFrom": "food_logs",
           "tableTo": "foods",
+          "schemaTo": "food",
           "columnsFrom": [
             "food_id"
           ],
@@ -317,9 +345,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.foods": {
+    "food.foods": {
       "name": "foods",
-      "schema": "",
+      "schema": "food",
       "columns": {
         "id": {
           "name": "id",
@@ -393,6 +421,7 @@
           "name": "foods_restaurant_id_restaurants_id_fk",
           "tableFrom": "foods",
           "tableTo": "restaurants",
+          "schemaTo": "food",
           "columnsFrom": [
             "restaurant_id"
           ],
@@ -406,6 +435,7 @@
           "name": "foods_category_id_categories_id_fk",
           "tableFrom": "foods",
           "tableTo": "categories",
+          "schemaTo": "food",
           "columnsFrom": [
             "category_id"
           ],
@@ -419,6 +449,7 @@
           "name": "foods_cuisine_id_cuisines_id_fk",
           "tableFrom": "foods",
           "tableTo": "cuisines",
+          "schemaTo": "food",
           "columnsFrom": [
             "cuisine_id"
           ],
@@ -432,6 +463,7 @@
           "name": "foods_dining_type_id_dining_types_id_fk",
           "tableFrom": "foods",
           "tableTo": "dining_types",
+          "schemaTo": "food",
           "columnsFrom": [
             "dining_type_id"
           ],
@@ -448,9 +480,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.restaurants": {
+    "food.restaurants": {
       "name": "restaurants",
-      "schema": "",
+      "schema": "food",
       "columns": {
         "id": {
           "name": "id",
@@ -458,6 +490,12 @@
           "primaryKey": true,
           "notNull": true,
           "default": "gen_random_uuid()"
+        },
+        "created_by": {
+          "name": "created_by",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
         },
         "name": {
           "name": "name",
@@ -513,16 +551,31 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "restaurants_created_by_users_id_fk": {
+          "name": "restaurants_created_by_users_id_fk",
+          "tableFrom": "restaurants",
+          "tableTo": "users",
+          "schemaTo": "auth",
+          "columnsFrom": [
+            "created_by"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.tags": {
+    "food.tags": {
       "name": "tags",
-      "schema": "",
+      "schema": "food",
       "columns": {
         "id": {
           "name": "id",
@@ -579,10 +632,381 @@
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
+    },
+    "finance.pocket_transfers": {
+      "name": "pocket_transfers",
+      "schema": "finance",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "from_pocket_id": {
+          "name": "from_pocket_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "to_pocket_id": {
+          "name": "to_pocket_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "amount": {
+          "name": "amount",
+          "type": "numeric(15, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "date": {
+          "name": "date",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "pocket_transfers_user_id_users_id_fk": {
+          "name": "pocket_transfers_user_id_users_id_fk",
+          "tableFrom": "pocket_transfers",
+          "tableTo": "users",
+          "schemaTo": "auth",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "pocket_transfers_from_pocket_id_pockets_id_fk": {
+          "name": "pocket_transfers_from_pocket_id_pockets_id_fk",
+          "tableFrom": "pocket_transfers",
+          "tableTo": "pockets",
+          "schemaTo": "finance",
+          "columnsFrom": [
+            "from_pocket_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "pocket_transfers_to_pocket_id_pockets_id_fk": {
+          "name": "pocket_transfers_to_pocket_id_pockets_id_fk",
+          "tableFrom": "pocket_transfers",
+          "tableTo": "pockets",
+          "schemaTo": "finance",
+          "columnsFrom": [
+            "to_pocket_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "finance.pockets": {
+      "name": "pockets",
+      "schema": "finance",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'general'"
+        },
+        "balance": {
+          "name": "balance",
+          "type": "numeric(15, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'0'"
+        },
+        "is_auto_allocation_active": {
+          "name": "is_auto_allocation_active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "monthly_amount": {
+          "name": "monthly_amount",
+          "type": "numeric(15, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "allocation_day": {
+          "name": "allocation_day",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "pockets_user_id_users_id_fk": {
+          "name": "pockets_user_id_users_id_fk",
+          "tableFrom": "pockets",
+          "tableTo": "users",
+          "schemaTo": "auth",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "finance.transactions": {
+      "name": "transactions",
+      "schema": "finance",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "pocket_id": {
+          "name": "pocket_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "category_id": {
+          "name": "category_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "amount": {
+          "name": "amount",
+          "type": "numeric(15, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "date": {
+          "name": "date",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "transactions_user_id_users_id_fk": {
+          "name": "transactions_user_id_users_id_fk",
+          "tableFrom": "transactions",
+          "tableTo": "users",
+          "schemaTo": "auth",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "transactions_pocket_id_pockets_id_fk": {
+          "name": "transactions_pocket_id_pockets_id_fk",
+          "tableFrom": "transactions",
+          "tableTo": "pockets",
+          "schemaTo": "finance",
+          "columnsFrom": [
+            "pocket_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "transactions_category_id_types_id_fk": {
+          "name": "transactions_category_id_types_id_fk",
+          "tableFrom": "transactions",
+          "tableTo": "types",
+          "schemaTo": "finance",
+          "columnsFrom": [
+            "category_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "finance.types": {
+      "name": "types",
+      "schema": "finance",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "icon_slug": {
+          "name": "icon_slug",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "types_user_id_users_id_fk": {
+          "name": "types_user_id_users_id_fk",
+          "tableFrom": "types",
+          "tableTo": "users",
+          "schemaTo": "auth",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
     }
   },
   "enums": {},
-  "schemas": {},
+  "schemas": {
+    "auth": "auth",
+    "food": "food",
+    "finance": "finance"
+  },
   "sequences": {},
   "roles": {},
   "policies": {},

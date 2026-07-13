@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { db } from "@/db";
-import { foods, foodLogs, foodLogTags } from "@/db/schema";
+import { foods, foodLogs, foodLogTags } from "@/db/schema/food";
 import { eq, desc, and, sql } from "drizzle-orm";
 import { sendPaginatedResponse, sendStandardResponse } from "@/lib/apiResponse";
 
