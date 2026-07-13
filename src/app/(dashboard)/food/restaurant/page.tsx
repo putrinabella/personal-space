@@ -17,6 +17,7 @@ import ActionButton from "@/shared/components/ActionButton";
 import { useDataFilters } from "@/shared/hooks/use-data-filters";
 import FormInput from "@/shared/components/FormInput";
 import { useRestaurantsDelete } from "@/features/food/restaurants/hooks/useRestaurantDelete";
+import DataSection from "@/shared/components/DataSection";
 
 export default function RestaurantPage() {
   const {
@@ -36,6 +37,7 @@ export default function RestaurantPage() {
   const {
     data: restaurants,
     loading,
+    error,
     lastPage,
     total,
     perPage,
@@ -124,74 +126,72 @@ export default function RestaurantPage() {
           </CardBox>
         </div>
       </CardBox>
-
-      {loading ? (
-        <div className="p-12 text-center text-base-500">
-          Loading culinary spots...
-        </div>
-      ) : (
-        <div className="flex flex-col gap-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {restaurants?.map((data) => (
-              <CardBox
-                key={data.id}
-                className="p-5 flex flex-col gap-3 hover:shadow-lg transition-shadow border border-base-200"
-                rounded="2xl"
-                color="base-100"
-              >
-                <div className="flex justify-between items-start">
-                  <div className="flex-1 pr-2">
-                    <h3 className="heading-h3 font-bold leading-tight">
-                      {data.name}
-                    </h3>
-                    <p className="text-body opacity-70 mt-1 font-bold">
-                      {data.address}
-                    </p>
+      <div>
+        <DataSection loading={loading} error={error} data={restaurants} />
+        {!loading && !error && restaurants.length > 0 && (
+          <div className="flex flex-col gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {restaurants?.map((data) => (
+                <CardBox
+                  key={data.id}
+                  className="p-5 flex flex-col gap-3 hover:shadow-lg transition-shadow border border-base-200"
+                  rounded="2xl"
+                  color="base-100"
+                >
+                  <div className="flex justify-between items-start">
+                    <div className="flex-1 pr-2">
+                      <h3 className="heading-h3 font-bold leading-tight">
+                        {data.name}
+                      </h3>
+                      <p className="text-body opacity-70 mt-1 font-bold">
+                        {data.address}
+                      </p>
+                    </div>
+                    {data.isFavoriteRestaurant && (
+                      <Star
+                        size={18}
+                        className="text-accent fill-accent shrink-0"
+                      />
+                    )}
                   </div>
-                  {data.isFavoriteRestaurant && (
-                    <Star
-                      size={18}
-                      className="text-accent fill-accent shrink-0"
-                    />
-                  )}
-                </div>
 
-                <div className="flex items-center justify-between pt-3 border-t border-base-200 mt-auto">
-                  <a
-                    href={data.googleMapsUrl}
-                    target="_blank"
-                    className="flex items-center gap-1 text-caption font-black uppercase tracking-widest hover:underline"
-                  >
-                    Open in Maps <ArrowUpRight size={12} />
-                  </a>
-                  <div className="flex gap-1">
-                    <ActionButton
-                      icon={Pencil}
-                      color="warning"
-                      size={14}
-                      to={`/food/restaurant/${data.id}/edit`}
-                    />
-                    <ActionButton
-                      icon={Trash}
-                      color="error"
-                      size={14}
-                      onClick={() => handleDelete(data.id)}
-                    />
+                  <div className="flex items-center justify-between pt-3 border-t border-base-200 mt-auto">
+                    <a
+                      href={data.googleMapsUrl}
+                      target="_blank"
+                      className="flex items-center gap-1 text-caption font-black uppercase tracking-widest hover:underline"
+                    >
+                      Open in Maps <ArrowUpRight size={12} />
+                    </a>
+                    <div className="flex gap-1">
+                      <ActionButton
+                        icon={Pencil}
+                        color="warning"
+                        size={14}
+                        to={`/food/restaurant/${data.id}/edit`}
+                      />
+                      <ActionButton
+                        icon={Trash}
+                        color="error"
+                        size={14}
+                        onClick={() => handleDelete(data.id)}
+                      />
+                    </div>
                   </div>
-                </div>
-              </CardBox>
-            ))}
+                </CardBox>
+              ))}
+            </div>
+
+            <Pagination
+              page={page}
+              lastPage={lastPage ?? 1}
+              total={total ?? 0}
+              perPage={perPage ?? 10}
+              onPageChange={setPage}
+            />
           </div>
-
-          <Pagination
-            page={page}
-            lastPage={lastPage ?? 1}
-            total={total ?? 0}
-            perPage={perPage ?? 10}
-            onPageChange={setPage}
-          />
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

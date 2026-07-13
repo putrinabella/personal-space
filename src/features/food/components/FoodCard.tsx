@@ -133,26 +133,32 @@ export const FoodCard = ({ food, onDetailClick }: FoodCardProps) => {
         </div>
       )}
 
-      <div className="flex items-start justify-between border-t border-base-300 pt-3 mt-1 text-left">
+      <div className="border-t border-base-300 pt-3 mt-1 text-left">
         <a
           href={food.restaurant?.googleMapsUrl}
           target="_blank"
           rel="noopener noreferrer"
           onClick={(e) => e.stopPropagation()}
-          className="flex items-start gap-2 text-base-content hover:text-accent transition-colors group/link w-full overflow-hidden"
+          className="flex items-start gap-2 text-base-content group/link w-full overflow-hidden transition-colors duration-300 hover:text-accent"
         >
-          <div className="mt-0.5 shrink-0">
+          {/* Icon */}
+          <div className="mt-0.5 shrink-0 transition-colors duration-300 group-hover/link:text-accent">
             <MapPinAreaIcon size={16} />
           </div>
-          <div className="flex flex-col min-w-0">
-            <span className="text-caption font-bold truncate">
+
+          {/* Text Container */}
+          <div className="flex flex-col min-w-0 transition-colors duration-300">
+            <span className="text-caption uppercase font-bold truncate group-hover/link:text-accent transition-colors duration-300">
               {food.restaurant?.name}
             </span>
-            <span className="text-caption text-base-content truncate leading-tight">
+            {/* Pastikan class ini ditambahkan agar alamat ikut berubah */}
+            <span className="text-caption uppercase truncate leading-tight group-hover/link:text-accent transition-colors duration-300">
               {food.restaurant?.address}
             </span>
           </div>
-          <div className="ml-auto mt-0.5 shrink-0">
+
+          {/* Arrow */}
+          <div className="ml-auto mt-0.5 shrink-0 transition-colors duration-300 group-hover/link:text-accent">
             <ArrowUpRight
               size={14}
               className="opacity-0 group-hover/link:opacity-100 transition-opacity"
@@ -160,6 +166,7 @@ export const FoodCard = ({ food, onDetailClick }: FoodCardProps) => {
           </div>
         </a>
       </div>
+
     </CardBox>
   );
 };

@@ -85,7 +85,7 @@
 
 @utility text-caption {
   /* Menggunakan font caption yang lebih bersih (Inter) */
-  @apply text-[10px] md:text-xs font-caption text-base-content/60 tracking-wide uppercase leading-normal;
+  @apply text-[10px] md:text-xs font-caption text-base-content/60 tracking-wide  leading-normal;
 }
 
 /* Tambahkan utilitas untuk data yang butuh keterbacaan tinggi */

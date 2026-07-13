@@ -17,6 +17,7 @@ import { useCategoriesDelete } from "@/features/food/categories/hooks/useCategor
 import { useCuisinesDelete } from "@/features/food/cuisines/hooks/useCuisinesDelete";
 import { useDiningTypeDelete } from "@/features/food/diningType/hooks/useDiningTypeDelete";
 import { useTagDelete } from "@/features/food/tags/hooks/useTagDelete";
+import DataSection from "@/shared/components/DataSection";
 
 const TAB_CONFIG = [
   { id: "categories", label: "Categories" },
@@ -96,7 +97,7 @@ export default function SettingsPage() {
   );
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-8 max-w-7xl mx-auto">
       <CardHeader title="S E T T I N G S" icon={Sliders} color="accent" />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -162,33 +163,42 @@ export default function SettingsPage() {
                 />
               }
             >
-              {activeData.loading ? (
-                <div className="p-8 text-center">Loading data...</div>
-              ) : (
-                <DataRenderer
+              <div>
+                <DataSection
+                  loading={activeData.loading}
+                  error={activeData.error}
                   data={activeData.data}
-                  viewType={viewType}
-                  onEdit={(item) => {
-                    // Navigasi ke path edit berdasarkan ID item
-                    router.push(`/food/settings/${activeTab}/${item.id}/edit`);
-                  }}
-                  onDelete={(item) => {
-                    const handler = deleteHandlers[activeTab];
-                    if (handler) {
-                      // Panggil handleDelete, BUKAN .mutate()
-                      handler.handleDelete(item.id);
-                    }
-                  }}
                 />
-              )}
+                {!activeData.loading &&
+                  !activeData.error &&
+                  activeData.data.length > 0 && (
+                    <DataRenderer
+                      data={activeData.data}
+                      viewType={viewType}
+                      onEdit={(item) => {
+                        // Navigasi ke path edit berdasarkan ID item
+                        router.push(
+                          `/food/settings/${activeTab}/${item.id}/edit`,
+                        );
+                      }}
+                      onDelete={(item) => {
+                        const handler = deleteHandlers[activeTab];
+                        if (handler) {
+                          // Panggil handleDelete, BUKAN .mutate()
+                          handler.handleDelete(item.id);
+                        }
+                      }}
+                    />
+                  )}
 
-              <Pagination
-                page={page}
-                lastPage={activeData.lastPage}
-                total={activeData.total}
-                perPage={activeData.perPage}
-                onPageChange={(newPage) => setPage(newPage)}
-              />
+                <Pagination
+                  page={page}
+                  lastPage={activeData.lastPage}
+                  total={activeData.total}
+                  perPage={activeData.perPage}
+                  onPageChange={(newPage) => setPage(newPage)}
+                />
+              </div>
             </CardSection>
           </div>
         </div>

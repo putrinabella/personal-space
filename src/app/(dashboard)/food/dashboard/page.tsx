@@ -10,30 +10,15 @@ import { useRandomFood } from "@/features/food/dashboard/hooks/useRandomFood";
 import { useDiningTypeAll } from "@/features/food/diningType/hooks/useDiningTypeAll";
 import { useRestaurantAll } from "@/features/food/restaurants/hooks/useRestaurantAll";
 import CardBox from "@/shared/components/CardBox";
+import DataSection from "@/shared/components/DataSection";
 import FormInput from "@/shared/components/FormInput";
-import { getIcon } from "@/shared/components/GetIcon";
 import Pagination from "@/shared/components/Pagination";
 import { useDataFilters } from "@/shared/hooks/use-data-filters";
-import { formatDateIndo } from "@/utils/dateFormatter";
-import { formatRupiah } from "@/utils/rupiahFormatter";
 import {
   ArrowClockwiseIcon,
-  ArrowUpRight,
-  CaretDownIcon,
-  ChatText,
-  DiceFiveIcon,
-  DiceFourIcon,
-  ForkKnife,
   ForkKnifeIcon,
   FunnelIcon,
-  Heart,
-  MapPinAreaIcon,
-  Moon,
-  Plus,
   SparkleIcon,
-  Star,
-  X,
-  XIcon,
 } from "@phosphor-icons/react";
 import { useState } from "react";
 
@@ -64,6 +49,7 @@ export default function FoodView() {
   const {
     data: foodData,
     loading,
+    error,
     lastPage,
     total,
     perPage,
@@ -91,6 +77,7 @@ export default function FoodView() {
     data: randomFood,
     refetch: fetchRandom,
     isFetching: loadingRandom,
+    error: randomError,
   } = useRandomFood(showRandomModal, activeFilters);
 
   const handleRoll = (e?: React.MouseEvent) => {
@@ -276,22 +263,8 @@ export default function FoodView() {
         </div>
       </CardBox>
       <div>
-        {loading ? (
-          <div className="p-12 text-center text-base-content">
-            Loading culinary archive...
-          </div>
-        ) : !foodData || foodData.length === 0 ? (
-          <div className="p-16 flex flex-col items-center justify-center text-center gap-2 border border-dashed border-base-300 rounded-2xl">
-            <ForkKnifeIcon size={28} className="text-base-content" />
-            <p className="font-bold text-base-content">
-              Belum ada catatan kuliner
-            </p>
-            <p className="text-data-body text-base-content">
-              Coba ubah filter, atau tambahkan entri baru lewat tombol "New
-              Entry".
-            </p>
-          </div>
-        ) : (
+        <DataSection loading={loading} error={error} data={foodData} />
+        {!loading && !error && foodData.length > 0 && (
           <div className="flex flex-col gap-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {foodData.map((food) => (
