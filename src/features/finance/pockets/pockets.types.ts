@@ -1,6 +1,6 @@
 import { BaseItem } from "@/shared/types/base.types";
 
-export interface TypeFormData {
+export interface PocketsFormData {
   householdId: string;
   name: string;
   type: string;
@@ -11,7 +11,7 @@ export interface TypeFormData {
   color: string;
 }
 
-export interface TypeEntry extends BaseItem, TypeFormData {
+export interface PocketsEntry extends BaseItem, PocketsFormData {
   householdId: string;
   type: string;
   iconSlug: string;
@@ -21,7 +21,7 @@ export interface TypeEntry extends BaseItem, TypeFormData {
   color: string;
 }
 
-export const defaultType: TypeFormData = {
+export const defaultPockets: PocketsFormData = {
   householdId: "",
   name: "",
   type: "",
@@ -32,9 +32,9 @@ export const defaultType: TypeFormData = {
   color: "",
 };
 
-export const validateType = (payload: TypeFormData): string[] => {
+export const validatePockets = (payload: PocketsFormData): string[] => {
   const errors: string[] = [];
-  if (!payload.name) errors.push("Nama kategori wajib diisi.");
+  if (!payload.name) errors.push("Nama wajib diisi.");
   if (!payload.iconSlug) errors.push("Icon wajib diisi.");
   return errors;
 };

@@ -1,17 +1,17 @@
 import { queryKeys } from "@/lib/queryKeys";
-import { typeService } from "../pockets.service";
+import { pocketsService } from "../pockets.service";
 import { useBaseDelete } from "@/shared/hooks/core/use-base-delete";
 
-export function useTypeDelete() {
+export function usePocketsDelete() {
   return useBaseDelete({
-    entityName: "Type",
+    entityName: "Pockets",
 
-    mutationFn: typeService.delete,
+    mutationFn: pocketsService.delete,
 
-    invalidateQueryKey: queryKeys.type.lists(),
+    invalidateQueryKey: queryKeys.pockets.lists(),
 
     messages: {
-      deleteSuccess: "Type deleted successfully",
+      deleteSuccess: "Pockets deleted successfully",
     },
   });
 }

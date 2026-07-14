@@ -1,18 +1,18 @@
 import { useBaseList } from "@/shared/hooks/core/use-base-list";
 import { queryKeys } from "@/lib/queryKeys";
-import { TypeEntry } from "../pockets.types";
-import { typeService } from "../pockets.service";
+import { pocketsService } from "../pockets.service";
 import { PaginatedParams } from "@/shared/types/common";
+import { PocketsEntry } from "../pockets.types";
 
-export function useTypeList(page = 1, title?: string, enabled = true) {
+export function usePocketsList(page = 1, title?: string, enabled = true) {
   const params: PaginatedParams = {
     page,
     search: title,
   };
 
-  return useBaseList<TypeEntry, PaginatedParams>({
-    queryKey: queryKeys.type.list(params),
-    fetcher: (p) => typeService.getPaginated(p),
+  return useBaseList<PocketsEntry, PaginatedParams>({
+    queryKey: queryKeys.pockets.list(params),
+    fetcher: (p) => pocketsService.getPaginated(p),
     params,
     enabled,
   });

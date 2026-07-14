@@ -1,6 +1,9 @@
 import { createCrudService } from "@/shared/service/createCrudService";
-import { TypeEntry } from "./pockets.types";
+import { PocketsEntry } from "./pockets.types";
 
-export const typeService = createCrudService<TypeEntry>("/api/food/Type", {
-  tag: "finance-type",
-});
+export const pocketsService = createCrudService<PocketsEntry>(
+  "/api/finance/pockets",
+  {
+    tag: "pockets",
+  },
+);

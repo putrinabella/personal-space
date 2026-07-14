@@ -7,7 +7,7 @@ import { IndicatorEmpty } from "./IndicatorEmptyData";
 interface DataSectionProps<T> {
   loading: boolean;
   error: boolean;
-  data: T | T[] | null;
+  data: any;
 
   EmptyComponent?: React.ComponentType<{ message?: string }>;
   ErrorComponent?: React.ComponentType<{

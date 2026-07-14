@@ -1,12 +1,12 @@
 import { queryKeys } from "@/lib/queryKeys";
 import { useBaseAll } from "@/shared/hooks/core/use-base-all";
-import { TypeEntry } from "../pockets.types";
-import { typeService } from "../pockets.service";
+import { pocketsService } from "../pockets.service";
+import { PocketsEntry } from "../pockets.types";
 
-export function useTypeAll() {
-  return useBaseAll<TypeEntry>({
-    queryKey: queryKeys.type.all,
+export function usePocketsAll() {
+  return useBaseAll<PocketsEntry>({
+    queryKey: queryKeys.pockets.all,
 
-    fetcher: typeService.getAll,
+    fetcher: pocketsService.getAll,
   });
 }
