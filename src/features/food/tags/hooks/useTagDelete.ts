@@ -11,7 +11,7 @@ export function useTagDelete() {
     invalidateQueryKey: queryKeys.tags.lists(),
 
     messages: {
-      deleteSuccess: "Tag berhasil dihapus",
+      deleteSuccess: "Tag deleted successfully",
     },
   });
 }

@@ -76,7 +76,7 @@ export function useBaseDelete({
       showConfirmButton: true,
       confirmButtonText: "Hapus",
       confirmButtonColor: "error" as DaisyColor,
-      cancelButtonText: "Batal",
+      cancelButtonText: "Cancel",
       cancelButtonColor: "base-300" as DaisyColor,
     });
 

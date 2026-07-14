@@ -27,9 +27,9 @@ export function useCuisinesForm(cuisinesId?: string, enabled: boolean = true) {
     redirectTo: "/food/settings",
 
     messages: {
-      createSuccess: "Kategori berhasil dibuat",
-      updateSuccess: "Kategori berhasil diperbarui",
-      fetchError: "Tidak dapat mengambil data kategori",
+      createSuccess: "Category created successfully",
+      updateSuccess: "Category updated successfully",
+      fetchError: "Failed to load category data",
     },
   });
 }

@@ -11,7 +11,7 @@ export function useDiningTypeDelete() {
     invalidateQueryKey: queryKeys.diningType.lists(),
 
     messages: {
-      deleteSuccess: "Tipe berhasil dihapus",
+      deleteSuccess: "Dining type deleted successfully",
     },
   });
 }

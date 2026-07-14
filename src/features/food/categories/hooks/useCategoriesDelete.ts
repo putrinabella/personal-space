@@ -11,7 +11,7 @@ export function useCategoriesDelete() {
     invalidateQueryKey: queryKeys.categories.lists(),
 
     messages: {
-      deleteSuccess: "Categories berhasil dihapus",
+      deleteSuccess: "Categories deleted successfully",
     },
   });
 }

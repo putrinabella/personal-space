@@ -11,7 +11,7 @@ export function useRestaurantsDelete() {
     invalidateQueryKey: queryKeys.restaurants.lists(),
 
     messages: {
-      deleteSuccess: "Restoran berhasil dihapus",
+      deleteSuccess: "Restaurant deleted successfully",
     },
   });
 }

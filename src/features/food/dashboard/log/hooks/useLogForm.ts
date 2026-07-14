@@ -22,9 +22,9 @@ export function useLogForm(logId?: string) {
     redirectTo: "/food/dashboard",
 
     messages: {
-      createSuccess: "Log berhasil dibuat",
-      updateSuccess: "Log berhasil diperbarui",
-      fetchError: "Tidak dapat mengambil data log",
+      createSuccess: "Log created successfully",
+      updateSuccess: "Log updated successfully",
+      fetchError: "Failed to load log data",
     },
   });
 }

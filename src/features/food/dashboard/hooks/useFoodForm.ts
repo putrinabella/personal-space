@@ -22,9 +22,9 @@ export function useFoodForm(foodId?: string) {
     redirectTo: "/food/dashboard",
 
     messages: {
-      createSuccess: "Makanan berhasil dibuat",
-      updateSuccess: "Makanan berhasil diperbarui",
-      fetchError: "Tidak dapat mengambil data makanan",
+      createSuccess: "Food created successfully",
+      updateSuccess: "Food updated successfully",
+      fetchError: "Failed to load food data",
     },
   });
 }

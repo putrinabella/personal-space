@@ -27,9 +27,9 @@ export function useRestaurantsForm(restaurantsId?: string) {
     redirectTo: "/food/restaurant",
 
     messages: {
-      createSuccess: "Restoran berhasil dibuat",
-      updateSuccess: "Restoran berhasil diperbarui",
-      fetchError: "Tidak dapat mengambil data restoran",
+      createSuccess: "Restaurant created successfully",
+      updateSuccess: "Restaurant updated successfully",
+      fetchError: "Failed to load restaurant data",
     },
   });
 }

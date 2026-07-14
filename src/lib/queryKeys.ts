@@ -9,4 +9,5 @@ export const queryKeys = {
   log: createQueryKeys("food-logs"),
   food: createQueryKeys("food"),
   discoverFoods: createQueryKeys("discover-foods"),
+  type: createQueryKeys("finance-type"),
 };

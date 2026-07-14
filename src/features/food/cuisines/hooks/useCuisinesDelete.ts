@@ -11,7 +11,7 @@ export function useCuisinesDelete() {
     invalidateQueryKey: queryKeys.cuisines.lists(),
 
     messages: {
-      deleteSuccess: "Cuisines berhasil dihapus",
+      deleteSuccess: "Cuisines deleted successfully",
     },
   });
 }

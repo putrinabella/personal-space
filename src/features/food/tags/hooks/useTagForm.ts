@@ -23,9 +23,9 @@ export function useTagForm(tagId?: string, enabled: boolean = true) {
     redirectTo: "/food/settings",
 
     messages: {
-      createSuccess: "Kategori berhasil dibuat",
-      updateSuccess: "Kategori berhasil diperbarui",
-      fetchError: "Tidak dapat mengambil data kategori",
+      createSuccess: "Tag created successfully",
+      updateSuccess: "Tag updated successfully",
+      fetchError: "Failed to load tag data",
     },
   });
 }

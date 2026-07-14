@@ -89,7 +89,7 @@ export default function EditRestaurantPage({
             onClick={() => router.back()}
             pressable
           >
-            <ArrowLeft size={18} className="inline mr-2" /> Batal
+            <ArrowLeft size={18} className="inline mr-2" /> Cancel
           </CardBox>
         </div>
       </CardBox>

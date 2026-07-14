@@ -53,7 +53,7 @@ export default function CreatePage() {
             onClick={() => router.back()}
             pressable
           >
-            <ArrowLeft size={18} /> Batal
+            <ArrowLeft size={18} /> Cancel
           </CardBox>
         </div>
       </CardBox>
