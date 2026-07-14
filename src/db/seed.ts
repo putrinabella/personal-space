@@ -1,11 +1,13 @@
 // src/db/seed-finance.ts
+
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
-import * as schema from "./schema"; // Pastikan path ke schema finance sudah benar
-import { eq, and, desc, sql } from "drizzle-orm";
+import * as schema from "./schema";
+import { eq } from "drizzle-orm";
 
 const connectionString = process.env.DATABASE_URL!;
 const client = postgres(connectionString, { max: 1 });
+
 const db = drizzle(client, { schema });
 
 const MY_HOUSEHOLD_ID = "2fb75d5e-3b0d-4ae5-80aa-adc9b9f9cb5f";
@@ -13,84 +15,243 @@ const TARGET_USER_ID = "cea8c189-1e5b-4031-b8ed-99b2e4e2f9cd";
 
 async function main() {
   try {
-    console.log(
-      "⏳ Membersihkan data finance untuk Household:",
-      MY_HOUSEHOLD_ID,
-    );
+    console.log("🧹 Cleaning finance data...");
 
-    // Hapus data hanya milik household tersebut agar data orang lain tidak terhapus
-    await db
-      .delete(schema.pocketTransfers)
-      .where(eq(schema.pocketTransfers.householdId, MY_HOUSEHOLD_ID)); // Hapus 'schema.' sebelum eq
+    await db.delete(schema.financeTransactionTags);
+
+    await db.delete(schema.financeTransactionLogs);
 
     await db
-      .delete(schema.transactions)
-      .where(eq(schema.transactions.householdId, MY_HOUSEHOLD_ID));
+      .delete(schema.financeRecurringTransactions)
+      .where(
+        eq(schema.financeRecurringTransactions.householdId, MY_HOUSEHOLD_ID),
+      );
 
     await db
-      .delete(schema.types)
-      .where(eq(schema.types.householdId, MY_HOUSEHOLD_ID));
+      .delete(schema.financeAccountTransfers)
+      .where(eq(schema.financeAccountTransfers.householdId, MY_HOUSEHOLD_ID));
 
     await db
-      .delete(schema.pockets)
-      .where(eq(schema.pockets.householdId, MY_HOUSEHOLD_ID));
+      .delete(schema.financeTransactions)
+      .where(eq(schema.financeTransactions.householdId, MY_HOUSEHOLD_ID));
 
-    console.log("🌱 Mulai seeding data...");
+    await db.delete(schema.financeSavingGoals);
 
-    // 1. Seed Pockets
-    const insertedPockets = await db
-      .insert(schema.pockets)
+    await db
+      .delete(schema.financeBudgets)
+      .where(eq(schema.financeBudgets.householdId, MY_HOUSEHOLD_ID));
+
+    await db
+      .delete(schema.financeTags)
+      .where(eq(schema.financeTags.householdId, MY_HOUSEHOLD_ID));
+
+    await db
+      .delete(schema.financeCategories)
+      .where(eq(schema.financeCategories.householdId, MY_HOUSEHOLD_ID));
+
+    await db
+      .delete(schema.financePockets)
+      .where(eq(schema.financePockets.householdId, MY_HOUSEHOLD_ID));
+
+    await db
+      .delete(schema.financeAccounts)
+      .where(eq(schema.financeAccounts.householdId, MY_HOUSEHOLD_ID));
+
+    console.log("🌱 Seeding...");
+
+    // -----------------------------------------------------------------
+    // Accounts
+    // -----------------------------------------------------------------
+
+    const accounts = await db
+      .insert(schema.financeAccounts)
       .values([
         {
           householdId: MY_HOUSEHOLD_ID,
-          name: "Main Wallet",
+          name: "Cash Wallet",
+          type: "cash",
+          currentBalance: "1000000",
+          color: "#22c55e",
+        },
+        {
+          householdId: MY_HOUSEHOLD_ID,
+          name: "BCA",
+          type: "bank",
+          currentBalance: "7500000",
+          color: "#2563eb",
+        },
+      ])
+      .returning();
+
+    // -----------------------------------------------------------------
+    // Pockets
+    // -----------------------------------------------------------------
+
+    const pockets = await db
+      .insert(schema.financePockets)
+      .values([
+        {
+          householdId: MY_HOUSEHOLD_ID,
+          name: "Daily",
           type: "general",
-          balance: "1000000.00",
         },
         {
           householdId: MY_HOUSEHOLD_ID,
           name: "Emergency Fund",
           type: "saving",
-          balance: "5000000.00",
         },
       ])
       .returning();
 
-    // 2. Seed Categories
-    const insertedTypes = await db
-      .insert(schema.types)
+    // -----------------------------------------------------------------
+    // Categories
+    // -----------------------------------------------------------------
+
+    const categories = await db
+      .insert(schema.financeCategories)
       .values([
         {
           householdId: MY_HOUSEHOLD_ID,
           name: "Salary",
           type: "income",
-          iconSlug: "briefcase",
         },
         {
           householdId: MY_HOUSEHOLD_ID,
           name: "Food",
           type: "expense",
-          iconSlug: "coffee",
         },
       ])
       .returning();
 
-    // 3. Seed Transactions
-    await db.insert(schema.transactions).values([
+    // -----------------------------------------------------------------
+    // Budget
+    // -----------------------------------------------------------------
+
+    await db.insert(schema.financeBudgets).values({
+      householdId: MY_HOUSEHOLD_ID,
+      categoryId: categories[1].id,
+      amount: "3000000",
+      month: 7,
+      year: 2026,
+    });
+
+    // -----------------------------------------------------------------
+    // Tags
+    // -----------------------------------------------------------------
+
+    const tags = await db
+      .insert(schema.financeTags)
+      .values([
+        {
+          householdId: MY_HOUSEHOLD_ID,
+          name: "Personal",
+        },
+        {
+          householdId: MY_HOUSEHOLD_ID,
+          name: "Family",
+        },
+      ])
+      .returning();
+
+    // -----------------------------------------------------------------
+    // Saving Goal
+    // -----------------------------------------------------------------
+
+    await db.insert(schema.financeSavingGoals).values({
+      name: "Emergency Fund",
+      description: "6 months living expenses",
+      pocketId: pockets[1].id,
+      targetAmount: "50000000",
+    });
+
+    // -----------------------------------------------------------------
+    // Recurring
+    // -----------------------------------------------------------------
+
+    await db.insert(schema.financeRecurringTransactions).values({
+      householdId: MY_HOUSEHOLD_ID,
+      accountId: accounts[1].id,
+      categoryId: categories[0].id,
+      amount: "10000000",
+      type: "income",
+      frequency: "monthly",
+      nextRun: new Date(),
+    });
+
+    // -----------------------------------------------------------------
+    // Transactions
+    // -----------------------------------------------------------------
+
+    const transactions = await db
+      .insert(schema.financeTransactions)
+      .values([
+        {
+          householdId: MY_HOUSEHOLD_ID,
+          accountId: accounts[1].id,
+          pocketId: pockets[0].id,
+          categoryId: categories[0].id,
+          createdById: TARGET_USER_ID,
+          amount: "10000000",
+          type: "income",
+          description: "Monthly Salary",
+        },
+        {
+          householdId: MY_HOUSEHOLD_ID,
+          accountId: accounts[0].id,
+          pocketId: pockets[0].id,
+          categoryId: categories[1].id,
+          createdById: TARGET_USER_ID,
+          amount: "75000",
+          type: "expense",
+          description: "Lunch",
+        },
+      ])
+      .returning();
+
+    // -----------------------------------------------------------------
+    // Transaction Tags
+    // -----------------------------------------------------------------
+
+    await db.insert(schema.financeTransactionTags).values([
       {
-        householdId: MY_HOUSEHOLD_ID,
-        pocketId: insertedPockets[0].id,
-        categoryId: insertedTypes[0].id,
-        createdById: TARGET_USER_ID,
-        amount: "10000000.00",
-        type: "income",
-        description: "Monthly Salary",
+        transactionId: transactions[0].id,
+        tagId: tags[0].id,
+      },
+      {
+        transactionId: transactions[1].id,
+        tagId: tags[1].id,
       },
     ]);
 
-    console.log("✅ Seeding selesai!");
+    // -----------------------------------------------------------------
+    // Transfer
+    // -----------------------------------------------------------------
+
+    await db.insert(schema.financeAccountTransfers).values({
+      householdId: MY_HOUSEHOLD_ID,
+      fromAccountId: accounts[1].id,
+      toAccountId: accounts[0].id,
+      amount: "500000",
+      description: "Transfer to Cash",
+    });
+
+    // -----------------------------------------------------------------
+    // Monthly Summary
+    // -----------------------------------------------------------------
+
+    await db.insert(schema.financeMonthlySummaries).values({
+      householdId: MY_HOUSEHOLD_ID,
+      month: 7,
+      year: 2026,
+      totalIncome: "10000000",
+      totalExpense: "75000",
+      totalSavings: "9925000",
+      netBalance: "9925000",
+    });
+
+    console.log("✅ Finance seed completed.");
   } catch (err) {
-    console.error("❌ Seeding gagal:", err);
+    console.error(err);
   } finally {
     await client.end();
   }

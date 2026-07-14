@@ -1,26 +1,64 @@
-import { NextRequest } from "next/server";
-import { db } from "@/db";
-import { pocketTransfers } from "@/db/schema/finance";
-import { sendStandardResponse } from "@/lib/apiResponse";
-import { getHouseholdAuth } from "@/lib/financeAuth";
+// import { financeAccountTransfers } from "@/db/schema";
+// import { createFinanceHandler } from "@/lib/server/crud/withAuth";
 
-export async function POST(request: NextRequest) {
-  try {
-    const { householdId } = await getHouseholdAuth();
-    const { fromPocketId, toPocketId, amount } = await request.json();
+// export async function POST(req: Request) {
+//   const handler = await createFinanceHandler({
+//     table: financeAccountTransfers,
+//     entity: "Transfer",
+//   });
+//   const body = await req.json();
 
-    const [newTransfer] = await db
-      .insert(pocketTransfers)
-      .values({
-        householdId,
-        fromPocketId,
-        toPocketId,
-        amount,
-      })
-      .returning();
+//   // Custom Logic: validasi saldo cukup atau pindah saldo antar pocket
 
-    return sendStandardResponse(newTransfer, "Transfer berhasil.", 201);
-  } catch (err: any) {
-    return sendStandardResponse(null, err.message, 401);
-  }
+//   return handler.POST(
+//     new Request(req.url, { method: "POST", body: JSON.stringify(body) }),
+//   );
+// }
+
+// export async function GET(req: Request) {
+//   return await (
+//     await createFinanceHandler({
+//       table: financeAccountTransfers,
+//       entity: "Transfer",
+//     })
+//   ).GET(req);
+// }
+// export async function PUT(req: Request) {
+//   return await (
+//     await createFinanceHandler({
+//       table: financeAccountTransfers,
+//       entity: "Transfer",
+//     })
+//   ).PUT(req);
+// }
+// export async function DELETE(req: Request) {
+//   return await (
+//     await createFinanceHandler({
+//       table: financeAccountTransfers,
+//       entity: "Transfer",
+//     })
+//   ).DELETE(req);
+// }
+import { financeAccountTransfers } from "@/db/schema/finance";
+import { createFinanceHandler } from "@/lib/server/crud/withAuth";
+
+const h = async () =>
+  await createFinanceHandler({
+    table: financeAccountTransfers,
+    entity: "Transfer",
+  });
+
+export async function GET(req: Request) {
+  return (await h()).GET(req);
+}
+export async function POST(req: Request) {
+  const handler = await h();
+  // Tambahkan custom logic pindah saldo di sini jika perlu
+  return handler.POST(req);
+}
+export async function PUT(req: Request) {
+  return (await h()).PUT(req);
+}
+export async function DELETE(req: Request) {
+  return (await h()).DELETE(req);
 }
