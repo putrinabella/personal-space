@@ -1,7 +1,7 @@
 import { queryKeys } from "@/lib/queryKeys";
 import { useBaseForm } from "@/shared/hooks/core/use-base-form";
-import { defaultType, TypeFormData, validateType } from "../type.types";
-import { typeService } from "../type.service";
+import { defaultType, TypeFormData, validateType } from "../pockets.types";
+import { typeService } from "../pockets.service";
 
 export function useTypeForm(typeId?: string, enabled: boolean = true) {
   return useBaseForm<TypeFormData>({

@@ -5,10 +5,20 @@ export interface TypeFormData {
   name: string;
   type: string;
   iconSlug: string;
+  monthlyAllocationAmount: string;
+  isAutoAllocationActive: boolean;
+  allocationDay: string;
+  color: string;
 }
 
 export interface TypeEntry extends BaseItem, TypeFormData {
+  householdId: string;
+  type: string;
   iconSlug: string;
+  monthlyAllocationAmount: string;
+  isAutoAllocationActive: boolean;
+  allocationDay: string;
+  color: string;
 }
 
 export const defaultType: TypeFormData = {
@@ -16,6 +26,10 @@ export const defaultType: TypeFormData = {
   name: "",
   type: "",
   iconSlug: "",
+  monthlyAllocationAmount: "",
+  isAutoAllocationActive: false,
+  allocationDay: "",
+  color: "",
 };
 
 export const validateType = (payload: TypeFormData): string[] => {

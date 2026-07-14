@@ -47,9 +47,9 @@ export const householdMembers = financeSchema.table("household_members", {
   ...auditColumns,
 });
 
-export const financeAccounts = financeSchema.table("financeAccounts", {
+// 1. ACCOUNTS
+export const financeAccounts = financeSchema.table("finance_accounts", {
   id: uuid("id").defaultRandom().primaryKey(),
-
   householdId: uuid("household_id")
     .references(() => households.id)
     .notNull(),
@@ -70,8 +70,8 @@ export const financeAccounts = financeSchema.table("financeAccounts", {
   ...auditColumns,
 });
 
-// 3. Pockets
-export const financePockets = financeSchema.table("financePockets", {
+// 2. POCKETS
+export const financePockets = financeSchema.table("finance_pockets", {
   id: uuid("id").defaultRandom().primaryKey(),
   householdId: uuid("household_id")
     .references(() => households.id)
@@ -93,166 +93,133 @@ export const financePockets = financeSchema.table("financePockets", {
   ...auditColumns,
 });
 
-// 4. Categories (Types)
-
+// 3. CATEGORIES
 export const financeCategories = financeSchema.table(
-  "financeCategories",
+  "finance_categories",
   {
     id: uuid("id").defaultRandom().primaryKey(),
-
     householdId: uuid("household_id")
       .references(() => households.id)
       .notNull(),
-
     parentId: uuid("parent_id"),
-
     name: text("name").notNull(),
-
     type: text("type", {
       enum: ["income", "expense"],
     }).notNull(),
-
     iconSlug: text("icon_slug"),
-
     color: text("color"),
-
     ...auditColumns,
   },
   (table) => ({
     parentCategoryFk: foreignKey({
       columns: [table.parentId],
       foreignColumns: [table.id],
-      name: "financeCategories_parent_category_fk",
+      name: "finance_categories_parent_category_fk",
     }),
   }),
 );
 
-// 5. Transactions
-export const financeTransactions = financeSchema.table("financeTransactions", {
+// 4. TRANSACTIONS
+export const financeTransactions = financeSchema.table("finance_transactions", {
   id: uuid("id").defaultRandom().primaryKey(),
-
   householdId: uuid("household_id")
     .references(() => households.id)
     .notNull(),
-
   accountId: uuid("account_id")
     .references(() => financeAccounts.id)
     .notNull(),
-
   pocketId: uuid("pocket_id").references(() => financePockets.id),
-
   categoryId: uuid("category_id")
     .references(() => financeCategories.id)
     .notNull(),
-
   createdById: uuid("created_by_user_id")
     .references(() => users.id)
     .notNull(),
-
   amount: numeric("amount", {
     precision: 15,
     scale: 2,
   }).notNull(),
-
   type: text("type", {
     enum: ["income", "expense"],
   }).notNull(),
-
   status: text("status", {
     enum: ["pending", "completed", "cancelled"],
   })
     .default("completed")
     .notNull(),
-
   description: text("description"),
-
   date: timestamp("date", {
     withTimezone: true,
   })
     .defaultNow()
     .notNull(),
-
   ...auditColumns,
 });
-// 4. Pocket Transfers (Internal)
+
+// 5. ACCOUNT TRANSFERS
 export const financeAccountTransfers = financeSchema.table(
-  "account_transfers",
+  "finance_account_transfers",
   {
     id: uuid("id").defaultRandom().primaryKey(),
-
     householdId: uuid("household_id")
       .references(() => households.id)
       .notNull(),
-
     fromAccountId: uuid("from_account_id")
       .references(() => financeAccounts.id)
       .notNull(),
-
     toAccountId: uuid("to_account_id")
       .references(() => financeAccounts.id)
       .notNull(),
-
     amount: numeric("amount", {
       precision: 15,
       scale: 2,
     }).notNull(),
-
     date: timestamp("date", {
       withTimezone: true,
     })
       .defaultNow()
       .notNull(),
-
     description: text("description"),
-
     ...auditColumns,
   },
 );
 
-export const financeBudgets = financeSchema.table("financeBudgets", {
+// 6. BUDGETS
+export const financeBudgets = financeSchema.table("finance_budgets", {
   id: uuid("id").defaultRandom().primaryKey(),
-
   householdId: uuid("household_id")
     .references(() => households.id)
     .notNull(),
-
   categoryId: uuid("category_id")
     .references(() => financeCategories.id)
     .notNull(),
-
   amount: numeric("amount", {
     precision: 15,
     scale: 2,
   }).notNull(),
-
   month: integer("month").notNull(),
-
   year: integer("year").notNull(),
-
   ...auditColumns,
 });
 
-export const financeTags = financeSchema.table("financeTags", {
+// 7. TAGS
+export const financeTags = financeSchema.table("finance_tags", {
   id: uuid("id").defaultRandom().primaryKey(),
-
   householdId: uuid("household_id")
     .references(() => households.id)
     .notNull(),
-
   name: text("name").notNull(),
-
   color: text("color"),
-
   ...auditColumns,
 });
 
+// 8. TRANSACTION TAGS (PIVOT)
 export const financeTransactionTags = financeSchema.table(
-  "transaction_financeTags",
+  "finance_transaction_tags",
   {
     transactionId: uuid("transaction_id")
       .references(() => financeTransactions.id)
       .notNull(),
-
     tagId: uuid("tag_id")
       .references(() => financeTags.id)
       .notNull(),
@@ -264,125 +231,104 @@ export const financeTransactionTags = financeSchema.table(
   }),
 );
 
-export const financeSavingGoals = financeSchema.table("saving_goals", {
+// 9. SAVING GOALS
+export const financeSavingGoals = financeSchema.table("finance_saving_goals", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: text("name").notNull(),
   description: text("description"),
   pocketId: uuid("pocket_id")
     .references(() => financePockets.id)
     .notNull(),
-
   targetAmount: numeric("target_amount", {
     precision: 15,
     scale: 2,
   }).notNull(),
-
   targetDate: date("target_date"),
-
   isCompleted: boolean("is_completed").default(false).notNull(),
-
   ...auditColumns,
 });
 
+// 10. RECURRING TRANSACTIONS
 export const financeRecurringTransactions = financeSchema.table(
-  "recurring_financeTransactions",
+  "finance_recurring_transactions",
   {
     id: uuid("id").defaultRandom().primaryKey(),
-
     householdId: uuid("household_id")
       .references(() => households.id)
       .notNull(),
-
     accountId: uuid("account_id")
       .references(() => financeAccounts.id)
       .notNull(),
-
     categoryId: uuid("category_id")
       .references(() => financeCategories.id)
       .notNull(),
-
     pocketId: uuid("pocket_id").references(() => financePockets.id),
-
     amount: numeric("amount", {
       precision: 15,
       scale: 2,
     }).notNull(),
-
     type: text("type", {
       enum: ["income", "expense"],
     }).notNull(),
-
     frequency: text("frequency", {
       enum: ["daily", "weekly", "monthly", "yearly"],
     }).notNull(),
-
     nextRun: timestamp("next_run", {
       withTimezone: true,
     }).notNull(),
-
     isActive: boolean("is_active").default(true).notNull(),
-
     ...auditColumns,
   },
 );
 
-export const financeTransactionLogs = financeSchema.table("transaction_logs", {
-  id: uuid("id").defaultRandom().primaryKey(),
-
-  transactionId: uuid("transaction_id")
-    .references(() => financeTransactions.id)
-    .notNull(),
-
-  userId: uuid("user_id")
-    .references(() => users.id)
-    .notNull(),
-
-  action: text("action").notNull(),
-
-  oldValue: text("old_value"),
-
-  newValue: text("new_value"),
-
-  createdAt: timestamp("created_at", {
-    withTimezone: true,
-  })
-    .defaultNow()
-    .notNull(),
-});
-
-export const financeMonthlySummaries = financeSchema.table(
-  "monthly_summaries",
+// 11. TRANSACTION LOGS
+export const financeTransactionLogs = financeSchema.table(
+  "finance_transaction_logs",
   {
     id: uuid("id").defaultRandom().primaryKey(),
+    transactionId: uuid("transaction_id")
+      .references(() => financeTransactions.id)
+      .notNull(),
+    userId: uuid("user_id")
+      .references(() => users.id)
+      .notNull(),
+    action: text("action").notNull(),
+    oldValue: text("old_value"),
+    newValue: text("new_value"),
+    createdAt: timestamp("created_at", {
+      withTimezone: true,
+    })
+      .defaultNow()
+      .notNull(),
+  },
+);
 
+// 12. MONTHLY SUMMARIES
+export const financeMonthlySummaries = financeSchema.table(
+  "finance_monthly_summaries",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
     householdId: uuid("household_id")
       .references(() => households.id)
       .notNull(),
-
     month: integer("month").notNull(),
-
     year: integer("year").notNull(),
-
     totalIncome: numeric("total_income", {
       precision: 15,
       scale: 2,
     }).default("0"),
-
     totalExpense: numeric("total_expense", {
       precision: 15,
       scale: 2,
     }).default("0"),
-
     totalSavings: numeric("total_savings", {
       precision: 15,
       scale: 2,
     }).default("0"),
-
     netBalance: numeric("net_balance", {
       precision: 15,
       scale: 2,
     }).default("0"),
-
     ...auditColumns,
   },
 );
