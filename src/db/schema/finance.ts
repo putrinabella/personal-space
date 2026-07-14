@@ -13,11 +13,44 @@ import {
 import { users } from "./auth";
 
 export const financeSchema = pgSchema("finance");
+const auditColumns = {
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .$onUpdate(() => new Date())
+    .notNull(),
+  deletedAt: timestamp("deleted_at", { withTimezone: true }),
+};
 
-export const pockets = financeSchema.table("pockets", {
+// 1. Households
+export const households = financeSchema.table("households", {
   id: uuid("id").defaultRandom().primaryKey(),
+  name: text("name").notNull(),
+  ...auditColumns,
+});
+
+// 2. Members
+export const householdMembers = financeSchema.table("household_members", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  householdId: uuid("household_id")
+    .references(() => households.id)
+    .notNull(),
   userId: uuid("user_id")
     .references(() => users.id)
+    .notNull(),
+  role: text("role", { enum: ["owner", "member"] })
+    .default("member")
+    .notNull(),
+  ...auditColumns,
+});
+
+// 3. Pockets
+export const pockets = financeSchema.table("pockets", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  householdId: uuid("household_id")
+    .references(() => households.id)
     .notNull(),
   name: text("name").notNull(),
   type: text("type", { enum: ["general", "saving"] })
@@ -32,35 +65,26 @@ export const pockets = financeSchema.table("pockets", {
     scale: 2,
   }),
   allocationDay: text("allocation_day"),
-
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .defaultNow()
-    .notNull(),
-  updatedAt: timestamp("updated_at", { withTimezone: true })
-    .defaultNow()
-    .$onUpdate(() => new Date())
-    .notNull(),
+  ...auditColumns,
 });
 
-// 2. Categories
+// 4. Categories (Types)
 export const types = financeSchema.table("types", {
   id: uuid("id").defaultRandom().primaryKey(),
-  userId: uuid("user_id")
-    .references(() => users.id)
+  householdId: uuid("household_id")
+    .references(() => households.id)
     .notNull(),
   name: text("name").notNull(),
   type: text("type", { enum: ["income", "expense"] }).notNull(),
   iconSlug: text("icon_slug"),
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .defaultNow()
-    .notNull(),
+  ...auditColumns,
 });
 
-// 3. Transactions
+// 5. Transactions
 export const transactions = financeSchema.table("transactions", {
   id: uuid("id").defaultRandom().primaryKey(),
-  userId: uuid("user_id")
-    .references(() => users.id)
+  householdId: uuid("household_id")
+    .references(() => households.id)
     .notNull(),
   pocketId: uuid("pocket_id")
     .references(() => pockets.id)
@@ -68,20 +92,20 @@ export const transactions = financeSchema.table("transactions", {
   categoryId: uuid("category_id")
     .references(() => types.id)
     .notNull(),
+  createdById: uuid("created_by_user_id")
+    .references(() => users.id)
+    .notNull(),
   amount: numeric("amount", { precision: 15, scale: 2 }).notNull(),
   type: text("type", { enum: ["income", "expense"] }).notNull(),
   date: timestamp("date", { withTimezone: true }).defaultNow().notNull(),
   description: text("description"),
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .defaultNow()
-    .notNull(),
+  ...auditColumns,
 });
-
 // 4. Pocket Transfers (Internal)
 export const pocketTransfers = financeSchema.table("pocket_transfers", {
   id: uuid("id").defaultRandom().primaryKey(),
-  userId: uuid("user_id")
-    .references(() => users.id)
+  householdId: uuid("household_id")
+    .references(() => households.id)
     .notNull(),
   fromPocketId: uuid("from_pocket_id")
     .references(() => pockets.id)
@@ -91,14 +115,22 @@ export const pocketTransfers = financeSchema.table("pocket_transfers", {
     .notNull(),
   amount: numeric("amount", { precision: 15, scale: 2 }).notNull(),
   date: timestamp("date", { withTimezone: true }).defaultNow().notNull(),
+  ...auditColumns,
 });
-
 // --- Relations ---
-export const pocketsRelations = relations(pockets, ({ many }) => ({
+export const pocketsRelations = relations(pockets, ({ one, many }) => ({
+  household: one(households, {
+    fields: [pockets.householdId],
+    references: [households.id],
+  }),
   transactions: many(transactions),
 }));
 
 export const transactionsRelations = relations(transactions, ({ one }) => ({
+  household: one(households, {
+    fields: [transactions.householdId],
+    references: [households.id],
+  }),
   pocket: one(pockets, {
     fields: [transactions.pocketId],
     references: [pockets.id],

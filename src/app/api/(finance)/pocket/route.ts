@@ -1,26 +1,18 @@
 import { NextRequest } from "next/server";
 import { db } from "@/db";
-import { pockets } from "@/db/schema/finance"; // Sesuaikan path import schema Anda
+import { pockets } from "@/db/schema/finance";
 import { eq, sql, desc, and } from "drizzle-orm";
 import { sendPaginatedResponse, sendStandardResponse } from "@/lib/apiResponse";
 import { validate as validateUuid } from "uuid";
-import { createClient } from "@/lib/supabase/server";
+import { getHouseholdAuth } from "@/lib/financeAuth";
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = await createClient();
-    const {
-      data: { user },
-      error,
-    } = await supabase.auth.getUser();
-    if (error || !user) {
-      return sendStandardResponse(null, "Unauthorized", 401, "error");
-    }
-
-    const userId = user.id;
-
+    const { householdId } = await getHouseholdAuth();
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
+
+    // 1. GET DETAIL BY ID
     if (id) {
       if (!validateUuid(id)) {
         return sendStandardResponse(
@@ -31,20 +23,24 @@ export async function GET(request: NextRequest) {
         );
       }
       const item = await db.query.pockets.findFirst({
-        where: and(eq(pockets.id, id), eq(pockets.userId, userId)),
+        where: and(eq(pockets.id, id), eq(pockets.householdId, householdId)),
         with: { transactions: true },
       });
       return item
         ? sendStandardResponse(item, "Detail pocket ditemukan.")
         : sendStandardResponse(null, "Pocket tidak ditemukan.", 404, "error");
     }
+
+    // 2. GET ALL (Tanpa pagination)
     if (!searchParams.has("page")) {
       const data = await db.query.pockets.findMany({
-        where: eq(pockets.userId, userId),
+        where: eq(pockets.householdId, householdId),
         orderBy: [desc(pockets.createdAt)],
       });
       return sendStandardResponse(data, "Berhasil mengambil daftar pocket.");
     }
+
+    // 3. GET PAGINATED
     const page = Math.max(1, parseInt(searchParams.get("page") || "1"));
     const perPage = Math.max(1, parseInt(searchParams.get("per_page") || "15"));
     const offset = (page - 1) * perPage;
@@ -53,9 +49,9 @@ export async function GET(request: NextRequest) {
       db
         .select({ count: sql<number>`cast(count(*) as integer)` })
         .from(pockets)
-        .where(eq(pockets.userId, userId)),
+        .where(eq(pockets.householdId, householdId)),
       db.query.pockets.findMany({
-        where: eq(pockets.userId, userId),
+        where: eq(pockets.householdId, householdId),
         limit: perPage,
         offset: offset,
         orderBy: [desc(pockets.createdAt)],
@@ -74,10 +70,19 @@ export async function GET(request: NextRequest) {
     return sendStandardResponse(null, err.message, 500, "error");
   }
 }
+
+// POST: Menambah pocket baru
 export async function POST(request: NextRequest) {
   try {
-    const userId = "USER_ID_DARI_SESSION"; // Ganti dengan logic auth Anda
-    const body = await request.json();
+    const { householdId } = await getHouseholdAuth();
+    if (!householdId)
+      return sendStandardResponse(
+        null,
+        "Household tidak ditemukan.",
+        403,
+        "error",
+      );
+
     const {
       name,
       type,
@@ -85,12 +90,12 @@ export async function POST(request: NextRequest) {
       isAutoAllocationActive,
       monthlyAllocationAmount,
       allocationDay,
-    } = body;
+    } = await request.json();
 
     const [newPocket] = await db
       .insert(pockets)
       .values({
-        userId,
+        householdId,
         name,
         type,
         balance: balance || "0",
@@ -105,9 +110,11 @@ export async function POST(request: NextRequest) {
     return sendStandardResponse(null, err.message, 500, "error");
   }
 }
+
+// PUT: Update pocket (misal: update balance atau auto-allocation)
 export async function PUT(request: NextRequest) {
   try {
-    const userId = "USER_ID_DARI_SESSION"; // Ganti dengan logic auth Anda
+    const { householdId } = await getHouseholdAuth();
     const {
       id,
       name,
@@ -117,8 +124,7 @@ export async function PUT(request: NextRequest) {
       allocationDay,
     } = await request.json();
 
-    if (!id)
-      return sendStandardResponse(null, "ID pocket diperlukan.", 400, "error");
+    if (!id) return sendStandardResponse(null, "ID diperlukan.", 400, "error");
 
     const [updated] = await db
       .update(pockets)
@@ -128,9 +134,8 @@ export async function PUT(request: NextRequest) {
         isAutoAllocationActive,
         monthlyAllocationAmount,
         allocationDay,
-        updatedAt: new Date(),
       })
-      .where(and(eq(pockets.id, id), eq(pockets.userId, userId)))
+      .where(and(eq(pockets.id, id), eq(pockets.householdId, householdId!)))
       .returning();
 
     return updated

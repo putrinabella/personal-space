@@ -25,8 +25,9 @@ export default function DockNavbar() {
       { path: "/food/settings", label: "Settings", Icon: GearSix },
     ],
     "/finance": [
-      { path: "/finance", label: "Dashboard", Icon: ChartPieSlice },
-      { path: "/finance/history", label: "History", Icon: Wallet },
+      { path: "/finance/dashboard", label: "Finance", Icon: Wallet },
+      { path: "/finance/history", label: "History", Icon: ChartPieSlice },
+      { path: "/finance/settings", label: "Settings", Icon: GearSix },
     ],
   };
 
@@ -34,7 +35,7 @@ export default function DockNavbar() {
   const activeSubMenus = subMenus[baseRoute] || [
     { path: "/", label: "Home", Icon: House },
     { path: "/food/dashboard", label: "Food", Icon: Hamburger },
-    { path: "/finance", label: "Finance", Icon: Wallet },
+    { path: "/finance/dashboard", label: "Finance", Icon: Wallet },
     { path: "/movie", label: "Movie", Icon: FilmStrip },
   ];
 
