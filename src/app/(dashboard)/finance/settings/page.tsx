@@ -29,14 +29,11 @@ export default function SettingsPage() {
   const deleteCategories = useCategoriesDelete();
   const deletePockets = usePocketsDelete();
   const deleteAccounts = useAccountsDelete();
-
-  // Pemetaan untuk mempermudah akses
   const deleteHandlers = {
     categories: deleteCategories,
     pockets: deletePockets,
     accounts: deleteAccounts,
   };
-  // 1. State untuk navigasi dan tampilan
   const [activeTab, setActiveTab] = useState<
     "categories" | "pockets" | "accounts"
   >("categories");
@@ -57,15 +54,11 @@ export default function SettingsPage() {
     undefined,
     activeTab === "accounts",
   );
-
-  // Pastikan semua query terdaftar di sini
   const queries = {
     categories: categoriesQuery,
     pockets: pocketsQuery,
     accounts: accountsQuery,
   };
-
-  // Ambil data yang aktif secara dinamis
   const activeData = queries[activeTab];
   const renderNavButtons = () => (
     <div className="flex flex-col gap-2">
@@ -101,11 +94,7 @@ export default function SettingsPage() {
               {renderNavButtons()}
             </CardSection>
 
-            <CardSection
-              title="View Options"
-              headerColor="primary"
-              // variant="normal"
-            >
+            <CardSection title="View Options" headerColor="primary">
               <div className="grid grid-cols-2 gap-2">
                 <button
                   onClick={() => setViewType("card")}
@@ -172,7 +161,6 @@ export default function SettingsPage() {
                       onDelete={(item) => {
                         const handler = deleteHandlers[activeTab];
                         if (handler) {
-                          // Panggil handleDelete, BUKAN .mutate()
                           handler.handleDelete(item.id);
                         }
                       }}

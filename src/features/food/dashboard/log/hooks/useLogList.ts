@@ -12,7 +12,6 @@ export function useLogsList(page = 1, title?: string) {
 
   return useBaseList<LogEntry, PaginatedParams>({
     queryKey: queryKeys.log.list(params),
-    // Sekarang ini tidak akan error lagi
     fetcher: (p) => logService.getPaginated(p),
     params,
   });

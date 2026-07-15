@@ -21,8 +21,6 @@ export function createCrudService<T>(basePath: string, options?: CrudOptions) {
       params: PaginatedParams = { page: 1, per_page: 15 },
     ): Promise<PaginatedResponse<T>> {
       const query = buildQueryString(params);
-
-      // Menyesuaikan dengan struktur ApiResponse: { meta, data }
       const json = await apiFetch<ApiResponse<PaginatedResponse<T>>>(
         `${basePath}${query}`,
         { next: { revalidate, tags: [tag] } },

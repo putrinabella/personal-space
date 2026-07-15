@@ -32,15 +32,12 @@ export default function SettingsPage() {
   const deleteCuisines = useCuisinesDelete();
   const deleteDiningType = useDiningTypeDelete();
   const deleteTags = useTagDelete();
-
-  // Pemetaan untuk mempermudah akses
   const deleteHandlers = {
     categories: deleteCategories,
     cuisines: deleteCuisines,
     diningType: deleteDiningType,
     tags: deleteTags,
   };
-  // 1. State untuk navigasi dan tampilan
   const [activeTab, setActiveTab] = useState<
     "categories" | "cuisines" | "diningType" | "tags"
   >("categories");
@@ -67,15 +64,12 @@ export default function SettingsPage() {
   );
 
   const tagsQuery = useTagsList(page, undefined, activeTab === "tags");
-  // Pastikan semua query terdaftar di sini
   const queries = {
     categories: categoriesQuery,
     cuisines: cuisinesQuery,
     diningType: diningTypeQuery,
     tags: tagsQuery,
   };
-
-  // Ambil data yang aktif secara dinamis
   const activeData = queries[activeTab];
   const renderNavButtons = () => (
     <div className="flex flex-col gap-2">
@@ -111,11 +105,7 @@ export default function SettingsPage() {
               {renderNavButtons()}
             </CardSection>
 
-            <CardSection
-              title="View Options"
-              headerColor="primary"
-              // variant="normal"
-            >
+            <CardSection title="View Options" headerColor="primary">
               <div className="grid grid-cols-2 gap-2">
                 <button
                   onClick={() => setViewType("card")}
@@ -159,7 +149,6 @@ export default function SettingsPage() {
                   icon={Plus}
                   color="primary"
                   to={`/food/settings/${activeTab}/create`}
-                  // onClick={() => router.push(`/settings/${activeTab}/create`)}
                 />
               }
             >
@@ -176,7 +165,6 @@ export default function SettingsPage() {
                       data={activeData.data}
                       viewType={viewType}
                       onEdit={(item) => {
-                        // Navigasi ke path edit berdasarkan ID item
                         router.push(
                           `/food/settings/${activeTab}/${item.id}/edit`,
                         );
@@ -184,7 +172,6 @@ export default function SettingsPage() {
                       onDelete={(item) => {
                         const handler = deleteHandlers[activeTab];
                         if (handler) {
-                          // Panggil handleDelete, BUKAN .mutate()
                           handler.handleDelete(item.id);
                         }
                       }}

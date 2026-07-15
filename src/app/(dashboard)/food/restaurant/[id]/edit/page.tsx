@@ -16,8 +16,6 @@ export default function EditRestaurantPage({
 }) {
   const router = useRouter();
   const { id } = use(params); // Mengambil ID dari URL
-
-  // Hook akan otomatis melakukan fetch data jika ID ada
   const { data, setField, handleSubmit, saving, loading } =
     useRestaurantsForm(id);
 
@@ -48,7 +46,6 @@ export default function EditRestaurantPage({
           onChange={(val) => setField("googleMapsUrl", val)}
         />
 
-        {/* Checkbox / Toggle Status */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div
             onClick={() =>

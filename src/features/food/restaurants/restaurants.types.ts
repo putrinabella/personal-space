@@ -1,6 +1,4 @@
 import { BaseItem } from "@/shared/types/base.types";
-
-// Tipe data yang dikirim ke form/API (Tanpa field otomatis DB)
 export interface RestaurantFormData {
   name: string;
   address: string;
@@ -8,8 +6,6 @@ export interface RestaurantFormData {
   isFavoriteRestaurant: boolean;
   isFavoriteCafe: boolean;
 }
-
-// Tipe data lengkap (untuk list/tampilan)
 export interface RestaurantEntry extends BaseItem, RestaurantFormData {}
 
 export const defaultRestaurants: RestaurantFormData = {

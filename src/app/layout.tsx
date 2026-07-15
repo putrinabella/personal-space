@@ -34,7 +34,6 @@ export default function RootLayout({
     >
       <body className="font-body bg-base-100 bg-cute-grid text-base-content antialiased h-screen flex flex-col">
         <QueryProvider>
-          {/* Hapus mask dan overflow di sini agar tidak mempengaruhi isi */}
           <div className="flex-1 w-full h-full">{children}</div>
         </QueryProvider>
       </body>

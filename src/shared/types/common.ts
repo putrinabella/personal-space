@@ -33,16 +33,12 @@ export interface PaginatedMeta {
   to: number;
   total: number;
 }
-
-// --- Query Params ---
 export interface PaginatedParams {
   page?: number | string;
   per_page?: number | string;
   search?: string;
   [key: string]: unknown; // Memungkinkan filter dinamis
 }
-
-// --- Next.js Helper Types ---
 export interface PageSearchProps {
   searchParams: Promise<PaginatedParams>;
 }

@@ -12,7 +12,6 @@ export function useCuisinesList(page = 1, title?: string, enabled = true) {
 
   return useBaseList<CuisinesEntry, PaginatedParams>({
     queryKey: queryKeys.cuisines.list(params),
-    // Sekarang ini tidak akan error lagi
     fetcher: (p) => cuisinesService.getPaginated(p),
     params,
     enabled,

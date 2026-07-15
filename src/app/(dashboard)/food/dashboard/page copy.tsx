@@ -82,8 +82,6 @@ export default function FoodView() {
   const selectedFood = foodData?.find((f) => f.id === expandedId);
   const [showFilters, setShowFilters] = useState(false);
   const [showRandomModal, setShowRandomModal] = useState(false);
-
-  // Panggil hook-nya
   const {
     data: randomFood,
     refetch: fetchRandom,
@@ -112,7 +110,6 @@ export default function FoodView() {
         </div>
 
         <div className="flex flex-wrap items-center gap-3">
-          {/* Tambahkan tombol ini */}
           <CardBox
             className="px-4 py-2 flex items-center gap-2 text-data-body md:text-base font-bold"
             rounded="xl"
@@ -598,7 +595,6 @@ export default function FoodView() {
                     rounded="2xl"
                     color="base-100"
                   >
-                    {/* Header */}
                     <div className="flex items-start gap-3">
                       <div className="w-12 h-12 flex items-center justify-center shrink-0 bg-primary/40 text-base-content rounded-2xl">
                         {getIcon(food.category?.iconSlug || "BowlSteam")}
@@ -613,7 +609,6 @@ export default function FoodView() {
                       </div>
                     </div>
 
-                    {/* Rating Section */}
                     {food.latestLog && (
                       <div className="flex items-center justify-center gap-6 py-1 border-y border-dashed border-base-300">
                         <div className="flex flex-col items-center gap-1">
@@ -648,14 +643,12 @@ export default function FoodView() {
                       </div>
                     )}
 
-                    {/* Action Buttons */}
                     <div className="flex gap-3 mt-2">
                       <CardBox
                         className="px-4 h-11 flex items-center justify-center gap-2 text-sm font-bold flex-1 md:flex-none"
                         rounded="xl"
                         color="base-300"
                         onClick={fetchRandom}
-                        // disabled={loadingRandom}
                         pressable
                       >
                         <DiceFourIcon weight="bold" size={18} />

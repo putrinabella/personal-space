@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { PaginatedMeta } from "@/shared/types/common";
-// 1. Ekspor interface agar bisa dipakai ulang di client-side components!
 export interface PaginationLinks {
   first: string;
   last: string;

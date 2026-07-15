@@ -2,8 +2,6 @@ import { financePockets } from "@/db/schema/finance";
 import { createCrudHandler } from "@/lib/server/crud/createCrudHandler";
 import { getHouseholdAuth } from "@/lib/financeAuth"; // Import helper auth Anda
 import { eq } from "drizzle-orm";
-
-// Kita buat fungsi untuk mendapatkan handler yang sudah terfilter
 async function getHandler() {
   const { householdId } = await getHouseholdAuth();
   return createCrudHandler({
@@ -13,8 +11,6 @@ async function getHandler() {
     defaultWhere: eq(financePockets.householdId, householdId), // Filter keamanan
   });
 }
-
-// Ekspor fungsi handler sesuai standar Next.js
 export async function GET(req: Request) {
   return (await getHandler()).GET(req);
 }

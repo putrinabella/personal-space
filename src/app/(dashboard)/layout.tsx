@@ -19,9 +19,7 @@ export default function DashboardShellLayout({
         <div>{children}</div>
       </div>
 
-      {/* Container Dock tetap di bawah */}
       <div className="absolute bottom-6 left-0 right-0 z-50 flex justify-center pointer-events-none">
-        {/* pointer-events-auto agar dock tetap bisa di-klik */}
         <div className="pointer-events-auto">
           <DockNavbar />
         </div>

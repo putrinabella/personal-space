@@ -9,8 +9,6 @@ import {
 } from "@/db/schema/food";
 import { sql, and, eq, AnyColumn, isNull, ilike } from "drizzle-orm";
 import { sendPaginatedResponse, sendStandardResponse } from "@/lib/apiResponse";
-
-// Helper internal untuk memetakan parameter string URL [type] ke objek tabel Drizzle asli
 function getTableSchema(type: string) {
   switch (type) {
     case "categories":
@@ -27,13 +25,6 @@ function getTableSchema(type: string) {
       return null;
   }
 }
-
-// ==========================================
-// 1. READ (GET): Detail ID / Get All / Pagination
-// ==========================================
-// ==========================================
-// 1. READ (GET): Detail ID / Get All / Pagination
-// ==========================================
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ type: string }> },
@@ -53,12 +44,8 @@ export async function GET(
 
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
-
-    // Gunakan 'any' agar Drizzle bisa mengakses properti dinamis tanpa error TS
     const table: any = target.table;
     const baseCondition = isNull(table.deletedAt);
-
-    // A. LOGIKA: GET DETAIL BY ID
     if (id) {
       const [item] = await db
         .select()
@@ -79,8 +66,6 @@ export async function GET(
         `Berhasil mengambil detail ${target.label}.`,
       );
     }
-
-    // B. LOGIKA: GET ALL TANPA PAGINATION
     if (!searchParams.has("page")) {
       const allItems = await db
         .select()
@@ -92,8 +77,6 @@ export async function GET(
         `Berhasil mengambil seluruh daftar ${target.label}.`,
       );
     }
-
-    // C. LOGIKA: GET WITH PAGINATION & FILTER
     const page = Math.max(1, parseInt(searchParams.get("page") || "1"));
     const perPage = Math.max(1, parseInt(searchParams.get("per_page") || "15"));
     const offset = (page - 1) * perPage;
@@ -102,8 +85,6 @@ export async function GET(
     const isFav = searchParams.get("isFavoriteRestaurant");
 
     const filters = [baseCondition];
-
-    // Filter dinamis dengan pengecekan kolom
     if (search && table.name && table.address) {
       filters.push(
         sql`(${table.name} ILIKE ${`%${search}%`} OR ${table.address} ILIKE ${`%${search}%`})`,
@@ -140,8 +121,6 @@ export async function GET(
     return sendStandardResponse(null, msg, 500, "error");
   }
 } // ==========================================
-// 2. CREATE (POST): Tambah opsi data baru
-// ==========================================
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ type: string }> },
@@ -172,10 +151,6 @@ export async function POST(
     return sendStandardResponse(null, msg, 500, "error");
   }
 }
-
-// ==========================================
-// 3. UPDATE (PUT): Edit opsi data berdasarkan ID
-// ==========================================
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ type: string }> },
@@ -224,10 +199,6 @@ export async function PUT(
     return sendStandardResponse(null, msg, 500, "error");
   }
 }
-
-// ==========================================
-// 4. DELETE (DELETE): Hapus data lewat URL Query (?id=UUID)
-// ==========================================
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ type: string }> },
@@ -256,14 +227,10 @@ export async function DELETE(
         "error",
       );
     }
-
-    // Ambil field secara aman dari deteksi ketat TypeScript
     const tableFields = target.table as unknown as {
       id: AnyColumn;
       deletedAt: AnyColumn;
     };
-
-    // 🛡️ Mengubah data permanen menjadi pembaruan stamp waktu saat ini
     await db
       .update(target.table)
       .set({ deletedAt: new Date() })

@@ -1,11 +1,9 @@
-// src/shared/hooks/core/use-base-list.ts
 "use client";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { PaginatedResponse, PaginatedParams } from "@/shared/types/common";
 
 interface UseBaseListProps<T, P extends PaginatedParams> {
   queryKey: readonly unknown[];
-  // Perbaikan tipe: fetcher sekarang langsung mengembalikan PaginatedResponse<T>
   fetcher: (params: P) => Promise<PaginatedResponse<T>>;
   params: P;
   enabled?: boolean;

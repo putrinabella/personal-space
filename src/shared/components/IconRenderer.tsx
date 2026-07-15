@@ -15,7 +15,6 @@ export default function IconRenderer({
   className = "",
   weight = "bold",
 }: IconRendererProps) {
-  // Mengambil komponen secara dinamis dari library PhosphorIcons
   const IconComponent = (PhosphorIcons as any)[name];
 
   if (!IconComponent) return null;

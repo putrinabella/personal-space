@@ -31,7 +31,6 @@ export default function FoodView() {
     <div className="flex flex-col gap-6">
       <header className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
         <div>
-          {/* Breadcrumb sederhana untuk navigasi Eounia */}
           <span className="text-xs font-bold tracking-[0.2em] uppercase text-slate-400 mb-2 block">
             Eounia / Food Diary
           </span>
@@ -43,7 +42,6 @@ export default function FoodView() {
           </p>
         </div>
 
-        {/* Tombol dengan layout responsif */}
         <div className="flex flex-wrap items-center gap-3">
           <CardBox
             className="px-4 py-2 flex items-center gap-2 text-sm md:text-base font-bold"
@@ -71,7 +69,6 @@ export default function FoodView() {
             className="px-4 py-2 flex items-center gap-2 text-sm md:text-base font-bold"
             rounded="xl"
             color="accent"
-            // onClick={() => setIsInputModalOpen(true)}
             href="/food/create"
             pressable
           >
@@ -135,7 +132,6 @@ export default function FoodView() {
           MAIN WIDGETS: Model Tiket / Blok Box Popcorn
          ========================================== */}
       <section className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-24">
-        {/* Widget Kalender */}
         <div className="lg:col-span-1 bg-white border-3 border-[#2D2A2A] rounded-2xl shadow-[6px_6px_0px_#2D2A2A] overflow-hidden flex flex-col">
           <div className="bg-[#FDF2B5] border-b-3 border-[#2D2A2A] px-5 py-3 font-black text-base flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -158,7 +154,6 @@ export default function FoodView() {
           </div>
         </div>
 
-        {/* Widget Peta Jejak Restoran */}
         <div className="lg:col-span-2 bg-white border-3 border-[#2D2A2A] rounded-2xl shadow-[6px_6px_0px_#2D2A2A] overflow-hidden flex flex-col">
           <div className="bg-[#99D9EA] border-b-3 border-[#2D2A2A] px-5 py-3 font-black text-base flex items-center justify-between">
             <div className="flex items-center gap-2">

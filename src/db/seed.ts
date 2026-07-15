@@ -1,5 +1,3 @@
-// src/db/seed-finance.ts
-
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import * as schema from "./schema";
@@ -59,10 +57,6 @@ async function main() {
 
     console.log("🌱 Seeding...");
 
-    // -----------------------------------------------------------------
-    // Accounts
-    // -----------------------------------------------------------------
-
     const accounts = await db
       .insert(schema.financeAccounts)
       .values([
@@ -83,10 +77,6 @@ async function main() {
       ])
       .returning();
 
-    // -----------------------------------------------------------------
-    // Pockets
-    // -----------------------------------------------------------------
-
     const pockets = await db
       .insert(schema.financePockets)
       .values([
@@ -102,10 +92,6 @@ async function main() {
         },
       ])
       .returning();
-
-    // -----------------------------------------------------------------
-    // Categories
-    // -----------------------------------------------------------------
 
     const categories = await db
       .insert(schema.financeCategories)
@@ -123,10 +109,6 @@ async function main() {
       ])
       .returning();
 
-    // -----------------------------------------------------------------
-    // Budget
-    // -----------------------------------------------------------------
-
     await db.insert(schema.financeBudgets).values({
       householdId: MY_HOUSEHOLD_ID,
       categoryId: categories[1].id,
@@ -134,10 +116,6 @@ async function main() {
       month: 7,
       year: 2026,
     });
-
-    // -----------------------------------------------------------------
-    // Tags
-    // -----------------------------------------------------------------
 
     const tags = await db
       .insert(schema.financeTags)
@@ -153,20 +131,12 @@ async function main() {
       ])
       .returning();
 
-    // -----------------------------------------------------------------
-    // Saving Goal
-    // -----------------------------------------------------------------
-
     await db.insert(schema.financeSavingGoals).values({
       name: "Emergency Fund",
       description: "6 months living expenses",
       pocketId: pockets[1].id,
       targetAmount: "50000000",
     });
-
-    // -----------------------------------------------------------------
-    // Recurring
-    // -----------------------------------------------------------------
 
     await db.insert(schema.financeRecurringTransactions).values({
       householdId: MY_HOUSEHOLD_ID,
@@ -177,10 +147,6 @@ async function main() {
       frequency: "monthly",
       nextRun: new Date(),
     });
-
-    // -----------------------------------------------------------------
-    // Transactions
-    // -----------------------------------------------------------------
 
     const transactions = await db
       .insert(schema.financeTransactions)
@@ -208,10 +174,6 @@ async function main() {
       ])
       .returning();
 
-    // -----------------------------------------------------------------
-    // Transaction Tags
-    // -----------------------------------------------------------------
-
     await db.insert(schema.financeTransactionTags).values([
       {
         transactionId: transactions[0].id,
@@ -223,10 +185,6 @@ async function main() {
       },
     ]);
 
-    // -----------------------------------------------------------------
-    // Transfer
-    // -----------------------------------------------------------------
-
     await db.insert(schema.financeAccountTransfers).values({
       householdId: MY_HOUSEHOLD_ID,
       fromAccountId: accounts[1].id,
@@ -234,10 +192,6 @@ async function main() {
       amount: "500000",
       description: "Transfer to Cash",
     });
-
-    // -----------------------------------------------------------------
-    // Monthly Summary
-    // -----------------------------------------------------------------
 
     await db.insert(schema.financeMonthlySummaries).values({
       householdId: MY_HOUSEHOLD_ID,

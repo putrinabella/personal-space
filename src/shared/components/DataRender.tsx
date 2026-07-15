@@ -39,7 +39,6 @@ export default function DataRenderer({
           <div
             className={`flex items-center ${viewType === "card" ? "flex-col gap-3" : "gap-4"}`}
           >
-            {/* Icon Container dengan warna dinamis */}
             {item.iconSlug && (
               <div
                 className="flex items-center justify-center rounded-xl border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"

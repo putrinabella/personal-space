@@ -45,7 +45,6 @@ export default function CreateRestaurantPage() {
         />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Checkbox untuk Restaurant */}
           <div
             onClick={() =>
               setField("isFavoriteRestaurant", !data.isFavoriteRestaurant)
@@ -62,7 +61,6 @@ export default function CreateRestaurantPage() {
             </p>
           </div>
 
-          {/* Checkbox untuk Cafe (Menggunakan isFavoriteCafe) */}
           <div
             onClick={() => setField("isFavoriteCafe", !data.isFavoriteCafe)}
             className={`cursor-pointer p-4 rounded-xl border-2 transition-all ${
@@ -83,7 +81,6 @@ export default function CreateRestaurantPage() {
             color="accent"
             onClick={handleSubmit}
             pressable
-            // disabled={saving}
           >
             {saving ? (
               "Saving..."

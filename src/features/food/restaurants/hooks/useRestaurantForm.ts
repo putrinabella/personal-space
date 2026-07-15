@@ -14,8 +14,6 @@ export function useRestaurantsForm(restaurantsId?: string) {
     defaultValues: defaultRestaurants,
     queryKey: queryKeys.restaurants.detail(restaurantsId || ""),
     invalidateQueryKey: queryKeys.restaurants.lists(),
-
-    // Pastikan getDetail mengembalikan tipe yang benar
     getDetail: async (id) => {
       const data = await restaurantsService.getDetail(id);
       return data as any;

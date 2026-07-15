@@ -12,7 +12,6 @@ export function useCategoriesList(page = 1, title?: string, enabled = true) {
 
   return useBaseList<CategoriesEntry, PaginatedParams>({
     queryKey: queryKeys.categories.list(params),
-    // Sekarang ini tidak akan error lagi
     fetcher: (p) => categoriesService.getPaginated(p),
     params,
     enabled,

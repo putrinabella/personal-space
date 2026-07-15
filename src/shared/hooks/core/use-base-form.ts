@@ -41,8 +41,6 @@ export function useBaseForm<T>({
   const router = useRouter();
   const queryClient = useQueryClient();
   const isEdit = Boolean(id && id !== "create");
-
-  // 1. Simpan hanya perubahan lokal di sini
   const [localChanges, setLocalChanges] = useState<Partial<T>>({});
 
   const msg = useMemo(
@@ -65,8 +63,6 @@ export function useBaseForm<T>({
     },
     enabled: enabled && !!id && !!getDetail,
   });
-
-  // 2. Satu-satunya sumber data (Gabungan default + server + input user)
   const data = useMemo(() => {
     return {
       ...defaultValues,
@@ -74,8 +70,6 @@ export function useBaseForm<T>({
       ...localChanges,
     } as T;
   }, [defaultValues, detailQuery.data, localChanges]);
-
-  // 3. Helper untuk memperbarui localChanges
   const setField = useCallback(<K extends keyof T>(field: K, value: T[K]) => {
     setLocalChanges((prev) => ({ ...prev, [field]: value }));
   }, []);
@@ -87,8 +81,6 @@ export function useBaseForm<T>({
   const resetForm = useCallback(() => {
     setLocalChanges({});
   }, []);
-
-  // --- MUTATION ---
   const mutation = useMutation({
     mutationFn: async () => {
       const payload = transformBeforeSubmit

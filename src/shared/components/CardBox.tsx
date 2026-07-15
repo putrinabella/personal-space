@@ -48,13 +48,9 @@ export default function CardBox({
 
   const isLink = Boolean(href);
   const isButton = Boolean(onClick) && !isLink;
-
-  // HAPUS "transition-all duration-200 ease-out"
   const pressableStyles = pressable
     ? "hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all duration-100"
     : "";
-
-  // 2. Gabungkan ke baseStyles
   const baseStyles = `
     border-4 border-neutral
     ${bgClass} ${roundedClass} ${shadowClass}
@@ -71,7 +67,6 @@ export default function CardBox({
   }
 
   if (isButton) {
-    // Tambahkan cursor-pointer jika tombol, atau hapus jika ingin benar-benar statis
     return (
       <button onClick={onClick} className={`${baseStyles} cursor-pointer`}>
         {children}

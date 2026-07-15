@@ -14,8 +14,6 @@ import { sendStandardResponse } from "@/lib/apiResponse";
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-
-    // 1. Define CTEs for logs
     const latestLogCte = db.$with("latest_log").as(
       db
         .selectDistinctOn([foodLogs.foodId], {
@@ -40,8 +38,6 @@ export async function GET(request: NextRequest) {
         .from(foodLogs)
         .groupBy(foodLogs.foodId),
     );
-
-    // 2. Build filters (Same as your main discovery route)
     const filters = [];
     if (searchParams.get("restaurantId"))
       filters.push(eq(foods.restaurantId, searchParams.get("restaurantId")!));
@@ -66,8 +62,6 @@ export async function GET(request: NextRequest) {
       filters.push(
         eq(foods.isFavoriteFood, searchParams.get("isFavorite") === "true"),
       );
-
-    // 3. Construct Query
     const queryBuilder = db
       .with(latestLogCte, logCountCte)
       .select({
@@ -96,13 +90,9 @@ export async function GET(request: NextRequest) {
       .leftJoin(latestLogCte, eq(latestLogCte.foodId, foods.id))
       .leftJoin(logCountCte, eq(logCountCte.foodId, foods.id))
       .where(filters.length ? and(...filters) : undefined);
-
-    // 4. Execute with Random Order
     const limit = parseInt(searchParams.get("limit") || "1");
     const data = await queryBuilder.orderBy(sql`RANDOM()`).limit(limit);
 
-    // Tentukan hasil berdasarkan limit
-    // Jika limit 1, kembalikan objek atau null. Jika lebih dari 1, kembalikan array.
     const result = limit === 1 ? (data.length > 0 ? data[0] : null) : data;
 
     return sendStandardResponse(

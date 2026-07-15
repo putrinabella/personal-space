@@ -1,4 +1,3 @@
-// drizzle.config.ts
 import { defineConfig } from "drizzle-kit";
 import * as dotenv from "dotenv";
 
@@ -11,6 +10,5 @@ export default defineConfig({
   dbCredentials: {
     url: process.env.DATABASE_URL!,
   },
-  // Tambahkan baris ini:
   schemaFilter: ["food", "finance"],
 });

@@ -22,8 +22,6 @@ export default function EditPage() {
     | "accounts"
     | "tags";
   const id = params.id as string;
-
-  // Kirimkan ID agar hook melakukan fetch data detail
   const { data, setField, handleSubmit, saving } = useEntityForm(entity, id);
   return (
     <div className="flex flex-col gap-8 max-w-7xl mx-auto">

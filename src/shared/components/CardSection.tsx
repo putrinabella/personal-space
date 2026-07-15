@@ -35,8 +35,6 @@ export default function CardSection({
 }: CardSectionProps) {
   const isCenter = align === "center";
   const isHeading = variant === "heading";
-
-  // 🎨 Menentukan kelas CSS & Ukuran Ikon berdasarkan varian ukuran yang Ratu pilih
   const titleClass = isHeading ? "heading-h2" : "text-body font-bold";
   const iconSize = isHeading ? 20 : 16;
   const iconClass = isHeading ? "w-5 h-5" : "w-4 h-4";
@@ -52,7 +50,6 @@ export default function CardSection({
       shadowSize={shadowSize}
       className={`p-0 overflow-hidden flex flex-col ${className}`}
     >
-      {/* 🏷️ HEADER SECTION */}
       <div
         className={`w-full px-6 py-4 border-b-4 border-neutral flex items-center gap-3
           ${isCenter ? "justify-center text-center" : "justify-start"}
@@ -79,7 +76,6 @@ export default function CardSection({
         {action && <div className="ml-auto">{action}</div>}
       </div>
 
-      {/* 📝 CONTENT AREA */}
       <div className={`p-6 flex-1 w-full ${isCenter ? "text-center" : ""}`}>
         {children}
       </div>

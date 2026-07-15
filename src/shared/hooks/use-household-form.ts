@@ -13,7 +13,6 @@ export function useHouseholdForm<T extends { householdId?: string }>(
 
   return useBaseForm<T>({
     ...config,
-    // Otomatis aktifkan hanya jika householdId sudah ada
     enabled: config.enabled !== false && !!householdId,
 
     transformBeforeSubmit: (data: T) => {
@@ -22,8 +21,6 @@ export function useHouseholdForm<T extends { householdId?: string }>(
           "Household configuration is missing. Please try again.",
         );
       }
-
-      // Jalankan custom transform jika ada, lalu tambahkan householdId
       const transformed = config.transformBeforeSubmit
         ? config.transformBeforeSubmit(data)
         : data;

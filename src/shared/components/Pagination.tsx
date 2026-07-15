@@ -17,15 +17,12 @@ export default function Pagination({
   perPage = 10,
   total = 0,
 }: PaginationProps) {
-  // Jika data kosong atau halaman hanya 1, sembunyikan pagination
   if (lastPage <= 1) {
     return <div className="mt-6" />;
   }
 
   const from = total === 0 ? 0 : (page - 1) * perPage + 1;
   const to = total === 0 ? 0 : Math.min(page * perPage, total);
-
-  // Generate logic untuk ellipsis "..."
   const pages: (number | "...")[] = [];
   const delta = 2;
   for (let p = 1; p <= lastPage; p++) {
@@ -38,7 +35,6 @@ export default function Pagination({
 
   return (
     <div className="flex flex-col md:flex-row items-center justify-between gap-4 mt-4">
-      {/* Info Status Data */}
       <p className="text-sm text-base-content/70">
         {total === 0 ? (
           "Menampilkan 0 data"
@@ -51,7 +47,6 @@ export default function Pagination({
         )}
       </p>
 
-      {/* Kontrol Navigasi */}
       <div className="flex items-center gap-1 flex-wrap">
         <button
           onClick={() => onPageChange(page - 1)}

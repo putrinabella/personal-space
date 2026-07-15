@@ -35,7 +35,6 @@ export default function HomePage() {
   }, [supabase]);
   return (
     <div className="flex flex-col items-center justify-between min-h-[85vh] py-12 px-4 gap-8">
-      {/* Header Utama */}
       <div className="text-center">
         <h1 className="text-5xl md:text-6xl font-black tracking-tighter uppercase text-base-content">
           Eunoia
@@ -45,13 +44,11 @@ export default function HomePage() {
         </p>
       </div>
 
-      {/* CardBox dengan lebar yang diatur agar konsisten dengan elemen dock */}
       <CardBox
         className="relative flex flex-col w-full max-w-sm overflow-visible"
         rounded="2xl"
       >
         <div className="flex items-center gap-4 px-6 pt-6 pb-5">
-          {/* Ikon Aesthetic */}
           <div className="h-12 w-12 shrink-0 rounded-full bg-accent/15 text-accent flex items-center justify-center font-black text-lg">
             <Sparkle size={24} weight="fill" />
           </div>

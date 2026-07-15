@@ -6,8 +6,6 @@ import { useTagForm } from "@/features/food/tags/hooks/useTagForm";
 export const useEntityForm = (entity: string, id?: string) => {
   const isCreating = id === "create" || !id;
   const safeId = isCreating ? undefined : id;
-
-  // HANYA aktifkan hook yang sesuai dengan entity saat ini
   const categories = useCategoriesForm(safeId, entity === "categories");
   const cuisines = useCuisinesForm(safeId, entity === "cuisines");
   const diningType = useDiningTypeForm(safeId, entity === "diningType");

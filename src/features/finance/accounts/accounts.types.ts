@@ -4,7 +4,6 @@ export interface AccountsFormData {
   householdId: string;
   name: string;
   type: string;
-  // currentBalance: string;
   currency: string;
   iconSlug: string;
   isArchived: boolean;
@@ -27,7 +26,6 @@ export const defaultAccounts: AccountsFormData = {
   type: "",
   iconSlug: "",
   color: "",
-  // currentBalance: "",
   currency: "",
   isArchived: false,
 };

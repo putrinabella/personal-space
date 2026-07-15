@@ -43,7 +43,6 @@ export default function CreateFoodEntryPage() {
       />
 
       <CardBox className="p-8 flex flex-col gap-6" rounded="2xl">
-        {/* Toggle Mode */}
         <div className="flex bg-base-200 p-1 rounded-xl">
           <button
             onClick={() => setMode("existing")}
@@ -125,7 +124,6 @@ export default function CreateFoodEntryPage() {
               />
             </div>
 
-            {/* Tambahan untuk Dining Type */}
             <FormInput
               label="Dining Type"
               required
@@ -140,7 +138,6 @@ export default function CreateFoodEntryPage() {
               disabled={loadingDiningType}
             />
 
-            {/* Toggle untuk Favorite Food & Drink */}
             <div className="flex gap-6 mt-2">
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
@@ -169,7 +166,6 @@ export default function CreateFoodEntryPage() {
 
         <hr />
 
-        {/* Transaction Log Details */}
         <p className="font-bold">Visit Details</p>
         <div className="grid grid-cols-2 gap-4">
           <FormInput
@@ -217,7 +213,6 @@ export default function CreateFoodEntryPage() {
             color="accent"
             onClick={onSave}
             pressable
-            // disabled={saving}
           >
             {saving ? (
               "Saving..."

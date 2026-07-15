@@ -47,8 +47,6 @@ export async function GET(request: NextRequest) {
       filters.push(eq(foods.cuisineId, searchParams.get("cuisineId")!));
     if (searchParams.get("diningTypeId"))
       filters.push(eq(foods.diningTypeId, searchParams.get("diningTypeId")!));
-    // if (searchParams.get("search"))
-    //   filters.push(ilike(foods.foodName, `%${searchParams.get("search")}%`));
     if (searchParams.get("search")) {
       const searchTerm = `%${searchParams.get("search")}%`;
       filters.push(

@@ -12,7 +12,6 @@ export function useTagsList(page = 1, title?: string, enabled = true) {
 
   return useBaseList<TagEntry, PaginatedParams>({
     queryKey: queryKeys.tags.list(params),
-    // Sekarang ini tidak akan error lagi
     fetcher: (p) => tagsService.getPaginated(p),
     params,
     enabled,

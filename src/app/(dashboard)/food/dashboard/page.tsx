@@ -71,8 +71,6 @@ export default function FoodView() {
   const selectedFood = foodData?.find((f) => f.id === expandedId);
   const [showFilters, setShowFilters] = useState(false);
   const [showRandomModal, setShowRandomModal] = useState(false);
-
-  // Panggil hook-nya
   const {
     data: randomFood,
     refetch: fetchRandom,
@@ -108,7 +106,6 @@ export default function FoodView() {
         </div>
 
         <div className="flex flex-wrap items-center gap-3">
-          {/* Tambahkan tombol ini */}
           <CardBox
             className="px-4 py-2 flex items-center gap-2 text-data-body md:text-base font-bold"
             rounded="xl"

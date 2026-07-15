@@ -14,13 +14,11 @@ export function useBaseDetail<T>({
 }: UseBaseDetailProps<T>) {
   const query = useQuery({
     queryKey,
-    // Pastikan fetcher hanya dipanggil jika id ada
     queryFn: () => fetcher(id as string),
     enabled: !!id,
   });
 
   return {
-    // Gunakan 'as T | null' agar tipe data konsisten
     data: (query.data ?? null) as T | null,
     loading: query.isLoading,
     error: query.isError,

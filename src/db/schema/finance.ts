@@ -24,15 +24,11 @@ const auditColumns = {
     .notNull(),
   deletedAt: timestamp("deleted_at", { withTimezone: true }),
 };
-
-// 1. Households
 export const households = financeSchema.table("households", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: text("name").notNull(),
   ...auditColumns,
 });
-
-// 2. Members
 export const householdMembers = financeSchema.table("household_members", {
   id: uuid("id").defaultRandom().primaryKey(),
   householdId: uuid("household_id")
@@ -46,8 +42,6 @@ export const householdMembers = financeSchema.table("household_members", {
     .notNull(),
   ...auditColumns,
 });
-
-// 1. ACCOUNTS
 export const financeAccounts = financeSchema.table("finance_accounts", {
   id: uuid("id").defaultRandom().primaryKey(),
   householdId: uuid("household_id")
@@ -69,8 +63,6 @@ export const financeAccounts = financeSchema.table("finance_accounts", {
   isArchived: boolean("is_archived").default(false),
   ...auditColumns,
 });
-
-// 2. POCKETS
 export const financePockets = financeSchema.table("finance_pockets", {
   id: uuid("id").defaultRandom().primaryKey(),
   householdId: uuid("household_id")
@@ -92,8 +84,6 @@ export const financePockets = financeSchema.table("finance_pockets", {
   iconSlug: text("icon_slug"),
   ...auditColumns,
 });
-
-// 3. CATEGORIES
 export const financeCategories = financeSchema.table(
   "finance_categories",
   {
@@ -118,8 +108,6 @@ export const financeCategories = financeSchema.table(
     }),
   }),
 );
-
-// 4. TRANSACTIONS
 export const financeTransactions = financeSchema.table("finance_transactions", {
   id: uuid("id").defaultRandom().primaryKey(),
   householdId: uuid("household_id")
@@ -155,8 +143,6 @@ export const financeTransactions = financeSchema.table("finance_transactions", {
     .notNull(),
   ...auditColumns,
 });
-
-// 5. ACCOUNT TRANSFERS
 export const financeAccountTransfers = financeSchema.table(
   "finance_account_transfers",
   {
@@ -183,8 +169,6 @@ export const financeAccountTransfers = financeSchema.table(
     ...auditColumns,
   },
 );
-
-// 6. BUDGETS
 export const financeBudgets = financeSchema.table("finance_budgets", {
   id: uuid("id").defaultRandom().primaryKey(),
   householdId: uuid("household_id")
@@ -201,8 +185,6 @@ export const financeBudgets = financeSchema.table("finance_budgets", {
   year: integer("year").notNull(),
   ...auditColumns,
 });
-
-// 7. TAGS
 export const financeTags = financeSchema.table("finance_tags", {
   id: uuid("id").defaultRandom().primaryKey(),
   householdId: uuid("household_id")
@@ -212,8 +194,6 @@ export const financeTags = financeSchema.table("finance_tags", {
   color: text("color"),
   ...auditColumns,
 });
-
-// 8. TRANSACTION TAGS (PIVOT)
 export const financeTransactionTags = financeSchema.table(
   "finance_transaction_tags",
   {
@@ -230,8 +210,6 @@ export const financeTransactionTags = financeSchema.table(
     }),
   }),
 );
-
-// 9. SAVING GOALS
 export const financeSavingGoals = financeSchema.table("finance_saving_goals", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: text("name").notNull(),
@@ -247,8 +225,6 @@ export const financeSavingGoals = financeSchema.table("finance_saving_goals", {
   isCompleted: boolean("is_completed").default(false).notNull(),
   ...auditColumns,
 });
-
-// 10. RECURRING TRANSACTIONS
 export const financeRecurringTransactions = financeSchema.table(
   "finance_recurring_transactions",
   {
@@ -280,8 +256,6 @@ export const financeRecurringTransactions = financeSchema.table(
     ...auditColumns,
   },
 );
-
-// 11. TRANSACTION LOGS
 export const financeTransactionLogs = financeSchema.table(
   "finance_transaction_logs",
   {
@@ -302,8 +276,6 @@ export const financeTransactionLogs = financeSchema.table(
       .notNull(),
   },
 );
-
-// 12. MONTHLY SUMMARIES
 export const financeMonthlySummaries = financeSchema.table(
   "finance_monthly_summaries",
   {

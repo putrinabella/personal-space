@@ -175,8 +175,6 @@ const FormInput = ({
 
   const flatOptions = flattenOptions();
   const filtered = flatOptions.filter((o) => {
-    // 1. Pastikan 'o' ada dan 'o' adalah string
-    // 2. Gunakan optional chaining atau pengecekan manual
     return o && o.toLowerCase().includes(query.toLowerCase());
   });
 
@@ -401,8 +399,6 @@ const FormInput = ({
     const today = new Date();
     let minDate: string | undefined = undefined;
     let maxDate: string | undefined = max ? String(max) : undefined;
-
-    // 1. --- LOGIKA FORMAT STRING BASE (YYYY-MM-DD atau YYYY-MM) ---
     const yToday = today.getFullYear();
     const mToday = String(today.getMonth() + 1).padStart(2, "0");
     const dToday = String(today.getDate()).padStart(2, "0");
@@ -410,13 +406,10 @@ const FormInput = ({
       type === "month"
         ? `${yToday}-${mToday}`
         : `${yToday}-${mToday}-${dToday}`;
-
-    // 2. --- LOGIKA MIN DATE (DENGAN FIX BESOK KHUSUS TIPE DATE) ---
     if (disablePast) {
       if (type === "month") {
         minDate = todayString;
       } else {
-        // Logika H+1 (Besok) khusus tipe "date"
         const tomorrow = new Date(today);
         tomorrow.setDate(today.getDate() + 1);
         const yStr = tomorrow.getFullYear();
@@ -434,10 +427,7 @@ const FormInput = ({
     } else if (min) {
       minDate = String(min);
     }
-
-    // 3. --- LOGIKA MAX DATE (DENGAN FIX H-1 KHUSUS TIPE DATE) ---
     if (max && type === "date") {
-      // Logika H-1 Akhir Promo hanya berlaku untuk tipe "date"
       const maxPromoDate = new Date(max);
       maxPromoDate.setDate(maxPromoDate.getDate() - 1);
 
@@ -450,8 +440,6 @@ const FormInput = ({
     if (disableFuture && !max) {
       maxDate = todayString;
     }
-
-    // 4. --- HANDLER UNTUK VALUE CHANGE (DENGAN BLOKIR HARI MINGGU UNTUK TIPE DATE) ---
     const handleDateChange = (e: ChangeEvent<HTMLInputElement>) => {
       const selectedValueStr = e.target.value;
       if (!selectedValueStr) {
@@ -472,8 +460,6 @@ const FormInput = ({
           return;
         }
       }
-
-      // Jika lolos pengecekan hari Minggu atau bertipe "month"
       setWarning?.(null);
       onChange?.(selectedValueStr);
     };
@@ -498,7 +484,6 @@ const FormInput = ({
           className={`${baseClasses} ${error ? "border-error focus:ring-error" : ""}`}
         />
 
-        {/* Tampilkan Teks Error di bawah input */}
         {error && <p className="text-xs text-error font-medium">{error}</p>}
 
         {helpText && !error && (

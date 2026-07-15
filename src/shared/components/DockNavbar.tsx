@@ -77,7 +77,6 @@ export default function DockNavbar() {
           : "bg-transparent border-transparent text-neutral/70 hover:text-neutral hover:scale-105"
       }`}
               >
-                {/* Ikon */}
                 {isPhosphor ? (
                   <IconComponent
                     size={24}
@@ -91,7 +90,6 @@ export default function DockNavbar() {
                   />
                 )}
 
-                {/* Teks Label - Hanya muncul di Desktop (md ke atas) */}
                 <span className="hidden md:block font-bold text-sm tracking-wide">
                   {menu.label}
                 </span>

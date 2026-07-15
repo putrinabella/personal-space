@@ -6,7 +6,6 @@ import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 interface UseBaseAllProps<T, TError = Error> {
   queryKey: readonly unknown[];
   fetcher: () => Promise<T[]>;
-  // Menambahkan options agar bisa mengontrol query dari luar (enabled, retry, dll)
   options?: Omit<UseQueryOptions<T[], TError>, "queryKey" | "queryFn">;
 }
 
@@ -20,11 +19,8 @@ export function useBaseAll<T, TError = Error>({
     queryFn: fetcher,
     staleTime: 1000 * 60 * 5,
     refetchOnWindowFocus: false,
-    // Menambahkan hook untuk menangani error secara global jika query gagal
     ...options,
   });
-
-  // Jika terjadi error, kita bisa memicu handleApiError secara otomatis
   if (query.isError) {
     handleApiError(query.error);
   }

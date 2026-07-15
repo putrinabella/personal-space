@@ -26,13 +26,9 @@ export function createGetHandler(options: CrudHandlerOptions) {
       if (options.defaultWhere) {
         filters.push(options.defaultWhere);
       }
-
-      // Soft Delete (pastikan table.deletedAt ada)
       if (options.enableSoftDelete !== false && table.deletedAt) {
         filters.push(isNull(table.deletedAt));
       }
-
-      // Detail
       if (id) {
         filters.push(eq(table.id, id));
 
@@ -56,8 +52,6 @@ export function createGetHandler(options: CrudHandlerOptions) {
           `${options.entity} retrieved successfully.`,
         );
       }
-
-      // Search
       if (
         search &&
         options.searchableColumns &&
@@ -71,8 +65,6 @@ export function createGetHandler(options: CrudHandlerOptions) {
           )!,
         );
       }
-
-      // Get All
       if (!page) {
         const items = await db
           .select()
@@ -84,8 +76,6 @@ export function createGetHandler(options: CrudHandlerOptions) {
           `${options.entity} list retrieved successfully.`,
         );
       }
-
-      // Pagination
       const offset = (page - 1) * perPage;
 
       const [items, total] = await Promise.all([

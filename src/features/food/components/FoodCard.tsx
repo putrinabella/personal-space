@@ -141,23 +141,20 @@ export const FoodCard = ({ food, onDetailClick }: FoodCardProps) => {
           onClick={(e) => e.stopPropagation()}
           className="flex items-start gap-2 text-base-content group/link w-full overflow-hidden transition-colors duration-300 hover:text-accent"
         >
-          {/* Icon */}
           <div className="mt-0.5 shrink-0 transition-colors duration-300 group-hover/link:text-accent">
             <MapPinAreaIcon size={16} />
           </div>
 
-          {/* Text Container */}
           <div className="flex flex-col min-w-0 transition-colors duration-300">
             <span className="text-caption uppercase font-bold truncate group-hover/link:text-accent transition-colors duration-300">
               {food.restaurant?.name}
             </span>
-            {/* Pastikan class ini ditambahkan agar alamat ikut berubah */}
+
             <span className="text-caption uppercase truncate leading-tight group-hover/link:text-accent transition-colors duration-300">
               {food.restaurant?.address}
             </span>
           </div>
 
-          {/* Arrow */}
           <div className="ml-auto mt-0.5 shrink-0 transition-colors duration-300 group-hover/link:text-accent">
             <ArrowUpRight
               size={14}
@@ -166,7 +163,6 @@ export const FoodCard = ({ food, onDetailClick }: FoodCardProps) => {
           </div>
         </a>
       </div>
-
     </CardBox>
   );
 };

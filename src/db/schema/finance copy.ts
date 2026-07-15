@@ -23,15 +23,11 @@ const auditColumns = {
     .notNull(),
   deletedAt: timestamp("deleted_at", { withTimezone: true }),
 };
-
-// 1. Households
 export const households = financeSchema.table("households", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: text("name").notNull(),
   ...auditColumns,
 });
-
-// 2. Members
 export const householdMembers = financeSchema.table("household_members", {
   id: uuid("id").defaultRandom().primaryKey(),
   householdId: uuid("household_id")
@@ -45,8 +41,6 @@ export const householdMembers = financeSchema.table("household_members", {
     .notNull(),
   ...auditColumns,
 });
-
-// 3. Pockets
 export const pockets = financeSchema.table("pockets", {
   id: uuid("id").defaultRandom().primaryKey(),
   householdId: uuid("household_id")
@@ -67,8 +61,6 @@ export const pockets = financeSchema.table("pockets", {
   allocationDay: text("allocation_day"),
   ...auditColumns,
 });
-
-// 4. Categories (Types)
 export const types = financeSchema.table("types", {
   id: uuid("id").defaultRandom().primaryKey(),
   householdId: uuid("household_id")
@@ -79,8 +71,6 @@ export const types = financeSchema.table("types", {
   iconSlug: text("icon_slug"),
   ...auditColumns,
 });
-
-// 5. Transactions
 export const transactions = financeSchema.table("transactions", {
   id: uuid("id").defaultRandom().primaryKey(),
   householdId: uuid("household_id")
@@ -101,7 +91,6 @@ export const transactions = financeSchema.table("transactions", {
   description: text("description"),
   ...auditColumns,
 });
-// 4. Pocket Transfers (Internal)
 export const pocketTransfers = financeSchema.table("pocket_transfers", {
   id: uuid("id").defaultRandom().primaryKey(),
   householdId: uuid("household_id")
@@ -117,7 +106,6 @@ export const pocketTransfers = financeSchema.table("pocket_transfers", {
   date: timestamp("date", { withTimezone: true }).defaultNow().notNull(),
   ...auditColumns,
 });
-// --- Relations ---
 export const pocketsRelations = relations(pockets, ({ one, many }) => ({
   household: one(households, {
     fields: [pockets.householdId],

@@ -4,7 +4,6 @@ import { foods } from "@/db/schema/food";
 import { eq, sql, desc, and } from "drizzle-orm";
 import { sendPaginatedResponse, sendStandardResponse } from "@/lib/apiResponse";
 import { validate as validateUuid } from "uuid";
-// 1. GET: Mengambil daftar menu berdasarkan restoran
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -18,7 +17,6 @@ export async function GET(request: NextRequest) {
         "error",
       );
     }
-    // 1. GET DETAIL BY ID
     if (id) {
       const item = await db.query.foods.findFirst({
         where: eq(foods.id, id),
@@ -28,8 +26,6 @@ export async function GET(request: NextRequest) {
         ? sendStandardResponse(item, "Detail menu found.")
         : sendStandardResponse(null, "Menu not found.", 404, "error");
     }
-
-    // 2. GET ALL (Tanpa pagination - biasanya untuk kebutuhan dropdown/select)
     if (!searchParams.has("page")) {
       const data = await db.query.foods.findMany({
         where: restaurantId ? eq(foods.restaurantId, restaurantId) : undefined,
@@ -41,8 +37,6 @@ export async function GET(request: NextRequest) {
         "Berhasil mengambil seluruh daftar menu.",
       );
     }
-
-    // 3. GET PAGINATED (Untuk tabel admin/manajemen menu)
     const page = Math.max(1, parseInt(searchParams.get("page") || "1"));
     const perPage = Math.max(1, parseInt(searchParams.get("per_page") || "15"));
     const offset = (page - 1) * perPage;
@@ -73,8 +67,6 @@ export async function GET(request: NextRequest) {
     return sendStandardResponse(null, err.message, 500, "error");
   }
 }
-
-// 2. POST: Menambah menu baru ke master data
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -110,8 +102,6 @@ export async function POST(request: NextRequest) {
     return sendStandardResponse(null, err.message, 500, "error");
   }
 }
-
-// 3. PUT: Update status menu (misal: ubah jadi favorit)
 export async function PUT(request: NextRequest) {
   try {
     const { id, isFavoriteFood, isFavoriteDrink } = await request.json();

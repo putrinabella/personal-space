@@ -39,8 +39,6 @@ const ActionButton = ({
   onClick,
 }: ActionButtonProps) => {
   const buttonStyle = getButtonColorClass(color);
-
-  // Tombol dianggap tidak aktif jika sedang loading atau di-set disabled
   const isDisabled = loading || disabled;
 
   const baseClasses = `
@@ -95,8 +93,6 @@ const ActionButton = ({
       {child}
     </div>
   );
-
-  // Jika tombol disabled/loading, sebaiknya jangan jalankan onClick
   const handleClick = (e: React.MouseEvent) => {
     if (isDisabled) {
       e.preventDefault();

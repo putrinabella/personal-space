@@ -20,8 +20,6 @@ export type ColorSchemeConfig = {
   iconColor: string;
   buttonBg: string;
 };
-
-// --- Helper untuk base colors ---
 const baseConfig: ColorSchemeConfig = {
   bg: "bg-base-200",
   border: "border-base-300",
@@ -29,8 +27,6 @@ const baseConfig: ColorSchemeConfig = {
   iconColor: "text-base-content",
   buttonBg: "bg-base-300 hover:bg-base-content/20",
 };
-
-// --- Maps ---
 
 export const colorSchemeMap: Record<DaisyColor, ColorSchemeConfig> = {
   primary: {
@@ -101,8 +97,6 @@ export const colorSchemeMap: Record<DaisyColor, ColorSchemeConfig> = {
   "base-200": baseConfig,
   "base-300": baseConfig,
 };
-
-// Map lainnya disesuaikan dengan tipe DaisyColor baru
 export const bgMap: Record<DaisyColor, string> = {
   primary: "bg-primary text-primary-content",
   secondary: "bg-secondary text-secondary-content",
@@ -187,8 +181,6 @@ export const buttonColorMap: Record<DaisyColor, string> = {
   "base-200": "bg-base-300 hover:bg-base-content/20",
   "base-300": "bg-base-content/10 hover:bg-base-content/20",
 };
-
-// --- Utility Functions ---
 
 export const isDaisyColor = (color: string): color is DaisyColor => {
   return [

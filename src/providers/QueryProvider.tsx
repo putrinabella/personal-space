@@ -8,7 +8,6 @@ export default function QueryProvider({
 }: {
   children: React.ReactNode;
 }) {
-  // Gunakan useState agar QueryClient hanya dibuat sekali per sesi
   const [queryClient] = useState(() => new QueryClient());
 
   return (

@@ -67,7 +67,6 @@ export function useBaseDelete({
   });
 
   const handleDelete = async (id: string) => {
-    // Hasil dari showAlert sekarang dijamin memiliki properti isConfirmed: boolean
     const result = await showAlert({
       title: msg.deleteConfirmTitle,
       text: msg.deleteConfirmText,
@@ -79,8 +78,6 @@ export function useBaseDelete({
       cancelButtonText: "Cancel",
       cancelButtonColor: "base-300" as DaisyColor,
     });
-
-    // Menggunakan isConfirmed untuk membatalkan aksi
     if (!result) return;
 
     mutation.mutate(id);

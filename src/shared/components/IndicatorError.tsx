@@ -22,7 +22,7 @@ export const IndicatorError = ({
         <div className="bg-error/10 rounded-full p-6">
           <Coffee className="w-16 h-16 text-error" weight="duotone" />
         </div>
-        {/* Small warning badge overlay */}
+
         <WarningCircle
           className="w-7 h-7 text-error absolute -bottom-1 -right-1 bg-base-100 rounded-full"
           weight="fill"
