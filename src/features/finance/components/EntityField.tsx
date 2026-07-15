@@ -1,147 +1,26 @@
 import FormInput from "@/shared/components/FormInput";
 import IconRenderer from "@/shared/components/IconRenderer";
+import { useCategoriesAll } from "../categories/hooks/useCategoriesAll";
+import {
+  COLOR_OPTIONS,
+  CURRENCY_OPTIONS,
+  ICON_LIBRARY,
+  TYPE_OPTIONS,
+} from "@/shared/constants/entity-options";
 
 export function EntityFields({ entity, data, setField }: any) {
-  const typeOptions = {
-    accounts: [
-      { label: "Cash", value: "cash" },
-      { label: "Bank", value: "bank" },
-      { label: "E-Wallet", value: "ewallet" },
-      { label: "Credit Card", value: "credit_card" },
-      { label: "Investment", value: "investment" },
-    ],
-    pockets: [
-      { label: "General", value: "general" },
-      { label: "Saving", value: "saving" },
-    ],
-    categories: [
-      { label: "Income", value: "income" },
-      { label: "Expense", value: "expense" },
-    ],
-  };
+  const { data: allCategories } = useCategoriesAll();
 
-  const colorOptions = [
-    { label: "Acid Lime", value: "#c5e384" },
-    { label: "Electric Violet", value: "#a78bfa" },
-    { label: "Sky Blue", value: "#a3d9ff" },
-    { label: "Hot Pink", value: "#f472b6" },
-    { label: "Sunny Yellow", value: "#fbbf24" },
-    { label: "Mandarin", value: "#fb923c" },
-    { label: "Mint Green", value: "#34d399" },
-    { label: "Deep Indigo", value: "#4f46e5" },
-    { label: "Rose Red", value: "#f87171" },
-    { label: "Cyber Teal", value: "#2dd4bf" },
-  ];
+  const parentOptions = (allCategories || [])
+    .filter((cat: any) => !cat.parentId && cat.id !== data.id)
+    .map((cat: any) => ({
+      label: cat.name,
+      value: cat.id,
+    }));
 
-  const iconLibrary = {
-    accounts: [
-      { label: "Wallet", value: "Wallet" },
-      { label: "Bank", value: "Bank" },
-      { label: "Credit Card", value: "CreditCard" },
-      { label: "Money", value: "Money" },
-      { label: "Coins", value: "Coins" },
-      { label: "Piggy Bank", value: "PiggyBank" },
-      { label: "Cash Register", value: "CashRegister" },
-      { label: "Vault", value: "Vault" },
-      { label: "Receipt", value: "Receipt" },
-      { label: "Hand Coins", value: "HandCoins" },
-      { label: "Currency Dollar", value: "CurrencyDollar" },
-      { label: "Currency Circle Dollar", value: "CurrencyCircleDollar" },
-      { label: "Building", value: "Buildings" },
-      { label: "Device Mobile", value: "DeviceMobile" },
-    ],
-
-    pockets: [
-      { label: "Folder", value: "Folder" },
-      { label: "Folders", value: "Folders" },
-      { label: "Archive", value: "Archive" },
-      { label: "Tray", value: "Tray" },
-      { label: "Tray Arrow Down", value: "TrayArrowDown" },
-      { label: "Tray Arrow Up", value: "TrayArrowUp" },
-      { label: "Lock", value: "Lock" },
-      { label: "Lock Key", value: "LockKey" },
-      { label: "Vault", value: "Vault" },
-      { label: "Safe", value: "Safe" },
-      { label: "Briefcase", value: "Briefcase" },
-      { label: "Suitcase", value: "Suitcase" },
-      { label: "Box", value: "Cube" },
-      { label: "Package", value: "Package" },
-    ],
-
-    categories: [
-      { label: "Shopping", value: "ShoppingBag" },
-      { label: "Shopping Cart", value: "ShoppingCart" },
-      { label: "Store", value: "Storefront" },
-      { label: "Gift", value: "Gift" },
-
-      { label: "Food", value: "ForkKnife" },
-      { label: "Coffee", value: "Coffee" },
-      { label: "Bowl Food", value: "BowlFood" },
-      { label: "Pizza", value: "Pizza" },
-
-      { label: "Transportation", value: "Car" },
-      { label: "Bus", value: "Bus" },
-      { label: "Train", value: "Train" },
-      { label: "Motorcycle", value: "Motorcycle" },
-      { label: "Airplane", value: "Airplane" },
-      { label: "Gas Pump", value: "GasPump" },
-
-      { label: "Home", value: "House" },
-      { label: "Buildings", value: "Buildings" },
-
-      { label: "Health", value: "Heartbeat" },
-      { label: "Hospital", value: "Hospital" },
-      { label: "First Aid", value: "FirstAidKit" },
-      { label: "Medicine", value: "Pill" },
-
-      { label: "Entertainment", value: "GameController" },
-      { label: "Movie", value: "FilmSlate" },
-      { label: "Music", value: "MusicNote" },
-      { label: "Ticket", value: "Ticket" },
-
-      { label: "Education", value: "GraduationCap" },
-      { label: "Book", value: "BookOpen" },
-
-      { label: "Work", value: "Briefcase" },
-      { label: "Laptop", value: "Laptop" },
-
-      { label: "Utilities", value: "Lightning" },
-      { label: "Light", value: "Lightbulb" },
-      { label: "Wifi", value: "WifiHigh" },
-      { label: "Phone", value: "Phone" },
-
-      { label: "Savings", value: "PiggyBank" },
-      { label: "Investment", value: "ChartLineUp" },
-      { label: "Target", value: "Target" },
-
-      { label: "Travel", value: "SuitcaseRolling" },
-      { label: "Map", value: "MapPin" },
-
-      { label: "Pets", value: "Dog" },
-      { label: "Family", value: "UsersThree" },
-
-      { label: "Heart", value: "Heart" },
-      { label: "Star", value: "Star" },
-      { label: "Sparkle", value: "Sparkle" },
-      { label: "Leaf", value: "Leaf" },
-      { label: "Flower", value: "FlowerLotus" },
-      { label: "Palette", value: "Palette" },
-      { label: "Camera", value: "Camera" },
-      { label: "Clock", value: "Clock" },
-      { label: "Calendar", value: "Calendar" },
-      { label: "Tag", value: "Tag" },
-    ],
-  };
-  const currencyOptions = [
-    { label: "IDR (Indonesian Rupiah)", value: "IDR" },
-    { label: "USD (US Dollar)", value: "USD" },
-    { label: "JPY (Japanese Yen)", value: "JPY" },
-    { label: "EUR (Euro)", value: "EUR" },
-  ];
-
-  const currentOptions = typeOptions[entity as keyof typeof typeOptions];
+  const currentOptions = TYPE_OPTIONS[entity as keyof typeof TYPE_OPTIONS];
   const currentIconOptions =
-    iconLibrary[entity as keyof typeof iconLibrary] || [];
+    ICON_LIBRARY[entity as keyof typeof ICON_LIBRARY] || [];
   const hasIcon =
     entity === "accounts" || entity === "categories" || entity === "pockets";
   return (
@@ -167,6 +46,18 @@ export function EntityFields({ entity, data, setField }: any) {
         onChange={(val) => setField("name", val)}
       />
 
+      {entity === "categories" && (
+        <FormInput
+          label="Parent Category (Optional)"
+          value={data.parentId || ""}
+          onChange={(val) => setField("parentId", val === "" ? null : val)}
+          options={parentOptions}
+          dropdownType="select"
+          searchable={true}
+          placeholder="No parent (Root category)"
+        />
+      )}
+
       {hasIcon && (
         <FormInput
           label="Icon"
@@ -181,16 +72,16 @@ export function EntityFields({ entity, data, setField }: any) {
         label="Background Color"
         value={data.color || ""}
         onChange={(val) => setField("color", val)}
-        options={colorOptions}
+        options={COLOR_OPTIONS}
         dropdownType="select"
         placeholder="Choose a color"
       />
       {entity === "accounts" && (
         <FormInput
           label="Currency"
-          value={data.currency || "IDR"} // Menggunakan data dari props
-          onChange={(val) => setField("currency", val)} // Konsisten pakai setField
-          options={currencyOptions}
+          value={data.currency || "IDR"}
+          onChange={(val) => setField("currency", val)}
+          options={CURRENCY_OPTIONS}
           placeholder="Select currency"
         />
       )}

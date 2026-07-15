@@ -18,7 +18,14 @@ export function useCategoriesForm(
     defaultValues: defaultCategories,
     queryKey: queryKeys.categories.detail(categoriesId || ""),
     invalidateQueryKey: queryKeys.categories.lists(),
-
+    transformBeforeSubmit: (data: CategoriesFormData) => {
+      return {
+        ...data,
+        // Jika parentId adalah string kosong, paksa jadi null
+        parentId:
+          data.parentId && data.parentId.trim() !== "" ? data.parentId : null,
+      };
+    },
     getDetail: async (id: string) => await categoriesService.getDetail(id),
     createFn: categoriesService.create,
     updateFn: categoriesService.update,

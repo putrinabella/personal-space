@@ -162,6 +162,7 @@ export default function SettingsPage() {
                   !activeData.error &&
                   activeData.data.length > 0 && (
                     <DataRenderer
+                      entity={activeTab}
                       data={activeData.data}
                       viewType={viewType}
                       onEdit={(item) => {
