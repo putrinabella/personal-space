@@ -165,7 +165,6 @@ export default function SettingsPage() {
                       data={activeData.data}
                       viewType={viewType}
                       onEdit={(item) => {
-                        // Navigasi ke path edit berdasarkan ID item
                         router.push(
                           `/finance/settings/${activeTab}/${item.id}/edit`,
                         );

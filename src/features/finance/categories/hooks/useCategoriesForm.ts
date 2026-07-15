@@ -1,38 +1,33 @@
 import { queryKeys } from "@/lib/queryKeys";
-import { useBaseForm } from "@/shared/hooks/core/use-base-form";
 import {
   defaultCategories,
   CategoriesFormData,
   validateCategories,
 } from "../categories.types";
 import { categoriesService } from "../categories.service";
+import { useHouseholdForm } from "@/shared/hooks/use-household-form";
 
 export function useCategoriesForm(
   categoriesId?: string,
   enabled: boolean = true,
 ) {
-  return useBaseForm<CategoriesFormData>({
+  return useHouseholdForm<CategoriesFormData>({
     id: categoriesId,
-    enabled: enabled,
+    enabled,
     entityName: "categories",
     defaultValues: defaultCategories,
     queryKey: queryKeys.categories.detail(categoriesId || ""),
     invalidateQueryKey: queryKeys.categories.lists(),
 
-    getDetail: async (id) => {
-      const data = await categoriesService.getDetail(id);
-      return data as any;
-    },
-
+    getDetail: async (id: string) => await categoriesService.getDetail(id),
     createFn: categoriesService.create,
     updateFn: categoriesService.update,
     validate: validateCategories,
     redirectTo: "/finance/settings",
-
     messages: {
-      createSuccess: "Account created successfully",
-      updateSuccess: "Account updated successfully",
-      fetchError: "Failed to load account data",
+      createSuccess: "Category created successfully",
+      updateSuccess: "Category updated successfully",
+      fetchError: "Failed to load category data",
     },
   });
 }

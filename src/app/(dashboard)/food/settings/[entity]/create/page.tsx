@@ -21,7 +21,7 @@ export default function CreatePage() {
   return (
     <div className="flex flex-col gap-8 max-w-7xl mx-auto">
       <CardHeader
-        title={`TAMBAH ${entity.toUpperCase()}`}
+        title={`ADD NEW ${entity.toUpperCase()}`}
         icon={Plus}
         color="primary"
       />

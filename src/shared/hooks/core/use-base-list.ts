@@ -23,7 +23,6 @@ export function useBaseList<T, P extends PaginatedParams>({
     enabled,
     placeholderData: keepPreviousData,
   });
-  console.log("Query:", queryKey);
   return {
     data: query.data?.items ?? [],
     total: query.data?.total ?? 0,

@@ -1,31 +1,26 @@
 import { queryKeys } from "@/lib/queryKeys";
-import { useBaseForm } from "@/shared/hooks/core/use-base-form";
 import {
   defaultAccounts,
   AccountsFormData,
   validateAccounts,
 } from "../accounts.types";
 import { accountsService } from "../accounts.service";
+import { useHouseholdForm } from "@/shared/hooks/use-household-form";
 
 export function useAccountsForm(accountsId?: string, enabled: boolean = true) {
-  return useBaseForm<AccountsFormData>({
+  return useHouseholdForm<AccountsFormData>({
     id: accountsId,
-    enabled: enabled,
+    enabled,
     entityName: "accounts",
     defaultValues: defaultAccounts,
     queryKey: queryKeys.accounts.detail(accountsId || ""),
     invalidateQueryKey: queryKeys.accounts.lists(),
 
-    getDetail: async (id) => {
-      const data = await accountsService.getDetail(id);
-      return data as any;
-    },
-
+    getDetail: async (id: string) => await accountsService.getDetail(id),
     createFn: accountsService.create,
     updateFn: accountsService.update,
     validate: validateAccounts,
     redirectTo: "/finance/settings",
-
     messages: {
       createSuccess: "Account created successfully",
       updateSuccess: "Account updated successfully",

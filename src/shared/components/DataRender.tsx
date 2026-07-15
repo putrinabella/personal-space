@@ -9,6 +9,7 @@ type Props<T extends BaseItem> = {
   onEdit?: (item: T) => void;
   onDelete?: (item: T) => void;
 };
+
 export default function DataRenderer({
   data,
   viewType,
@@ -20,34 +21,46 @@ export default function DataRenderer({
       className={
         viewType === "card"
           ? "grid grid-cols-2 md:grid-cols-3 gap-4"
-          : "flex flex-col gap-2"
+          : "flex flex-col gap-3"
       }
     >
       {data.map((item) => (
         <div
           key={item.id}
           className={`
-            p-4 border  rounded-2xl bg-base-100 transition-all hover:shadow-lg group
+            group border-2 border-black bg-base-100 transition-all hover:translate-x-0.5 hover:translate-y-[2px] hover:shadow-none
             ${
               viewType === "card"
-                ? "flex flex-col items-center justify-center gap-3 text-center"
-                : "flex items-center justify-between"
+                ? "p-5 flex flex-col items-center justify-center gap-3 text-center rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+                : "p-4 flex items-center justify-between rounded-xl shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]"
             }
           `}
         >
-          {/* Bagian Konten */}
           <div
-            className={`flex items-center ${viewType === "card" ? "flex-col gap-2" : "gap-3"}`}
+            className={`flex items-center ${viewType === "card" ? "flex-col gap-3" : "gap-4"}`}
           >
+            {/* Icon Container dengan warna dinamis */}
             {item.iconSlug && (
-              <div className="p-3 rounded-full bg-primary">
-                <IconRenderer name={item.iconSlug} size={24} />
+              <div
+                className="flex items-center justify-center rounded-xl border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+                style={{
+                  backgroundColor: item.color || "#e2e8f0",
+                  width: viewType === "card" ? "64px" : "48px",
+                  height: viewType === "card" ? "64px" : "48px",
+                }}
+              >
+                <IconRenderer
+                  name={item.iconSlug || "Circle"}
+                  size={viewType === "card" ? 28 : 20}
+                />
               </div>
             )}
-            <h3 className="font-bold text-body">{item.name}</h3>
+
+            <h3 className="font-black uppercase tracking-tight text-base-content text-lg">
+              {item.name}
+            </h3>
           </div>
 
-          {/* Bagian Tombol Aksi */}
           <div className="flex gap-2">
             <ActionButton
               icon={Pencil}

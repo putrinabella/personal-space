@@ -727,7 +727,7 @@ const FormInput = ({
                     w-full px-3 py-2 bg-base-100 text-base-content border-b border-base-300 rounded-sm focus:outline-none focus:ring-1 focus:ring-primary"
                 />
 
-                <ul className="max-h-60 overflow-auto flex flex-col gap-1">
+                <ul className="max-h-40 overflow-auto flex flex-col gap-1">
                   {filteredSelectOptions.length > 0 ? (
                     filteredSelectOptions.map((opt) => (
                       <li
@@ -770,7 +770,7 @@ const FormInput = ({
               }}
               onFocus={() => setOpen(true)}
               onBlur={() => setTimeout(() => setOpen(false), 200)}
-              placeholder={placeholder || `Pilih atau ketik ${label}`}
+              placeholder={placeholder || `Select or type ${label}`}
               disabled={disabled}
               readOnly={readOnly}
               required={required}
@@ -795,7 +795,7 @@ const FormInput = ({
                   ))
                 ) : query !== "" ? (
                   <div className="px-4 py-2 text-base-content/70">
-                    Ketik manual: <strong>{query}</strong>
+                    Type here: <strong>{query}</strong>
                   </div>
                 ) : (
                   <div className="px-4 py-2 text-base-content/70">
