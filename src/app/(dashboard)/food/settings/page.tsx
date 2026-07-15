@@ -165,12 +165,12 @@ export default function SettingsPage() {
                       entity={activeTab}
                       data={activeData.data}
                       viewType={viewType}
-                      onEdit={(item) => {
+                      onEdit={(item: any) => {
                         router.push(
                           `/food/settings/${activeTab}/${item.id}/edit`,
                         );
                       }}
-                      onDelete={(item) => {
+                      onDelete={(item: any) => {
                         const handler = deleteHandlers[activeTab];
                         if (handler) {
                           handler.handleDelete(item.id);
