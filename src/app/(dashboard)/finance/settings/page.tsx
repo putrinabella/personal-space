@@ -78,11 +78,6 @@ export default function SettingsPage() {
       ))}
     </div>
   );
-  // console.log("Pagination Data:", {
-  //   page,
-  //   lastPage: activeData.lastPage,
-  //   total: activeData.total,
-  // });
   return (
     <div className="flex flex-col gap-8 max-w-7xl mx-auto">
       <CardHeader title="S E T T I N G S" icon={Sliders} color="accent" />

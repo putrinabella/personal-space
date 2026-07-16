@@ -7,6 +7,7 @@ import { CategoriesEntry } from "../categories.types";
 export function useCategoriesList(page = 1, title?: string, enabled = true) {
   const params: PaginatedParams = {
     page,
+    per_page: 1000,
     search: title,
   };
 
