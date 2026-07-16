@@ -6,7 +6,7 @@ import CardHeader from "@/shared/components/CardHeader";
 import FormInput from "@/shared/components/FormInput";
 import { ForkKnife, Check, ArrowLeft } from "@phosphor-icons/react";
 import { useRouter } from "next/navigation";
-import { useCategoriesAll } from "@/features/food/categories/hooks/useCategoriesAll";
+import { useCategoriesAll } from "@/features/food/category/hooks/useCategoryAll";
 import { useFoodAll } from "@/features/food/dashboard/hooks/useFoodAll";
 import { useRestaurantAll } from "@/features/food/restaurants/hooks/useRestaurantAll";
 import { useLogForm } from "@/features/food/dashboard/log/hooks/useLogForm";

@@ -1,20 +1,20 @@
 import { BaseItem } from "@/shared/types/base.types";
 
-export interface CategoriesFormData {
+export interface CategoryFormData {
   name: string;
   iconSlug: string;
 }
 
-export interface CategoriesEntry extends BaseItem, CategoriesFormData {
+export interface CategoryEntry extends BaseItem, CategoryFormData {
   iconSlug: string;
 }
 
-export const defaultCategories: CategoriesFormData = {
+export const defaultCategory: CategoryFormData = {
   name: "",
   iconSlug: "",
 };
 
-export const validateCategories = (payload: CategoriesFormData): string[] => {
+export const validateCategory = (payload: CategoryFormData): string[] => {
   const errors: string[] = [];
   if (!payload.name) errors.push("Nama kategori wajib diisi.");
   if (!payload.iconSlug) errors.push("Icon wajib diisi.");

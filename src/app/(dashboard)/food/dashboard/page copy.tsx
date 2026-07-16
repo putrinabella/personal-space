@@ -1,6 +1,6 @@
 "use client";
 
-import { useCategoriesAll } from "@/features/food/categories/hooks/useCategoriesAll";
+import { useCategoriesAll } from "@/features/food/category/hooks/useCategoryAll";
 import { useCuisinesAll } from "@/features/food/cuisines/hooks/useCuisinesAll";
 import { useDiscoverFoodsList } from "@/features/food/dashboard/hooks/useDiscoverList";
 import { useRandomFood } from "@/features/food/dashboard/hooks/useRandomFood";

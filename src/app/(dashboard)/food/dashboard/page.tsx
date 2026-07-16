@@ -1,6 +1,6 @@
 "use client";
 
-import { useCategoriesAll } from "@/features/food/categories/hooks/useCategoriesAll";
+import { useCategoriesAll } from "@/features/food/category/hooks/useCategoryAll";
 import { FoodCard } from "@/features/food/components/FoodCard";
 import { FoodDetailModal } from "@/features/food/components/FoodDetailModal";
 import { FoodRandomModal } from "@/features/food/components/FoodRandomModal";

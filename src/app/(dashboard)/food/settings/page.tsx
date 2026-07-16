@@ -4,7 +4,7 @@ import { useState } from "react";
 import CardHeader from "@/shared/components/CardHeader";
 import CardSection from "@/shared/components/CardSection";
 import Pagination from "@/shared/components/Pagination";
-import { useCategoriesList } from "@/features/food/categories/hooks/useCategoriesList";
+import { useCategoryList } from "@/features/food/category/hooks/useCategoryList";
 import { useCuisinesList } from "@/features/food/cuisines/hooks/useCuisinesList";
 import { Sliders, List, Plus } from "lucide-react";
 import DataRenderer from "@/shared/components/DataRender";
@@ -13,14 +13,14 @@ import { SquaresFour } from "@phosphor-icons/react";
 import { useTagsList } from "@/features/food/tags/hooks/useTagList";
 import { useDiningTypeList } from "@/features/food/diningType/hooks/useDiningTypeList";
 import { useRouter } from "next/navigation";
-import { useCategoriesDelete } from "@/features/food/categories/hooks/useCategoriesDelete";
+import { useCategoryDelete } from "@/features/food/category/hooks/useCategoryDelete";
 import { useCuisinesDelete } from "@/features/food/cuisines/hooks/useCuisinesDelete";
 import { useDiningTypeDelete } from "@/features/food/diningType/hooks/useDiningTypeDelete";
 import { useTagDelete } from "@/features/food/tags/hooks/useTagDelete";
 import DataSection from "@/shared/components/DataSection";
 
 const TAB_CONFIG = [
-  { id: "categories", label: "Categories" },
+  { id: "category", label: "Category" },
   { id: "cuisines", label: "Cuisines" },
   { id: "diningType", label: "Dining Type" },
   { id: "tags", label: "Tag" },
@@ -28,27 +28,27 @@ const TAB_CONFIG = [
 
 export default function SettingsPage() {
   const router = useRouter();
-  const deleteCategories = useCategoriesDelete();
+  const deleteCategory = useCategoryDelete();
   const deleteCuisines = useCuisinesDelete();
   const deleteDiningType = useDiningTypeDelete();
   const deleteTags = useTagDelete();
   const deleteHandlers = {
-    categories: deleteCategories,
+    category: deleteCategory,
     cuisines: deleteCuisines,
     diningType: deleteDiningType,
     tags: deleteTags,
   };
   const [activeTab, setActiveTab] = useState<
-    "categories" | "cuisines" | "diningType" | "tags"
-  >("categories");
+    "category" | "cuisines" | "diningType" | "tags"
+  >("category");
 
   const [viewType, setViewType] = useState<"list" | "card">("card");
   const [page, setPage] = useState(1);
 
-  const categoriesQuery = useCategoriesList(
+  const categoryQuery = useCategoryList(
     page,
     undefined,
-    activeTab === "categories",
+    activeTab === "category",
   );
 
   const cuisinesQuery = useCuisinesList(
@@ -65,7 +65,7 @@ export default function SettingsPage() {
 
   const tagsQuery = useTagsList(page, undefined, activeTab === "tags");
   const queries = {
-    categories: categoriesQuery,
+    category: categoryQuery,
     cuisines: cuisinesQuery,
     diningType: diningTypeQuery,
     tags: tagsQuery,

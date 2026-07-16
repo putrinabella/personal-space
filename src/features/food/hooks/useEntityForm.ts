@@ -1,4 +1,4 @@
-import { useCategoriesForm } from "@/features/food/categories/hooks/useCategoriesForm";
+import { useCategoriesForm } from "@/features/food/category/hooks/useCategoriesForm";
 import { useCuisinesForm } from "@/features/food/cuisines/hooks/useCuisinesForm";
 import { useDiningTypeForm } from "@/features/food/diningType/hooks/useDiningTypeForm";
 import { useTagForm } from "@/features/food/tags/hooks/useTagForm";

@@ -1,5 +1,5 @@
 import { BaseItem } from "@/shared/types/base.types";
-import { CategoriesEntry } from "../categories/categories.types";
+import { CategoriesEntry } from "../category/category.types";
 import { RestaurantEntry } from "../restaurants/restaurants.types";
 import { TagEntry } from "../tags/tags.types";
 import { CuisinesEntry } from "../cuisines/cuisines.types";
