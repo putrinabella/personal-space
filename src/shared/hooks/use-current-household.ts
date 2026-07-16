@@ -3,7 +3,8 @@ import { householdMembers } from "@/db/schema/finance";
 import { eq } from "drizzle-orm";
 import { createClient } from "@/lib/supabase/server";
 import { db } from "@/db";
-export async function getHousehold() {
+
+async function getAuthData() {
   const supabase = await createClient();
   const {
     data: { user },
@@ -16,6 +17,18 @@ export async function getHousehold() {
     .where(eq(householdMembers.userId, user.id))
     .limit(1);
 
-  console.log("SERVER DEBUG - Found Household:", result[0]?.householdId);
-  return result.length > 0 ? result[0].householdId : null;
+  return { user, householdId: result[0]?.householdId };
+}
+
+// Gunakan fungsi internal untuk kedua fungsi yang diekspor
+export async function getHousehold() {
+  const data = await getAuthData();
+  return data?.householdId || null;
+}
+
+export async function getFinanceAuth() {
+  const data = await getAuthData();
+  if (!data?.user || !data?.householdId)
+    throw new Error("Unauthorized/Household not found");
+  return { userId: data.user.id, householdId: data.householdId };
 }
