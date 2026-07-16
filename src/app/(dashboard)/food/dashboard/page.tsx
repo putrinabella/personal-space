@@ -1,6 +1,6 @@
 "use client";
 
-import { useCategoriesAll } from "@/features/food/category/hooks/useCategoryAll";
+import { useCategoryAll } from "@/features/food/category/hooks/useCategoryAll";
 import { FoodCard } from "@/features/food/components/FoodCard";
 import { FoodDetailModal } from "@/features/food/components/FoodDetailModal";
 import { FoodRandomModal } from "@/features/food/components/FoodRandomModal";
@@ -57,8 +57,7 @@ export default function FoodView() {
 
   const { data: dataRestaurant, isLoading: loadingRestaurant } =
     useRestaurantAll();
-  const { data: dataCategories, isLoading: loadingCategories } =
-    useCategoriesAll();
+  const { data: dataCategory, isLoading: loadingCategory } = useCategoryAll();
   const { data: dataCuisines, isLoading: loadingCuisines } = useCuisinesAll();
   const { data: dataDiningType, isLoading: loadingDiningType } =
     useDiningTypeAll();
@@ -220,8 +219,8 @@ export default function FoodView() {
                 searchable={false}
               />
               <FormInput
-                label="Categories"
-                options={dataCategories.map((c) => ({
+                label="Category"
+                options={dataCategory.map((c) => ({
                   label: c.name,
                   value: c.id,
                 }))}
@@ -229,7 +228,7 @@ export default function FoodView() {
                 value={filters.categoryId}
                 onChange={(val) => handleFilterChange("categoryId", val)}
                 placeholder="Select category"
-                disabled={loadingCategories}
+                disabled={loadingCategory}
               />
               <FormInput
                 label="Cuisine"

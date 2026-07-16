@@ -6,7 +6,7 @@ import CardHeader from "@/shared/components/CardHeader";
 import FormInput from "@/shared/components/FormInput";
 import { ForkKnife, Check, ArrowLeft } from "@phosphor-icons/react";
 import { useRouter } from "next/navigation";
-import { useCategoriesAll } from "@/features/food/category/hooks/useCategoryAll";
+import { useCategoryAll } from "@/features/food/category/hooks/useCategoryAll";
 import { useFoodAll } from "@/features/food/dashboard/hooks/useFoodAll";
 import { useRestaurantAll } from "@/features/food/restaurants/hooks/useRestaurantAll";
 import { useLogForm } from "@/features/food/dashboard/log/hooks/useLogForm";
@@ -20,8 +20,7 @@ export default function CreateFoodEntryPage() {
 
   const { data: dataRestaurant, isLoading: loadingRestaurant } =
     useRestaurantAll();
-  const { data: dataCategories, isLoading: loadingCategories } =
-    useCategoriesAll();
+  const { data: dataCategory, isLoading: loadingCategory } = useCategoryAll();
   const { data: dataCuisines, isLoading: loadingCuisines } = useCuisinesAll();
   const { data: dataDiningType, isLoading: loadingDiningType } =
     useDiningTypeAll();
@@ -97,9 +96,9 @@ export default function CreateFoodEntryPage() {
 
             <div className="grid grid-cols-2 gap-4">
               <FormInput
-                label="Categories"
+                label="Category"
                 required
-                options={dataCategories.map((c) => ({
+                options={dataCategory.map((c) => ({
                   label: c.name,
                   value: c.id,
                 }))}
@@ -107,7 +106,7 @@ export default function CreateFoodEntryPage() {
                 value={data.categoryId}
                 onChange={(val) => setField("categoryId", val)}
                 placeholder="Select category"
-                disabled={loadingCategories}
+                disabled={loadingCategory}
               />
               <FormInput
                 label="Cuisine"

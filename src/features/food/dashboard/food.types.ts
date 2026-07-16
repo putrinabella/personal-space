@@ -1,5 +1,5 @@
 import { BaseItem } from "@/shared/types/base.types";
-import { CategoriesEntry } from "../category/category.types";
+import { CategoryEntry } from "../category/category.types";
 import { RestaurantEntry } from "../restaurants/restaurants.types";
 import { TagEntry } from "../tags/tags.types";
 import { CuisinesEntry } from "../cuisines/cuisines.types";
@@ -47,7 +47,7 @@ export interface FoodEntry extends BaseItem, FoodFormData {
   isFavoriteFood: boolean;
   isFavoriteDrink: boolean;
   restaurant: RestaurantEntry;
-  category: CategoriesEntry;
+  category: CategoryEntry;
   cuisine: CuisinesEntry;
   diningType: DiningTypeEntry;
   allLogs: LogEntry[];
