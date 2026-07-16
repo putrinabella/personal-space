@@ -17,9 +17,9 @@ export default function Pagination({
   perPage = 10,
   total = 0,
 }: PaginationProps) {
-  if (lastPage <= 1) {
-    return <div className="mt-6" />;
-  }
+  // if (lastPage <= 1) {
+  //   return <div className="mt-6" />;
+  // }
 
   const from = total === 0 ? 0 : (page - 1) * perPage + 1;
   const to = total === 0 ? 0 : Math.min(page * perPage, total);

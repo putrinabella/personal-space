@@ -17,18 +17,41 @@ export function createCrudService<T>(basePath: string, options?: CrudOptions) {
 
   return {
     /* 1. GET WITH PAGINATION - Sekarang menggunakan PaginatedResponse yang konsisten */
+    // async getPaginated(
+    //   params: PaginatedParams = { page: 1, per_page: 15 },
+    // ): Promise<PaginatedResponse<T>> {
+    //   const query = buildQueryString(params);
+    //   const json = await apiFetch<ApiResponse<PaginatedResponse<T>>>(
+    //     `${basePath}${query}`,
+    //     { next: { revalidate, tags: [tag] } },
+    //   );
+
+    //   return json.data;
+    // },
     async getPaginated(
       params: PaginatedParams = { page: 1, per_page: 15 },
     ): Promise<PaginatedResponse<T>> {
       const query = buildQueryString(params);
-      const json = await apiFetch<ApiResponse<PaginatedResponse<T>>>(
-        `${basePath}${query}`,
-        { next: { revalidate, tags: [tag] } },
-      );
+      // Panggil API
+      const json = await apiFetch<any>(`${basePath}${query}`, {
+        next: { revalidate, tags: [tag] },
+      });
 
-      return json.data;
+      // UNWRAP STRUKTUR API:
+      // json.data (root) berisi: { items: [], meta: {...} }
+      // Kita kembalikan ke bentuk PaginatedResponse yang flat
+      const payload = json.data;
+
+      return {
+        items: payload.items,
+        total: payload.meta.total,
+        current_page: payload.meta.current_page,
+        last_page: payload.meta.last_page,
+        per_page: payload.meta.per_page,
+        from: payload.meta.from,
+        to: payload.meta.to,
+      };
     },
-
     /* 2. GET ALL */
     async getAll(params: PaginatedParams = {}): Promise<T[]> {
       const query = buildQueryString(params);

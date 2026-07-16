@@ -26,7 +26,7 @@ export function useBaseList<T, P extends PaginatedParams>({
     total: query.data?.total ?? 0,
     lastPage: query.data?.last_page ?? 1,
     perPage: query.data?.per_page ?? 10,
-    page: query.data?.current_page ?? Number(params.page) ?? 1,
+    page: query.data?.current_page ?? params.page ?? 1,
     loading: query.isLoading,
     error: query.isError,
     refetch: query.refetch,

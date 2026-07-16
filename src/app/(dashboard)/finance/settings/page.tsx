@@ -20,8 +20,8 @@ import DataSection from "@/shared/components/DataSection";
 
 const TAB_CONFIG = [
   { id: "accounts", label: "Accounts" },
-  { id: "pockets", label: "Pockets" },
   { id: "categories", label: "Categories" },
+  { id: "pockets", label: "Pockets" },
 ] as const;
 
 export default function SettingsPage() {
@@ -78,7 +78,11 @@ export default function SettingsPage() {
       ))}
     </div>
   );
-
+  // console.log("Pagination Data:", {
+  //   page,
+  //   lastPage: activeData.lastPage,
+  //   total: activeData.total,
+  // });
   return (
     <div className="flex flex-col gap-8 max-w-7xl mx-auto">
       <CardHeader title="S E T T I N G S" icon={Sliders} color="accent" />
@@ -170,9 +174,9 @@ export default function SettingsPage() {
 
                 <Pagination
                   page={page}
-                  lastPage={activeData.lastPage}
-                  total={activeData.total}
-                  perPage={activeData.perPage}
+                  lastPage={activeData.lastPage ?? 1}
+                  total={activeData.total ?? 0}
+                  perPage={activeData.perPage ?? 10}
                   onPageChange={(newPage) => setPage(newPage)}
                 />
               </div>
