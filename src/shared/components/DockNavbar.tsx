@@ -26,7 +26,7 @@ export default function DockNavbar() {
     ],
     "/finance": [
       { path: "/finance/dashboard", label: "Finance", Icon: Wallet },
-      { path: "/finance/history", label: "History", Icon: ChartPieSlice },
+      { path: "/finance/analytics", label: "Analytics", Icon: ChartPieSlice },
       { path: "/finance/settings", label: "Settings", Icon: GearSix },
     ],
   };

@@ -44,7 +44,8 @@ type FormInputProps = {
     | "switch"
     | "file"
     | "survey"
-    | "profile";
+    | "profile"
+    | "money";
   options?: SelectOption[];
   radioOptions?: RadioOption[];
   min?: number | string;
@@ -522,6 +523,31 @@ const FormInput = ({
               <span className="text-sm text-base-content">{opt.label}</span>
             </label>
           ))}
+        </div>
+      ) : type === "money" ? (
+        <div className="relative">
+          <span
+            className={`absolute left-3 top-1/2 -translate-y-1/2 font-medium ${error ? "text-error" : "text-base-content/60"}`}
+          >
+            Rp
+          </span>
+          <input
+            type="text" // Menggunakan text karena kita memformat angkanya
+            value={
+              value ? new Intl.NumberFormat("id-ID").format(Number(value)) : ""
+            }
+            onChange={(e: ChangeEvent<HTMLInputElement>) => {
+              // Hapus semua karakter non-digit
+              const rawValue = e.target.value.replace(/[^0-9]/g, "");
+              // Kirim angka murni ke parent
+              onChange?.(rawValue === "" ? "" : Number(rawValue));
+            }}
+            placeholder={placeholder || "0"}
+            required={required}
+            disabled={disabled}
+            readOnly={readOnly}
+            className={`pl-10 ${baseClasses}`}
+          />
         </div>
       ) : type === "textarea" ? (
         <textarea

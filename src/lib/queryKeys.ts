@@ -15,4 +15,5 @@ export const queryKeys = {
   categories: createQueryKeys("categories"),
   pockets: createQueryKeys("pockets"),
   accounts: createQueryKeys("accounts"),
+  transaction: createQueryKeys("transaction"),
 };
