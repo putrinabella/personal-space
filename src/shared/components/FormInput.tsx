@@ -151,7 +151,7 @@ const FormInput = ({
     : normalizedOptions;
 
   const baseClasses =
-    "w-full px-4 py-2.5 border-2 border-black shadow-[6px_6px_0px_rgba(74,62,61,1)] rounded-xl text-sm transition-colors duration-200" +
+    "w-full px-4 py-2.5 border-2 border-black shadow-[6px_6px_0px_rgba(74,62,61,1)] rounded-xl text-body transition-colors duration-200" +
     (error
       ? " border-error focus:ring-2 focus:ring-error focus:border-transparent focus:outline-none"
       : " border-base-300 focus:ring-2 focus:ring-primary focus:border-transparent focus:outline-none") +
@@ -222,12 +222,12 @@ const FormInput = ({
           </button>
 
           {label && (
-            <span className="text-sm text-base-content select-none">
+            <span className="text-body text-base-content select-none">
               {label}
             </span>
           )}
         </div>
-        {error && <p className="text-xs text-error font-medium">{error}</p>}
+        {error && <p className="text-data text-error font-medium">{error}</p>}
       </div>
     );
   }
@@ -266,14 +266,14 @@ const FormInput = ({
               strokeWidth={3}
             />
           </div>
-          <span className="text-sm font-medium text-base-content group-hover:text-primary transition-colors select-none">
+          <span className="text-body font-medium text-base-content group-hover:text-primary transition-colors select-none">
             {label} {required && <span className="text-error ml-1">*</span>}
           </span>
         </label>
         {error ? (
-          <p className="text-xs text-error font-medium mt-1 ml-8">{error}</p>
+          <p className="text-data text-error font-medium mt-1 ml-8">{error}</p>
         ) : helpText ? (
-          <p className="text-xs text-base-content/70 mt-2 ml-8">{helpText}</p>
+          <p className="text-data text-base-content/70 mt-2 ml-8">{helpText}</p>
         ) : null}
       </div>
     );
@@ -305,7 +305,7 @@ const FormInput = ({
                   <p className="font-semibold">{opt.label}</p>
                   {opt.description && (
                     <p
-                      className={`text-xs ${
+                      className={`text-data ${
                         selected ? "text-white/80" : "text-base-content/70"
                       }`}
                     >
@@ -324,7 +324,7 @@ const FormInput = ({
             </div>
           );
         })}
-        {error && <p className="text-xs text-error font-medium">{error}</p>}
+        {error && <p className="text-data text-error font-medium">{error}</p>}
       </div>
     );
   }
@@ -349,7 +349,7 @@ const FormInput = ({
             }`}
             >
               <div
-                className={`w-12 h-12 rounded-xl flex items-center justify-center font-bold text-sm
+                className={`w-12 h-12 rounded-xl flex items-center justify-center font-bold text-body
               ${
                 selected
                   ? "bg-primary text-white"
@@ -377,7 +377,7 @@ const FormInput = ({
                 </p>
 
                 {opt.description && (
-                  <p className="text-xs text-base-content/60 mt-0.5">
+                  <p className="text-data text-base-content/60 mt-0.5">
                     {opt.description}
                   </p>
                 )}
@@ -392,7 +392,7 @@ const FormInput = ({
             </div>
           );
         })}
-        {error && <p className="text-xs text-error font-medium">{error}</p>}
+        {error && <p className="text-data text-error font-medium">{error}</p>}
       </div>
     );
   }
@@ -468,7 +468,7 @@ const FormInput = ({
     return (
       <div className={`relative ${className} space-y-2`}>
         <label
-          className={`block text-sm font-medium mb-1 ${error ? "text-error" : "text-base-content"}`}
+          className={`block text-body font-medium mb-1 ${error ? "text-error" : "text-base-content"}`}
         >
           {label} {required && <span className="text-error">*</span>}
         </label>
@@ -485,10 +485,10 @@ const FormInput = ({
           className={`${baseClasses} ${error ? "border-error focus:ring-error" : ""}`}
         />
 
-        {error && <p className="text-xs text-error font-medium">{error}</p>}
+        {error && <p className="text-data text-error font-medium">{error}</p>}
 
         {helpText && !error && (
-          <p className="text-xs text-base-content/80">{helpText}</p>
+          <p className="text-data text-base-content/80">{helpText}</p>
         )}
       </div>
     );
@@ -497,7 +497,7 @@ const FormInput = ({
   return (
     <div className={`relative ${className} space-y-1`}>
       <label
-        className={`block text-sm font-medium mb-1 ${error ? "text-error" : "text-base-content"}`}
+        className={`block text-body font-medium mb-1 ${error ? "text-error" : "text-base-content"}`}
       >
         {label} {required && <span className="text-error">*</span>}
       </label>
@@ -520,7 +520,7 @@ const FormInput = ({
                 disabled={disabled}
                 className={`w-4 h-4 focus:ring-2 ${error ? "radio-error text-error focus:ring-error" : "text-primary focus:ring-primary"}`}
               />
-              <span className="text-sm text-base-content">{opt.label}</span>
+              <span className="text-body text-base-content">{opt.label}</span>
             </label>
           ))}
         </div>
@@ -609,7 +609,7 @@ const FormInput = ({
         />
       ) : options ? (
         dropdownType === "profile" ? (
-          <div className="relative text-sm" ref={dropdownRef}>
+          <div className="relative text-body" ref={dropdownRef}>
             <button
               type="button"
               disabled={disabled}
@@ -665,7 +665,7 @@ const FormInput = ({
                         : "hover:bg-base-200"
                     }`}
                         >
-                          <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center overflow-hidden text-xs font-bold text-primary">
+                          <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center overflow-hidden text-data font-bold text-primary">
                             {opt.image ? (
                               <img
                                 src={opt.image}
@@ -681,11 +681,11 @@ const FormInput = ({
                           </div>
 
                           <div className="flex-1">
-                            <p className="text-sm font-medium leading-tight">
+                            <p className="text-body font-medium leading-tight">
                               {opt.label}
                             </p>
                             {opt.description && (
-                              <p className="text-xs text-base-content/60">
+                              <p className="text-data text-base-content/60">
                                 {opt.description}
                               </p>
                             )}
@@ -707,7 +707,7 @@ const FormInput = ({
             )}
           </div>
         ) : dropdownType === "select" ? (
-          <div className="relative text-sm" ref={dropdownRef}>
+          <div className="relative text-body" ref={dropdownRef}>
             <button
               type="button"
               disabled={disabled}
@@ -846,9 +846,9 @@ const FormInput = ({
       )}
 
       {error ? (
-        <p className="text-xs text-error font-medium">{error}</p>
+        <p className="text-data text-error font-medium">{error}</p>
       ) : helpText ? (
-        <p className="text-xs text-base-content/80">{helpText}</p>
+        <p className="text-data text-base-content/80">{helpText}</p>
       ) : null}
     </div>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import CardBox from "@/shared/components/CardBox";
 import CardHeader from "@/shared/components/CardHeader";
 import FormInput from "@/shared/components/FormInput";
@@ -10,15 +10,18 @@ import {
   ArrowLeft,
   ArrowDownRight,
   ArrowUpRight,
+  X,
 } from "@phosphor-icons/react";
 import { useRouter } from "next/navigation";
 import { useTransactionForm } from "@/features/finance/transaction/hooks/useTransactionForm";
 import { useAccountsAll } from "@/features/finance/accounts/hooks/useAccountsAll";
 import { usePocketsAll } from "@/features/finance/pockets/hooks/usePocketsAll";
 import { useCategoriesAll } from "@/features/finance/categories/hooks/useCategoriesAll";
+import SelectionItem from "@/shared/components/SelectionItem";
 
 export default function CreateTransactionPage() {
   const router = useRouter();
+  const [expandedParentId, setExpandedParentId] = useState<string | null>(null);
   const { data, setField, handleSubmit, saving } = useTransactionForm();
 
   // Fetch data account & pocket
@@ -36,59 +39,87 @@ export default function CreateTransactionPage() {
     () => pockets.find((p) => p.id === data.pocketId),
     [pockets, data.pocketId],
   );
-
+  const filteredCategories = useMemo(
+    () => categories.filter((cat) => cat.type === data.type),
+    [categories, data.type],
+  );
+  useEffect(() => {
+    if (categories.length > 0 && data.type === "expense") {
+      const firstExpenseParent = categories.find(
+        (cat) => cat.type === "expense" && !cat.parentId,
+      );
+      if (firstExpenseParent) {
+        setExpandedParentId(firstExpenseParent.id);
+      }
+    }
+  }, [categories, data.type]);
   return (
-    <div className="flex flex-col gap-8 max-w-2xl mx-auto">
+    <div className="flex flex-col gap-8 max-w-7xl mx-auto">
       <CardHeader title="NEW TRANSACTION" icon={Wallet} color="primary" />
 
       <CardBox className="p-8 flex flex-col gap-6" rounded="2xl">
-        {/* Tipe Transaksi */}
         <div className="flex bg-base-200 p-1 rounded-xl">
           <button
             onClick={() => setField("type", "expense")}
-            className={`flex-1 py-3 rounded-lg font-bold flex items-center justify-center gap-2 transition ${data.type === "expense" ? "bg-error text-white shadow" : "opacity-60"}`}
+            className={`flex-1 py-2 rounded-lg font-bold transition flex items-center justify-center gap-2  ${data.type === "expense" ? "bg-error text-white shadow" : "opacity-60"}`}
           >
             <ArrowUpRight size={18} /> Expense
           </button>
           <button
             onClick={() => setField("type", "income")}
-            className={`flex-1 py-3 rounded-lg font-bold flex items-center justify-center gap-2 transition ${data.type === "income" ? "bg-success text-white shadow" : "opacity-60"}`}
+            className={`flex-1 py-2 rounded-lg font-bold transition  flex items-center justify-center gap-2 ${data.type === "income" ? "bg-success text-white shadow" : "opacity-60"}`}
           >
             <ArrowDownRight size={18} /> Income
           </button>
         </div>
-
-        {/* Account Selection + Live Balance */}
+        {/* ACCOUNT SELECTION */}
         <div className="space-y-2">
-          <FormInput
-            label="Account"
-            options={accounts.map((a) => ({ label: a.name, value: a.id }))}
-            dropdownType="select"
-            value={data.accountId}
-            onChange={(val) => setField("accountId", val)}
-            placeholder="Select account"
-          />
-          {selectedAccount && (
-            <div className="text-sm font-medium text-primary bg-primary/10 px-3 py-2 rounded-lg">
-              Available balance:{" "}
-              <span className="font-bold">
-                Rp {Number(selectedAccount.currentBalance).toLocaleString()}
+          <div className="flex justify-between items-center">
+            <h3 className="text-body tracking-wider">Select Account</h3>
+            {selectedAccount && (
+              <span className="text-body bg-primary/10 px-3 py-1 text-bold rounded-full">
+                Balance: Rp{" "}
+                {Number(selectedAccount.currentBalance).toLocaleString()}
               </span>
-            </div>
-          )}
+            )}
+          </div>
+          <SelectionItem
+            entity="accounts"
+            data={accounts}
+            viewType="card"
+            selectedId={data.accountId}
+            onSelect={(item) => setField("accountId", item.id)}
+          />
         </div>
 
-        {/* Pocket Selection (Optional) */}
-        <FormInput
-          label="Pocket (Optional)"
-          options={pockets.map((p) => ({ label: p.name, value: p.id }))}
-          dropdownType="select"
-          value={data.pocketId}
-          onChange={(val) => setField("pocketId", val)}
-          placeholder="Select pocket"
-        />
-
-        <div className="grid grid-cols-2 gap-4">
+        {/* CATEGORY SELECTION */}
+        <div className="space-y-2">
+          <h3 className="text-body tracking-wider">Select Category</h3>
+          <SelectionItem
+            entity="categories"
+            data={filteredCategories}
+            viewType="card"
+            selectedId={data.categoryId}
+            onSelect={(item) => setField("categoryId", item.id)}
+            // Tambahkan logic ini jika komponen SelectionItem mendukungnya
+            expandedParentId={expandedParentId}
+            onToggleParent={(parentId) =>
+              setExpandedParentId((prev) =>
+                prev === parentId ? null : parentId,
+              )
+            }
+          />
+        </div>
+        {/* POCKET & EXTRA INFO */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <FormInput
+            label="Pocket (Optional)"
+            options={pockets.map((p) => ({ label: p.name, value: p.id }))}
+            dropdownType="select"
+            value={data.pocketId}
+            onChange={(val) => setField("pocketId", val)}
+            placeholder="Select pocket"
+          />
           <FormInput
             label="Amount"
             type="money"
@@ -96,33 +127,28 @@ export default function CreateTransactionPage() {
             value={data.amount}
             onChange={(val) => setField("amount", val)}
           />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormInput
             label="Date"
             type="date"
             value={data.date}
             onChange={(val) => setField("date", val)}
           />
+          <FormInput
+            label="Description"
+            placeholder="What is this for?"
+            value={data.description}
+            onChange={(val) => setField("description", val)}
+          />
         </div>
-        <FormInput
-          label="Category"
-          options={categories.map((c) => ({ label: c.name, value: c.id }))}
-          dropdownType="select"
-          value={data.categoryId}
-          onChange={(val) => setField("categoryId", val)}
-          placeholder="Select category"
-        />
-        <FormInput
-          label="Description"
-          placeholder="What is this for?"
-          value={data.description}
-          onChange={(val) => setField("description", val)}
-        />
+        {/* ACTIONS */}
 
-        <div className="flex gap-4 pt-4">
+        <div className="flex flex-col md:flex-row gap-4 pt-4">
           <CardBox
             className="px-6 py-3 flex items-center justify-center gap-2 font-bold flex-1"
             rounded="xl"
-            color="primary"
+            color="accent"
             onClick={handleSubmit}
             pressable
           >
@@ -130,10 +156,10 @@ export default function CreateTransactionPage() {
               "Saving..."
             ) : (
               <>
-                <Check size={18} /> Confirm
+                <Check size={18} /> Confirm Transaction
               </>
             )}
-          </CardBox>
+          </CardBox>{" "}
           <CardBox
             className="px-6 py-3 flex items-center justify-center gap-2 font-bold flex-1"
             rounded="xl"
@@ -141,7 +167,7 @@ export default function CreateTransactionPage() {
             onClick={() => router.back()}
             pressable
           >
-            <ArrowLeft size={18} /> Back
+            <X size={18} /> Cancel
           </CardBox>
         </div>
       </CardBox>

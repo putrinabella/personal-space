@@ -53,7 +53,7 @@ export const FoodDetailModal = ({ food, isOpen, onClose }: ModalProps) => {
             return (
               <div className="flex flex-col items-center gap-2 py-10 text-center">
                 <ForkKnife size={28} className="text-base-content/20" />
-                <p className="text-data-body text-base-content">
+                <p className="text-body text-base-content">
                   No visit history yet.
                 </p>
               </div>
@@ -76,7 +76,7 @@ export const FoodDetailModal = ({ food, isOpen, onClose }: ModalProps) => {
                         <span className="text-caption font-bold text-base-content">
                           {formatDateIndo(log.dateVisited)}
                         </span>
-                        <span className="text-data-body font-black text-base-content tabular-nums">
+                        <span className="text-body font-black text-base-content tabular-nums">
                           {formatRupiah(log.price)}
                         </span>
                       </div>
@@ -88,7 +88,7 @@ export const FoodDetailModal = ({ food, isOpen, onClose }: ModalProps) => {
                               className={`w-8 h-8 rounded-full border-2 flex items-center justify-center shrink-0 ${isHisLow ? "border-error" : "border-accent"}`}
                             >
                               <span
-                                className={`text-xs font-black ${isHisLow ? "text-error" : "text-data-body"}`}
+                                className={`text-xs font-black ${isHisLow ? "text-error" : "text-body"}`}
                               >
                                 {log.ratingHis}
                               </span>
@@ -105,7 +105,7 @@ export const FoodDetailModal = ({ food, isOpen, onClose }: ModalProps) => {
                               className={`w-8 h-8 rounded-full border-2 flex items-center justify-center shrink-0 ${isHerLow ? "border-error" : "border-accent"}`}
                             >
                               <span
-                                className={`text-xs font-black ${isHerLow ? "text-error" : "text-data-body"}`}
+                                className={`text-xs font-black ${isHerLow ? "text-error" : "text-body"}`}
                               >
                                 {log.ratingHer}
                               </span>

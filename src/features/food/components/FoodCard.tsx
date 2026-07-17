@@ -58,7 +58,7 @@ export const FoodCard = ({ food, onDetailClick }: FoodCardProps) => {
               className={`w-11 h-11 rounded-full border-2 border-accent flex items-center justify-center ${isHisLow ? "border-error" : "border-accent"}`}
             >
               <span
-                className={`font-black text-accent ${isHisLow ? "text-error" : "text-data-body "}`}
+                className={`font-black text-accent ${isHisLow ? "text-error" : "text-body "}`}
               >
                 {food.latestLog.ratingHis}
               </span>
@@ -76,7 +76,7 @@ export const FoodCard = ({ food, onDetailClick }: FoodCardProps) => {
               className={`w-11 h-11 rounded-full border-2 border-accent flex items-center justify-center ${isHerLow ? "border-error" : "border-accent"}`}
             >
               <span
-                className={`font-black text-accent ${isHerLow ? "text-error" : "text-data-body "}`}
+                className={`font-black text-accent ${isHerLow ? "text-error" : "text-body "}`}
               >
                 {food.latestLog.ratingHer}
               </span>
@@ -107,7 +107,7 @@ export const FoodCard = ({ food, onDetailClick }: FoodCardProps) => {
           <span className="font-bold uppercase tracking-widest text-base-content">
             Price
           </span>
-          <span className="text-data-body font-black text-base-content">
+          <span className="text-body font-black text-base-content">
             {formatRupiah(food.latestLog?.price)}
           </span>
         </div>
@@ -116,7 +116,7 @@ export const FoodCard = ({ food, onDetailClick }: FoodCardProps) => {
           <span className=" font-bold uppercase tracking-widest text-base-content">
             Visits
           </span>
-          <span className="text-data-body font-black text-base-content">
+          <span className="text-body font-black text-base-content">
             {food.totalLogs}x
           </span>
         </div>

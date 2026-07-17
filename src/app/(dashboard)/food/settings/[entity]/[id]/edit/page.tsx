@@ -8,6 +8,7 @@ import {
   ArrowLeft,
   Plus,
   PencilSimpleIcon,
+  X,
 } from "@phosphor-icons/react";
 import { useEntityForm } from "@/features/food/hooks/useEntityForm";
 import { EntityFields } from "@/features/food/components/EntityField";
@@ -57,7 +58,7 @@ export default function EditPage() {
             onClick={() => router.back()}
             pressable
           >
-            <ArrowLeft size={18} /> Cancel
+            <X size={18} /> Cancel
           </CardBox>
         </div>
       </CardBox>

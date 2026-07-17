@@ -1,5 +1,9 @@
 import { db } from "@/db";
-import { financeAccounts, financeTransactions } from "@/db/schema";
+import {
+  financeAccounts,
+  financePockets,
+  financeTransactions,
+} from "@/db/schema";
 import { sendStandardResponse } from "@/lib/apiResponse";
 import { getHouseholdAuth } from "@/lib/financeAuth";
 import { createFinanceHandler } from "@/lib/server/crud/withAuth";
@@ -31,7 +35,12 @@ export async function POST(request: NextRequest) {
       status,
     } = body;
 
+    // Pastikan status default-nya 'completed' jika tidak ada input
+    const transactionStatus = status || "completed";
+    const numericAmount = Number(amount);
+
     const result = await db.transaction(async (tx) => {
+      // 1. Simpan Transaksi
       const [newTransaction] = await tx
         .insert(financeTransactions)
         .values({
@@ -39,24 +48,36 @@ export async function POST(request: NextRequest) {
           accountId,
           pocketId: pocketId || null,
           categoryId,
-          amount: String(amount),
+          amount: String(numericAmount),
           type,
-          status: status || "completed", // Default ke completed
+          status: transactionStatus,
           description,
           date: date ? new Date(date) : new Date(),
           createdById: userId,
         })
         .returning();
 
-      // Saldo dikurangi/ditambah jika transaksi bukan 'cancelled'
-      if (status !== "cancelled") {
-        const adjustment = type === "income" ? amount : -amount;
+      // 2. Update Saldo HANYA jika status BUKAN 'cancelled'
+      if (transactionStatus !== "cancelled") {
+        const adjustment = type === "income" ? numericAmount : -numericAmount;
+
+        // Update Saldo Account
         await tx
           .update(financeAccounts)
           .set({
             currentBalance: sql`${financeAccounts.currentBalance} + ${adjustment}`,
           })
           .where(eq(financeAccounts.id, accountId));
+
+        // Update Saldo Pocket (Jika pocketId ada)
+        if (pocketId) {
+          await tx
+            .update(financePockets)
+            .set({
+              currentBalance: sql`${financePockets.currentBalance} + ${adjustment}`,
+            })
+            .where(eq(financePockets.id, pocketId));
+        }
       }
 
       return newTransaction;
@@ -67,6 +88,7 @@ export async function POST(request: NextRequest) {
     return sendStandardResponse(null, err.message, 500, "error");
   }
 }
+
 export async function PUT(req: Request) {
   try {
     const body = await req.json();

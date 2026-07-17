@@ -99,3 +99,11 @@
     linear-gradient(to right, rgba(74, 62, 61, 0.05) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(74, 62, 61, 0.05) 1px, transparent 1px);
 }
+* {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+*::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, dan Opera */
+}

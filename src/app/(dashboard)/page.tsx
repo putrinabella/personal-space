@@ -39,7 +39,7 @@ export default function HomePage() {
         <h1 className="text-5xl md:text-6xl font-black tracking-tighter uppercase text-base-content">
           Eunoia
         </h1>
-        <p className="text-data-body font-medium italic mt-3 text-base-content/80">
+        <p className="text-body font-medium italic mt-3 text-base-content/80">
           "One Home for Everything That Matters."
         </p>
       </div>

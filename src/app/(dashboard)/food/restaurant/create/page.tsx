@@ -4,7 +4,7 @@ import CardBox from "@/shared/components/CardBox";
 import CardHeader from "@/shared/components/CardHeader";
 import FormInput from "@/shared/components/FormInput";
 import { MapPinAreaIcon } from "@phosphor-icons/react/dist/ssr";
-import { Check, ArrowLeft } from "@phosphor-icons/react";
+import { Check, ArrowLeft, X } from "@phosphor-icons/react";
 import { useRouter } from "next/navigation";
 import { useRestaurantsForm } from "@/features/food/restaurants/hooks/useRestaurantForm";
 
@@ -97,7 +97,7 @@ export default function CreateRestaurantPage() {
             onClick={() => router.back()}
             pressable
           >
-            <ArrowLeft size={18} /> Cancel
+            <X size={18} /> Cancel
           </CardBox>
         </div>
       </CardBox>

@@ -31,7 +31,7 @@ export const IndicatorError = ({
 
       <div className="space-y-1">
         <p className="text-primary font-bold text-body uppercase">{title}</p>
-        <p className="text-base-content/70 text-data-body">{description}</p>
+        <p className="text-base-content/70 text-body">{description}</p>
       </div>
 
       {onRetry && (

@@ -4,7 +4,7 @@ import { useParams, useRouter } from "next/navigation";
 import CardBox from "@/shared/components/CardBox";
 import CardHeader from "@/shared/components/CardHeader";
 import FormInput from "@/shared/components/FormInput";
-import { Check, ArrowLeft, Plus } from "@phosphor-icons/react";
+import { Check, ArrowLeft, Plus, X } from "@phosphor-icons/react";
 import { useEntityForm } from "@/features/food/hooks/useEntityForm";
 import { EntityFields } from "@/features/food/components/EntityField";
 
@@ -52,7 +52,7 @@ export default function CreatePage() {
             onClick={() => router.back()}
             pressable
           >
-            <ArrowLeft size={18} /> Cancel
+            <X size={18} /> Cancel
           </CardBox>
         </div>
       </CardBox>

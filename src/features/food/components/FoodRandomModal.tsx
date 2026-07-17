@@ -54,7 +54,7 @@ export const FoodRandomModal = ({
             <div className="flex flex-col gap-4">
               <FoodCard food={food} />
               <CardBox
-                className="px-4 py-2 flex items-center justify-center gap-2 text-data-body md:text-base font-bold"
+                className="px-4 py-2 flex items-center justify-center gap-2 text-body md:text-base font-bold"
                 rounded="xl"
                 color="accent"
                 onClick={onRoll}

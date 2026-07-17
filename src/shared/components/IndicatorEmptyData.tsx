@@ -29,7 +29,7 @@ export const IndicatorEmpty = ({
 
       <div className="space-y-2 max-w-sm">
         <p className="text-primary font-bold text-body uppercase">{title}</p>
-        <p className="text-base-content/70 text-data-body">{description}</p>
+        <p className="text-base-content/70 text-body">{description}</p>
       </div>
 
       {onAction && (

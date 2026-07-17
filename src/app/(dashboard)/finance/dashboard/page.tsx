@@ -13,14 +13,14 @@ export default function FinancePage() {
           <h1 className="text-4xl md:text-5xl font-black tracking-tighter uppercase text-[#2D2A2A]">
             Asset Narrative
           </h1>
-          <p className="text-base-content mt-2 text-data-body md:text-base font-medium italic">
+          <p className="text-base-content mt-2 text-body md:text-base font-medium italic">
             "Documenting the journey of resources, grounding every humble
             pursuit."
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-3">
           <CardBox
-            className="px-4 py-2 flex items-center gap-2 text-data-body md:text-base font-bold"
+            className="px-4 py-2 flex items-center gap-2 text-body md:text-base font-bold"
             rounded="xl"
             color="secondary"
             pressable
@@ -30,7 +30,7 @@ export default function FinancePage() {
           </CardBox>
 
           <CardBox
-            className="px-4 py-2 flex items-center gap-2 text-data-body md:text-base font-bold"
+            className="px-4 py-2 flex items-center gap-2 text-body md:text-base font-bold"
             rounded="xl"
             color="accent"
             href="/finance/dashboard/create"

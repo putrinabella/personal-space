@@ -69,6 +69,12 @@ export const financePockets = financeSchema.table("finance_pockets", {
     .references(() => households.id)
     .notNull(),
   name: text("name").notNull(),
+  currentBalance: numeric("current_balance", {
+    precision: 15,
+    scale: 2,
+  })
+    .default("0")
+    .notNull(),
   type: text("type", {
     enum: ["general", "saving"],
   })

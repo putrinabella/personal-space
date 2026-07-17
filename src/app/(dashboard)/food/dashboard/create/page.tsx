@@ -4,7 +4,7 @@ import { useState } from "react";
 import CardBox from "@/shared/components/CardBox";
 import CardHeader from "@/shared/components/CardHeader";
 import FormInput from "@/shared/components/FormInput";
-import { ForkKnife, Check, ArrowLeft } from "@phosphor-icons/react";
+import { ForkKnife, Check, ArrowLeft, X } from "@phosphor-icons/react";
 import { useRouter } from "next/navigation";
 import { useCategoryAll } from "@/features/food/category/hooks/useCategoryAll";
 import { useFoodAll } from "@/features/food/dashboard/hooks/useFoodAll";
@@ -228,7 +228,7 @@ export default function CreateFoodEntryPage() {
             onClick={() => router.back()}
             pressable
           >
-            <ArrowLeft size={18} /> Cancel
+            <X size={18} /> Cancel
           </CardBox>
         </div>
       </CardBox>
