@@ -5,7 +5,7 @@ import { categoryService } from "../category.service";
 
 export function useCategoryAll() {
   return useBaseAll<CategoryEntry>({
-    queryKey: queryKeys.category.all,
+    queryKey: queryKeys.category.all(),
 
     fetcher: categoryService.getAll,
   });

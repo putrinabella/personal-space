@@ -5,7 +5,7 @@ import { logService } from "../log.service";
 
 export function useLogAll() {
   return useBaseAll<LogEntry>({
-    queryKey: queryKeys.log.all,
+    queryKey: queryKeys.log.all(),
 
     fetcher: logService.getAll,
   });

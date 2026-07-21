@@ -5,7 +5,7 @@ import { diningTypeService } from "../dining.service";
 
 export function useDiningTypeAll() {
   return useBaseAll<DiningTypeEntry>({
-    queryKey: queryKeys.diningType.all,
+    queryKey: queryKeys.diningType.all(),
 
     fetcher: diningTypeService.getAll,
   });

@@ -19,8 +19,8 @@ export function useTransactionForm(
     queryKey: queryKeys.transaction.detail(transactionId || ""),
     invalidateQueryKey: [
       ...queryKeys.transaction.lists(),
-      ...queryKeys.accounts.all,
-      ...queryKeys.pockets.all,
+      ...queryKeys.accounts.all(),
+      ...queryKeys.pockets.all(),
     ],
 
     getDetail: async (id: string) => await transactionService.getDetail(id),

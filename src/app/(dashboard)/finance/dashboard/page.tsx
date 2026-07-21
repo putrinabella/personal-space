@@ -2,9 +2,14 @@
 import { useAccountsAll } from "@/features/finance/accounts/hooks/useAccountsAll";
 import AccountCard from "@/features/finance/components/AccountCard";
 import FinanceCard from "@/features/finance/components/FinanceCard";
+import TransactionCard from "@/features/finance/components/TransactionCard";
 import { usePocketsAll } from "@/features/finance/pockets/hooks/usePocketsAll";
+import { useTransactionAll } from "@/features/finance/transaction/hooks/useTransactionAll";
+import { useTransactionCalendar } from "@/features/finance/transaction/hooks/useTransactionCalendar";
+import { useTransactionList } from "@/features/finance/transaction/hooks/useTransactionList";
 import CardBox from "@/shared/components/CardBox";
-import IconRenderer from "@/shared/components/IconRenderer";
+import UniversalCalendar from "@/shared/components/UniversalCalendar";
+import { getCurrentYearMonth } from "@/utils/dateFormatter";
 import { formatRupiah } from "@/utils/rupiahFormatter";
 import {
   WalletIcon,
@@ -14,13 +19,18 @@ import {
   Eye,
   EyeSlash,
 } from "@phosphor-icons/react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 export default function FinancePage() {
-  const [showBalance, setShowBalance] = useState(true);
+  const [selectedMonth, setSelectedMonth] = useState(getCurrentYearMonth());
+
   const { data: accounts } = useAccountsAll();
   const { data: pockets } = usePocketsAll();
+  // Mengambil transaksi berdasarkan filter bulan yang aktif
+  const { data: transactions } = useTransactionAll({ month: selectedMonth });
 
+  // Menggunakan custom hook untuk kalkulasi data kalender
+  const calendarData = useTransactionCalendar(transactions);
   return (
     <div className="flex flex-col gap-8 max-w-7xl mx-auto">
       <header className="flex items-center justify-between gap-4">
@@ -93,6 +103,38 @@ export default function FinancePage() {
           {pockets?.map((pock) => (
             <FinanceCard key={pock.id} item={pock} label="Pocket" />
           ))}
+        </div>
+      </section>
+      {/* Calendar Section (Menyinkronkan bulan aktif saat user ganti bulan di kalender) */}
+      <section className="flex flex-col gap-2">
+        <UniversalCalendar
+          data={calendarData}
+          title="Calendar"
+          onMonthChange={(yearMonth) => setSelectedMonth(yearMonth)}
+        />
+      </section>
+
+      {/* Recent Transactions Section */}
+      <section className="flex flex-col gap-4">
+        <div className="flex justify-between items-center">
+          <h2 className="text-body font-black uppercase">
+            Recent Transactions ({selectedMonth})
+          </h2>
+          <span className="text-sm font-bold text-neutral/70 hover:underline cursor-pointer">
+            See all →
+          </span>
+        </div>
+
+        <div className="flex flex-col gap-3">
+          {transactions.length === 0 ? (
+            <p className="text-xs font-bold text-neutral/50 uppercase tracking-wide">
+              No transactions recorded for this month.
+            </p>
+          ) : (
+            transactions.map((trx) => (
+              <TransactionCard key={trx.id} transaction={trx} />
+            ))
+          )}
         </div>
       </section>
     </div>

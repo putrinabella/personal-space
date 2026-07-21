@@ -1,13 +1,24 @@
 import { db } from "@/db";
 import {
   financeAccounts,
+  financeCategories,
   financePockets,
   financeTransactions,
 } from "@/db/schema";
-import { sendStandardResponse } from "@/lib/apiResponse";
+import { sendPaginatedResponse, sendStandardResponse } from "@/lib/apiResponse";
 import { getHouseholdAuth } from "@/lib/financeAuth";
 import { createFinanceHandler } from "@/lib/server/crud/withAuth";
-import { eq, sql } from "drizzle-orm";
+import {
+  eq,
+  ilike,
+  isNull,
+  sql,
+  and,
+  desc,
+  count,
+  gte,
+  lte,
+} from "drizzle-orm";
 import { NextRequest } from "next/server";
 
 const h = async () =>
@@ -16,9 +27,202 @@ const h = async () =>
     entity: "Transaction",
   });
 
-export async function GET(req: Request) {
-  return (await h()).GET(req);
+export async function GET(request: NextRequest) {
+  try {
+    const { householdId } = await getHouseholdAuth();
+    const { searchParams } = new URL(request.url);
+
+    const id = searchParams.get("id");
+    const page = Number(searchParams.get("page"));
+    const perPage = Number(searchParams.get("per_page") ?? 15);
+    const search = searchParams.get("search");
+
+    // Parameter filter tambahan
+    const month = searchParams.get("month"); // Format: "YYYY-MM" (misal: "2026-07")
+    const accountId = searchParams.get("accountId");
+    const pocketId = searchParams.get("pocketId");
+    const categoryId = searchParams.get("categoryId");
+    const type = searchParams.get("type"); // misal: "income" atau "expense"
+    const status = searchParams.get("status"); // misal: "completed", "pending", dll
+
+    const filters = [eq(financeTransactions.householdId, householdId)];
+    filters.push(isNull(financeTransactions.deletedAt));
+
+    if (id) {
+      filters.push(eq(financeTransactions.id, id));
+    }
+
+    if (search) {
+      filters.push(ilike(financeTransactions.description, `%${search}%`));
+    }
+
+    // Filter berdasarkan Account ID
+    if (accountId) {
+      filters.push(eq(financeTransactions.accountId, accountId));
+    }
+
+    // Filter berdasarkan Pocket ID
+    if (pocketId) {
+      filters.push(eq(financeTransactions.pocketId, pocketId));
+    }
+
+    // Filter berdasarkan Category ID
+    if (categoryId) {
+      filters.push(eq(financeTransactions.categoryId, categoryId));
+    }
+
+    // Filter berdasarkan Type (income/expense)
+    if (type) {
+      filters.push(eq(financeTransactions.type, type as any));
+    }
+
+    // Filter berdasarkan Status
+    if (status) {
+      filters.push(eq(financeTransactions.status, status as any));
+    }
+
+    // Filter berdasarkan Bulan (Format "YYYY-MM")
+    if (month) {
+      const startDate = `${month}-01T00:00:00.000Z`;
+      const [year, mon] = month.split("-").map(Number);
+      const lastDay = new Date(year, mon, 0).getDate();
+      const endDate = `${month}-${lastDay}T23:59:59.999Z`;
+
+      filters.push(
+        gte(financeTransactions.date, new Date(startDate) as any),
+        lte(financeTransactions.date, new Date(endDate) as any),
+      );
+    }
+    // Base query dengan leftJoin ke account, pocket, dan category
+    const queryBase = db
+      .select({
+        id: financeTransactions.id,
+        householdId: financeTransactions.householdId,
+        accountId: financeTransactions.accountId,
+        pocketId: financeTransactions.pocketId,
+        categoryId: financeTransactions.categoryId,
+        createdById: financeTransactions.createdById,
+        amount: financeTransactions.amount,
+        type: financeTransactions.type,
+        status: financeTransactions.status,
+        description: financeTransactions.description,
+        date: financeTransactions.date,
+        createdAt: financeTransactions.createdAt,
+        updatedAt: financeTransactions.updatedAt,
+        deletedAt: financeTransactions.deletedAt,
+        account: financeAccounts,
+        pocket: financePockets,
+        category: financeCategories,
+      })
+      .from(financeTransactions)
+      .leftJoin(
+        financeAccounts,
+        eq(financeAccounts.id, financeTransactions.accountId),
+      )
+      .leftJoin(
+        financePockets,
+        eq(financePockets.id, financeTransactions.pocketId),
+      )
+      .leftJoin(
+        financeCategories,
+        eq(financeCategories.id, financeTransactions.categoryId),
+      )
+      .where(and(...filters))
+      .orderBy(desc(financeTransactions.date));
+
+    // Jika mencari berdasarkan ID spesifik
+    if (id) {
+      const [item] = await queryBase.limit(1);
+
+      if (!item) {
+        return sendStandardResponse(
+          null,
+          "Transaction not found.",
+          404,
+          "error",
+        );
+      }
+
+      return sendStandardResponse(item, "Transaction retrieved successfully.");
+    }
+
+    // Jika tanpa pagination
+    if (!page) {
+      const items = await queryBase;
+      return sendStandardResponse(
+        items,
+        "Transaction list retrieved successfully.",
+      );
+    }
+
+    // Jika dengan pagination
+    const offset = (page - 1) * perPage;
+
+    const [items, total] = await Promise.all([
+      db
+        .select({
+          id: financeTransactions.id,
+          householdId: financeTransactions.householdId,
+          accountId: financeTransactions.accountId,
+          pocketId: financeTransactions.pocketId,
+          categoryId: financeTransactions.categoryId,
+          createdById: financeTransactions.createdById,
+          amount: financeTransactions.amount,
+          type: financeTransactions.type,
+          status: financeTransactions.status,
+          description: financeTransactions.description,
+          date: financeTransactions.date,
+          createdAt: financeTransactions.createdAt,
+          updatedAt: financeTransactions.updatedAt,
+          deletedAt: financeTransactions.deletedAt,
+          account: financeAccounts,
+          pocket: financePockets,
+          category: financeCategories,
+        })
+        .from(financeTransactions)
+        .leftJoin(
+          financeAccounts,
+          eq(financeAccounts.id, financeTransactions.accountId),
+        )
+        .leftJoin(
+          financePockets,
+          eq(financePockets.id, financeTransactions.pocketId),
+        )
+        .leftJoin(
+          financeCategories,
+          eq(financeCategories.id, financeTransactions.categoryId),
+        )
+        .where(and(...filters))
+        .orderBy(desc(financeTransactions.date))
+        .limit(perPage)
+        .offset(offset),
+
+      db
+        .select({ count: count() })
+        .from(financeTransactions)
+        .where(and(...filters)),
+    ]);
+
+    return sendPaginatedResponse({
+      requestUrl: request.url,
+      items,
+      totalItems: total[0]?.count ?? 0,
+      page,
+      perPage,
+      message: "Transaction list retrieved successfully.",
+    });
+  } catch (error) {
+    return sendStandardResponse(
+      null,
+      error instanceof Error ? error.message : "Internal Server Error",
+      500,
+      "error",
+    );
+  }
 }
+// export async function GET(req: Request) {
+//   return (await h()).GET(req);
+// }
 
 export async function POST(request: NextRequest) {
   try {

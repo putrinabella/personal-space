@@ -5,7 +5,7 @@ import { TagEntry } from "../tags.types";
 
 export function useTagAll() {
   return useBaseAll<TagEntry>({
-    queryKey: queryKeys.tags.all,
+    queryKey: queryKeys.tags.all(),
 
     fetcher: tagsService.getAll,
   });

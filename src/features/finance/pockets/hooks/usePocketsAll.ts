@@ -5,7 +5,7 @@ import { PocketsEntry } from "../pockets.types";
 
 export function usePocketsAll() {
   return useBaseAll<PocketsEntry>({
-    queryKey: queryKeys.pockets.all,
+    queryKey: queryKeys.pockets.all(),
 
     fetcher: pocketsService.getAll,
   });

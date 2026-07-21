@@ -5,7 +5,7 @@ import { RestaurantEntry } from "../restaurants.types";
 
 export function useRestaurantAll() {
   return useBaseAll<RestaurantEntry>({
-    queryKey: queryKeys.restaurants.all,
+    queryKey: queryKeys.restaurants.all(),
 
     fetcher: restaurantsService.getAll,
   });

@@ -5,7 +5,7 @@ import { CuisinesEntry } from "../cuisines.types";
 
 export function useCuisinesAll() {
   return useBaseAll<CuisinesEntry>({
-    queryKey: queryKeys.cuisines.all,
+    queryKey: queryKeys.cuisines.all(),
 
     fetcher: cuisinesService.getAll,
   });

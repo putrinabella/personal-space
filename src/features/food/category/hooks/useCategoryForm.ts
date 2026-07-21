@@ -14,7 +14,7 @@ export function useCategoryForm(categoryId?: string, enabled: boolean = true) {
     entityName: "category",
     defaultValues: defaultCategory,
     queryKey: queryKeys.category.detail(categoryId || ""),
-    invalidateQueryKey: queryKeys.category.all,
+    invalidateQueryKey: queryKeys.category.all(),
 
     getDetail: async (id) => {
       const data = await categoryService.getDetail(id);

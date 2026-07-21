@@ -254,6 +254,13 @@ export function formatTime(date: string | Date | null | undefined): string {
   return `${hours}:${minutes}`;
 }
 
+export const getCurrentYearMonth = () => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  return `${year}-${month}`;
+};
+
 /* Contoh penggunaan:
 getAgeFromDob("2000-01-15");
 getAgeYearsOnly("2000-01-15");

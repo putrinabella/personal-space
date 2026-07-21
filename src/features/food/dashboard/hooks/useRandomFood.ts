@@ -8,7 +8,7 @@ export function useRandomFood(
   filters: any = {}, // Tambahkan argumen filters
 ) {
   return useBaseAll<FoodEntry>({
-    queryKey: [...queryKeys.discoverFoods.all, "random", filters],
+    queryKey: [...queryKeys.discoverFoods.all(), "random", filters],
     fetcher: () => randomFoodService.getAll(filters),
 
     options: {

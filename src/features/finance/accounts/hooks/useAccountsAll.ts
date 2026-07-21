@@ -5,7 +5,7 @@ import { AccountsEntry } from "../accounts.types";
 
 export function useAccountsAll() {
   return useBaseAll<AccountsEntry>({
-    queryKey: queryKeys.accounts.all,
+    queryKey: queryKeys.accounts.all(),
 
     fetcher: accountsService.getAll,
   });
