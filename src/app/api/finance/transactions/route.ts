@@ -65,7 +65,8 @@ export async function POST(request: NextRequest) {
         await tx
           .update(financeAccounts)
           .set({
-            currentBalance: sql`${financeAccounts.currentBalance} + ${adjustment}`,
+            // Tambahkan ::numeric agar database tahu cara menjumlahkan string/numeric
+            currentBalance: sql`${financeAccounts.currentBalance} + ${adjustment}::numeric`,
           })
           .where(eq(financeAccounts.id, accountId));
 
@@ -74,7 +75,8 @@ export async function POST(request: NextRequest) {
           await tx
             .update(financePockets)
             .set({
-              currentBalance: sql`${financePockets.currentBalance} + ${adjustment}`,
+              // Tambahkan ::numeric
+              currentBalance: sql`${financePockets.currentBalance} + ${adjustment}::numeric`,
             })
             .where(eq(financePockets.id, pocketId));
         }

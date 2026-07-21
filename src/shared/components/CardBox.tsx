@@ -25,7 +25,10 @@ export default function CardBox({
   className = "",
   pressable,
 }: CardBoxProps) {
-  const bgClass = isDaisyColor(color) ? bgMap[color] : color;
+  const isHex = color.startsWith("#");
+  const bgClass =
+    !isHex && isDaisyColor(color) ? bgMap[color as DaisyColor] : "";
+  const customStyle = isHex ? { backgroundColor: color } : {};
 
   const roundedClassMap = {
     full: "rounded-full",
@@ -60,19 +63,26 @@ export default function CardBox({
 
   if (isLink && href) {
     return (
-      <Link href={href} className={`${baseStyles} block`}>
+      <Link href={href} className={`${baseStyles} block`} style={customStyle}>
         {children}
       </Link>
     );
   }
-
   if (isButton) {
     return (
-      <button onClick={onClick} className={`${baseStyles} cursor-pointer`}>
+      <button
+        onClick={onClick}
+        className={`${baseStyles} cursor-pointer`}
+        style={customStyle}
+      >
         {children}
       </button>
     );
   }
 
-  return <div className={baseStyles}>{children}</div>;
+  return (
+    <div className={baseStyles} style={customStyle}>
+      {children}
+    </div>
+  );
 }

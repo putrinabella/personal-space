@@ -21,7 +21,7 @@ export default function CreatePage() {
         color="primary"
       />
 
-      <CardBox className="p-8 flex flex-col gap-6 mb-12" rounded="2xl">
+      <CardBox className="p-4 md:p-6 flex flex-col gap-6 mb-12" rounded="2xl">
         <EntityFields entity={entity} data={data} setField={setField} />
 
         <div className="flex flex-col md:flex-row gap-4 pt-4">

@@ -1,0 +1,59 @@
+"use client";
+import { useState } from "react";
+import { Eye, EyeSlash } from "@phosphor-icons/react";
+import CardBox from "@/shared/components/CardBox";
+import IconRenderer from "@/shared/components/IconRenderer";
+import { formatRupiah } from "@/utils/rupiahFormatter";
+
+interface FinanceCardProps {
+  item: any;
+  label?: string; // e.g., "Account" atau "Pocket"
+}
+
+export default function FinanceCard({
+  item,
+  label = "Account",
+}: FinanceCardProps) {
+  const [showBalance, setShowBalance] = useState(false);
+
+  return (
+    <CardBox
+      // 1. Set width yang tetap (w-48 atau min-w-[12rem]) agar semua kartu seragam
+      className="p-4 md:p-6 flex flex-col gap-2 w-48 min-w-48 shrink-0"
+      rounded="2xl"
+      color={item.color}
+    >
+      <div className="flex justify-between items-start">
+        <div className="w-12 h-12 bg-white/50 rounded-2xl flex items-center justify-center border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+          <IconRenderer name={item.iconSlug} size={24} weight="bold" />
+        </div>
+
+        <button
+          onClick={() => setShowBalance(!showBalance)}
+          className="opacity-50 hover:opacity-100 transition-opacity p-1"
+        >
+          {showBalance ? <Eye size={20} /> : <EyeSlash size={20} />}
+        </button>
+      </div>
+
+      {/* 2. Text container dengan break-words agar teks panjang turun ke bawah */}
+      <div className="grow wrap-break-word">
+        <p className="font-black text-lg uppercase leading-tight">
+          {item.name}
+        </p>
+        <p className="text-sm font-medium opacity-70 capitalize mt-0.5">
+          {item.type} {label}
+        </p>
+      </div>
+
+      <div className="">
+        <p className="text-sm font-bold opacity-70">Rp</p>
+        <p className="text-xl font-black truncate">
+          {showBalance
+            ? formatRupiah(item.currentBalance).replace("Rp", "").trim()
+            : "••••••••"}
+        </p>
+      </div>
+    </CardBox>
+  );
+}

@@ -28,7 +28,7 @@ export default function CardHeader({
       color={color}
       rounded={rounded}
       shadowSize={shadowSize}
-      className={`p-6 flex items-center gap-5 ${className}`}
+      className={`p-4 md:p-6 flex items-center gap-5 ${className}`}
     >
       {IconComponent && (
         <CardBox

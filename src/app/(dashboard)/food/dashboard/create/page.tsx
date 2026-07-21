@@ -41,7 +41,7 @@ export default function CreateFoodEntryPage() {
         color="primary"
       />
 
-      <CardBox className="p-8 flex flex-col gap-6" rounded="2xl">
+      <CardBox className="p-4 md:p-6 flex flex-col gap-6" rounded="2xl">
         <div className="flex bg-base-200 p-1 rounded-xl">
           <button
             onClick={() => setMode("existing")}

@@ -1,0 +1,1582 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Kantong — Finance</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/@phosphor-icons/web@2.0.3/src/regular/style.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/@phosphor-icons/web@2.0.3/src/bold/style.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/@phosphor-icons/web@2.0.3/src/fill/style.css"
+    />
+    <style>
+      :root {
+        --ink: #191933;
+        --bg: #f3f0ff;
+        --outerbg: #e4defb;
+        --surface: #ffffff;
+        --yellow: #ffd976;
+        --pink: #ffb3c6;
+        --blue: #9fe8e4;
+        --green: #b4f8c8;
+        --purple: #cbb8ff;
+        --orange: #ffc48c;
+        --accent: #6c5ce7;
+        --fab: #ff5c8a;
+        --income: #159c56;
+        --income-bg: #dff7e6;
+        --expense: #e63946;
+        --expense-bg: #ffe3e3;
+        --muted: #6b6b85;
+        --line: 3px;
+        --radius: 22px;
+        --radius-sm: 16px;
+        --shadow: 4px 4px 0px var(--ink);
+        --shadow-sm: 3px 3px 0px var(--ink);
+        --safe-top: env(safe-area-inset-top, 0px);
+        --safe-bottom: env(safe-area-inset-bottom, 0px);
+      }
+      * {
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: var(--outerbg);
+      }
+      body {
+        font-family: "Poppins", sans-serif;
+        color: var(--ink);
+        display: flex;
+        justify-content: center;
+        min-height: 100vh;
+      }
+      .num {
+        font-family: "JetBrains Mono", monospace;
+      }
+
+      /* ---------- App frame ---------- */
+      .app-frame {
+        width: 100%;
+        max-width: 430px;
+        min-height: 100vh;
+        background: var(--bg);
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+      @media (min-width: 560px) {
+        body {
+          padding: 32px 16px;
+        }
+        .app-frame {
+          min-height: 844px;
+          height: 844px;
+          border-radius: 44px;
+          border: 8px solid var(--ink);
+          box-shadow: 10px 10px 0px var(--ink);
+        }
+      }
+
+      /* ---------- Topbar ---------- */
+      .topbar {
+        padding: calc(18px + var(--safe-top)) 20px 14px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: var(--bg);
+        position: relative;
+        z-index: 5;
+      }
+      .topbar .hello {
+        font-size: 13px;
+        color: var(--muted);
+        font-weight: 600;
+        margin: 0 0 2px;
+      }
+      .topbar h1 {
+        font-size: 22px;
+        font-weight: 800;
+        margin: 0;
+        letter-spacing: -0.3px;
+      }
+      .bell-btn {
+        width: 44px;
+        height: 44px;
+        border-radius: 14px;
+        background: var(--yellow);
+        border: var(--line) solid var(--ink);
+        box-shadow: var(--shadow-sm);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        cursor: pointer;
+        position: relative;
+        transition:
+          transform 0.08s ease,
+          box-shadow 0.08s ease;
+      }
+      .bell-btn:active {
+        transform: translate(2px, 2px);
+        box-shadow: 1px 1px 0 var(--ink);
+      }
+      .bell-dot {
+        position: absolute;
+        top: 6px;
+        right: 7px;
+        width: 9px;
+        height: 9px;
+        background: var(--expense);
+        border: 2px solid var(--ink);
+        border-radius: 50%;
+      }
+
+      /* ---------- Scroll area ---------- */
+      .scroll-area {
+        flex: 1;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding-bottom: 130px;
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+      }
+      .scroll-area::-webkit-scrollbar {
+        display: none;
+      }
+
+      .pull-indicator {
+        height: 0px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        transition: height 0.18s ease;
+        color: var(--accent);
+        font-size: 20px;
+      }
+      .pull-indicator.spin i {
+        animation: spin 0.6s linear infinite;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      section {
+        padding: 6px 20px 22px;
+      }
+      .section-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+      }
+      .section-head h2 {
+        font-size: 17px;
+        font-weight: 700;
+        margin: 0;
+      }
+      .section-head .see-all {
+        font-size: 12.5px;
+        font-weight: 600;
+        color: var(--accent);
+        cursor: pointer;
+      }
+
+      /* ---------- Balance card ---------- */
+      .balance-card {
+        background: var(--ink);
+        color: #fff;
+        border-radius: var(--radius);
+        border: var(--line) solid var(--ink);
+        box-shadow: var(--shadow);
+        padding: 20px 20px 18px;
+        position: relative;
+        overflow: hidden;
+      }
+      .balance-card .dot-deco {
+        position: absolute;
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background: #2a2a50;
+        top: -60px;
+        right: -40px;
+      }
+      .balance-label {
+        font-size: 12.5px;
+        opacity: 0.75;
+        font-weight: 600;
+        margin: 0 0 4px;
+        position: relative;
+      }
+      .balance-amount {
+        font-size: 30px;
+        font-weight: 800;
+        margin: 0 0 16px;
+        position: relative;
+        letter-spacing: -0.5px;
+      }
+      .balance-row {
+        display: flex;
+        gap: 10px;
+        position: relative;
+      }
+      .balance-pill {
+        flex: 1;
+        background: rgba(255, 255, 255, 0.09);
+        border: 2px solid rgba(255, 255, 255, 0.25);
+        border-radius: 14px;
+        padding: 10px 12px;
+      }
+      .balance-pill .pill-top {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 11.5px;
+        opacity: 0.8;
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+      .balance-pill.income .pill-top i {
+        color: #8dffb0;
+      }
+      .balance-pill.expense .pill-top i {
+        color: #ff9ba3;
+      }
+      .balance-pill .pill-amount {
+        font-size: 15px;
+        font-weight: 700;
+      }
+
+      /* ---------- Horizontal scroll rows ---------- */
+      .hscroll {
+        display: flex;
+        gap: 14px;
+        overflow-x: auto;
+        padding: 4px 2px 10px;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+      }
+      .hscroll::-webkit-scrollbar {
+        display: none;
+      }
+
+      /* ---------- Account card ---------- */
+      .acct-card {
+        scroll-snap-align: start;
+        min-width: 168px;
+        border-radius: var(--radius);
+        border: var(--line) solid var(--ink);
+        box-shadow: var(--shadow);
+        padding: 16px;
+        cursor: pointer;
+        transition:
+          transform 0.08s ease,
+          box-shadow 0.08s ease;
+      }
+      .acct-card:active {
+        transform: translate(3px, 3px);
+        box-shadow: 1px 1px 0 var(--ink);
+      }
+      .acct-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.55);
+        border: 2.5px solid var(--ink);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 21px;
+        margin-bottom: 16px;
+      }
+      .acct-name {
+        font-weight: 700;
+        font-size: 14.5px;
+        margin: 0 0 2px;
+      }
+      .acct-type {
+        font-size: 11px;
+        font-weight: 600;
+        opacity: 0.65;
+        margin: 0 0 10px;
+      }
+      .acct-balance {
+        font-size: 16.5px;
+        font-weight: 800;
+      }
+      .acct-currency {
+        font-size: 10.5px;
+        font-weight: 700;
+        opacity: 0.6;
+        margin-left: 3px;
+      }
+
+      /* ---------- Pocket card ---------- */
+      .pocket-card {
+        scroll-snap-align: start;
+        min-width: 172px;
+        border-radius: var(--radius);
+        background: var(--surface);
+        border: var(--line) solid var(--ink);
+        box-shadow: var(--shadow);
+        padding: 16px;
+        cursor: pointer;
+        transition:
+          transform 0.08s ease,
+          box-shadow 0.08s ease;
+      }
+      .pocket-card:active {
+        transform: translate(3px, 3px);
+        box-shadow: 1px 1px 0 var(--ink);
+      }
+      .pocket-top {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 14px;
+      }
+      .pocket-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 11px;
+        border: 2.5px solid var(--ink);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+      }
+      .pocket-name {
+        font-weight: 700;
+        font-size: 14px;
+      }
+      .pocket-balance {
+        font-size: 17px;
+        font-weight: 800;
+        margin-bottom: 10px;
+      }
+      .pocket-divider {
+        border-top: 2px dashed var(--ink);
+        opacity: 0.35;
+        margin: 0 0 10px;
+      }
+      .pocket-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .badge {
+        font-size: 10px;
+        font-weight: 700;
+        padding: 4px 9px;
+        border-radius: 20px;
+        border: 2px solid var(--ink);
+        background: var(--surface);
+      }
+      .badge.on {
+        background: var(--income-bg);
+        color: var(--income);
+      }
+      .badge.off {
+        background: #f0f0f5;
+        color: var(--muted);
+      }
+
+      /* ---------- Calendar ---------- */
+      .cal-wrap {
+        border-radius: var(--radius);
+        border: var(--line) solid var(--ink);
+        box-shadow: var(--shadow);
+        background: var(--surface);
+        overflow: hidden;
+      }
+      .cal-header {
+        position: sticky;
+        top: 0;
+        z-index: 3;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 16px;
+        background: var(--purple);
+        border-bottom: var(--line) solid var(--ink);
+      }
+      .cal-header h3 {
+        margin: 0;
+        font-size: 15.5px;
+        font-weight: 800;
+      }
+      .cal-nav {
+        display: flex;
+        gap: 8px;
+      }
+      .cal-nav button {
+        width: 30px;
+        height: 30px;
+        border-radius: 9px;
+        border: 2.5px solid var(--ink);
+        background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        cursor: pointer;
+      }
+      .cal-nav button:active {
+        transform: translate(1px, 1px);
+      }
+      .weekday-row {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        background: #f6f4ff;
+      }
+      .weekday-row span {
+        text-align: center;
+        font-size: 10.5px;
+        font-weight: 700;
+        color: var(--muted);
+        padding: 8px 0;
+      }
+      .cal-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 5px;
+        padding: 8px;
+      }
+      .day-cell {
+        aspect-ratio: 1/1.02;
+        border-radius: 10px;
+        border: 2px solid transparent;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        cursor: pointer;
+        gap: 2px;
+        background: #f9f8ff;
+      }
+      .day-cell.empty {
+        visibility: hidden;
+        cursor: default;
+      }
+      .day-cell .d-num {
+        font-size: 12px;
+        font-weight: 700;
+      }
+      .day-cell .d-amt {
+        font-size: 8px;
+        font-weight: 700;
+      }
+      .day-cell.has-expense {
+        background: var(--expense-bg);
+      }
+      .day-cell.has-income {
+        background: var(--income-bg);
+      }
+      .day-cell.has-both {
+        background: linear-gradient(
+          180deg,
+          var(--income-bg) 50%,
+          var(--expense-bg) 50%
+        );
+      }
+      .day-cell.has-expense .d-amt {
+        color: var(--expense);
+      }
+      .day-cell.has-income .d-amt {
+        color: var(--income);
+      }
+      .day-cell.has-both .d-amt {
+        color: var(--ink);
+      }
+      .day-cell .dots {
+        display: flex;
+        gap: 2px;
+        position: absolute;
+        bottom: 3px;
+      }
+      .day-cell .dots i {
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        display: block;
+      }
+      .dot-income {
+        background: var(--income);
+      }
+      .dot-expense {
+        background: var(--expense);
+      }
+      .day-cell.today {
+        border-color: var(--ink);
+        border-width: 2.5px;
+        background: var(--yellow);
+      }
+      .day-cell.selected {
+        border-color: var(--accent);
+        border-width: 2.5px;
+        box-shadow: 0 0 0 2px var(--accent) inset;
+      }
+      .day-cell.big-amt {
+        border-width: 2.5px;
+        border-color: var(--ink);
+      }
+      .cal-legend {
+        display: flex;
+        gap: 14px;
+        padding: 10px 16px 14px;
+        font-size: 10.5px;
+        color: var(--muted);
+        font-weight: 600;
+      }
+      .cal-legend span {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .cal-legend i {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        display: inline-block;
+      }
+
+      /* ---------- Transactions ---------- */
+      .day-group {
+        margin-bottom: 16px;
+      }
+      .day-group-label {
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--muted);
+        margin: 0 0 8px;
+        padding-left: 2px;
+      }
+      .tx-card {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: var(--surface);
+        border: var(--line) solid var(--ink);
+        border-radius: 16px;
+        box-shadow: var(--shadow-sm);
+        padding: 12px 14px;
+        margin-bottom: 10px;
+        cursor: pointer;
+        transition:
+          transform 0.08s ease,
+          box-shadow 0.08s ease;
+      }
+      .tx-card:active {
+        transform: translate(2px, 2px);
+        box-shadow: 1px 1px 0 var(--ink);
+      }
+      .tx-icon {
+        width: 42px;
+        height: 42px;
+        min-width: 42px;
+        border-radius: 12px;
+        border: 2.5px solid var(--ink);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 19px;
+      }
+      .tx-mid {
+        flex: 1;
+        min-width: 0;
+      }
+      .tx-desc {
+        font-size: 14px;
+        font-weight: 700;
+        margin: 0 0 3px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .tx-meta {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+      .tx-tag {
+        font-size: 10px;
+        font-weight: 600;
+        color: var(--muted);
+        background: #f0eefb;
+        border-radius: 8px;
+        padding: 2px 7px;
+      }
+      .tx-amt {
+        font-size: 14.5px;
+        font-weight: 800;
+        white-space: nowrap;
+      }
+      .tx-amt.income {
+        color: var(--income);
+      }
+      .tx-amt.expense {
+        color: var(--expense);
+      }
+
+      /* ---------- FAB ---------- */
+      .fab {
+        position: fixed;
+        bottom: calc(88px + var(--safe-bottom));
+        right: 24px;
+        z-index: 20;
+        width: 60px;
+        height: 60px;
+        border-radius: 20px;
+        background: var(--fab);
+        border: var(--line) solid var(--ink);
+        box-shadow: 5px 5px 0px var(--ink);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 26px;
+        color: var(--ink);
+        cursor: pointer;
+        transition:
+          transform 0.08s ease,
+          box-shadow 0.08s ease;
+      }
+      .fab:active {
+        transform: translate(3px, 3px);
+        box-shadow: 2px 2px 0 var(--ink);
+      }
+      .app-frame .fab {
+        position: absolute;
+      }
+
+      /* ---------- Bottom nav ---------- */
+      .bottom-nav {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 15;
+        background: var(--surface);
+        border-top: var(--line) solid var(--ink);
+        padding: 10px 10px calc(10px + var(--safe-bottom));
+        display: flex;
+        justify-content: space-between;
+        gap: 4px;
+      }
+      .nav-item {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        padding: 8px 4px;
+        border-radius: 14px;
+        cursor: pointer;
+        min-height: 48px;
+        justify-content: center;
+        border: 2.5px solid transparent;
+        transition: background 0.1s ease;
+      }
+      .nav-item i {
+        font-size: 20px;
+      }
+      .nav-item span {
+        font-size: 9.5px;
+        font-weight: 700;
+      }
+      .nav-item.active {
+        background: var(--yellow);
+        border-color: var(--ink);
+      }
+      .nav-item:not(.active) {
+        color: var(--muted);
+      }
+
+      /* ---------- Bottom sheet ---------- */
+      .sheet-backdrop {
+        position: absolute;
+        inset: 0;
+        background: rgba(25, 25, 51, 0.45);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.22s ease;
+        z-index: 25;
+      }
+      .sheet-backdrop.show {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      .bottom-sheet {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 30;
+        background: var(--bg);
+        border-top: var(--line) solid var(--ink);
+        border-radius: 26px 26px 0 0;
+        box-shadow: 0 -4px 0px var(--ink);
+        transform: translateY(102%);
+        transition: transform 0.28s cubic-bezier(0.32, 0.72, 0, 1);
+        max-height: 78%;
+        display: flex;
+        flex-direction: column;
+        padding-bottom: calc(14px + var(--safe-bottom));
+      }
+      .bottom-sheet.open {
+        transform: translateY(0);
+      }
+      .sheet-handle {
+        width: 44px;
+        height: 5px;
+        background: var(--ink);
+        opacity: 0.25;
+        border-radius: 3px;
+        margin: 10px auto 6px;
+      }
+      .sheet-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 6px 20px 10px;
+      }
+      .sheet-header h3 {
+        margin: 0;
+        font-size: 16.5px;
+        font-weight: 800;
+      }
+      .sheet-close {
+        width: 32px;
+        height: 32px;
+        border-radius: 10px;
+        border: 2.5px solid var(--ink);
+        background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 15px;
+      }
+      .sheet-summary {
+        display: flex;
+        gap: 10px;
+        padding: 0 20px 14px;
+      }
+      .sheet-summary .sum-pill {
+        flex: 1;
+        border: 2.5px solid var(--ink);
+        border-radius: 13px;
+        padding: 8px 10px;
+      }
+      .sheet-summary .sum-pill.income {
+        background: var(--income-bg);
+      }
+      .sheet-summary .sum-pill.expense {
+        background: var(--expense-bg);
+      }
+      .sheet-summary .sum-label {
+        font-size: 10px;
+        font-weight: 700;
+        opacity: 0.7;
+      }
+      .sheet-summary .sum-val {
+        font-size: 14px;
+        font-weight: 800;
+      }
+      .sheet-list {
+        overflow-y: auto;
+        padding: 0 20px 10px;
+      }
+      .sheet-empty {
+        text-align: center;
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 600;
+        padding: 30px 10px;
+      }
+
+      .fx-yellow {
+        background: var(--yellow);
+      }
+      .fx-pink {
+        background: var(--pink);
+      }
+      .fx-blue {
+        background: var(--blue);
+      }
+      .fx-green {
+        background: var(--green);
+      }
+      .fx-purple {
+        background: var(--purple);
+      }
+      .fx-orange {
+        background: var(--orange);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-frame" id="appFrame">
+      <header class="topbar">
+        <div>
+          <p class="hello">Selamat siang 👋</p>
+          <h1 id="greetName">Hi, Na</h1>
+        </div>
+        <div class="bell-btn">
+          <i class="ph-bold ph-bell"></i><span class="bell-dot"></span>
+        </div>
+      </header>
+
+      <main class="scroll-area" id="scrollArea">
+        <div class="pull-indicator" id="pullIndicator">
+          <i class="ph-bold ph-arrows-clockwise"></i>
+        </div>
+
+        <section>
+          <div class="balance-card">
+            <div class="dot-deco"></div>
+            <p class="balance-label">TOTAL BALANCE</p>
+            <p class="balance-amount num" id="totalBalance">Rp 0</p>
+            <div class="balance-row">
+              <div class="balance-pill income">
+                <div class="pill-top">
+                  <i class="ph-bold ph-trend-up"></i> Income (Jul)
+                </div>
+                <div class="pill-amount num" id="monthIncome">Rp 0</div>
+              </div>
+              <div class="balance-pill expense">
+                <div class="pill-top">
+                  <i class="ph-bold ph-trend-down"></i> Expense (Jul)
+                </div>
+                <div class="pill-amount num" id="monthExpense">Rp 0</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div class="section-head">
+            <h2>Accounts</h2>
+            <span class="see-all">See all</span>
+          </div>
+          <div class="hscroll" id="accountsRow"></div>
+        </section>
+
+        <section>
+          <div class="section-head">
+            <h2>Pockets</h2>
+            <span class="see-all">See all</span>
+          </div>
+          <div class="hscroll" id="pocketsRow"></div>
+        </section>
+
+        <section>
+          <div class="section-head"><h2>Calendar</h2></div>
+          <div class="cal-wrap">
+            <div class="cal-header">
+              <div class="cal-nav">
+                <button id="prevMonth">
+                  <i class="ph-bold ph-caret-left"></i>
+                </button>
+              </div>
+              <h3 id="calMonthLabel">July 2026</h3>
+              <div class="cal-nav">
+                <button id="nextMonth">
+                  <i class="ph-bold ph-caret-right"></i>
+                </button>
+              </div>
+            </div>
+            <div class="weekday-row">
+              <span>S</span><span>M</span><span>T</span><span>W</span
+              ><span>T</span><span>F</span><span>S</span>
+            </div>
+            <div class="cal-grid" id="calGrid"></div>
+            <div class="cal-legend">
+              <span><i style="background: var(--income)"></i> Income</span>
+              <span><i style="background: var(--expense)"></i> Expense</span>
+              <span
+                ><i style="background: var(--ink); opacity: 0.5"></i>
+                Today</span
+              >
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div class="section-head">
+            <h2>Recent Transactions</h2>
+            <span class="see-all">See all</span>
+          </div>
+          <div id="recentList"></div>
+        </section>
+      </main>
+
+      <div class="fab" id="fabBtn"><i class="ph-bold ph-plus"></i></div>
+
+      <nav class="bottom-nav">
+        <div class="nav-item active" data-tab="home">
+          <i class="ph-fill ph-house"></i><span>Home</span>
+        </div>
+        <div class="nav-item" data-tab="transactions">
+          <i class="ph ph-note-pencil"></i><span>Transactions</span>
+        </div>
+        <div class="nav-item" data-tab="reports">
+          <i class="ph ph-chart-pie-slice"></i><span>Reports</span>
+        </div>
+        <div class="nav-item" data-tab="budgets">
+          <i class="ph ph-target"></i><span>Budgets</span>
+        </div>
+        <div class="nav-item" data-tab="settings">
+          <i class="ph ph-gear-six"></i><span>Settings</span>
+        </div>
+      </nav>
+
+      <div class="sheet-backdrop" id="sheetBackdrop"></div>
+      <div class="bottom-sheet" id="bottomSheet">
+        <div class="sheet-handle"></div>
+        <div class="sheet-header">
+          <h3 id="sheetTitle">Saturday, July 18</h3>
+          <div class="sheet-close" id="sheetClose">
+            <i class="ph-bold ph-x"></i>
+          </div>
+        </div>
+        <div class="sheet-summary">
+          <div class="sum-pill income">
+            <div class="sum-label">Income</div>
+            <div class="sum-val num" id="sheetIncome">Rp 0</div>
+          </div>
+          <div class="sum-pill expense">
+            <div class="sum-label">Expense</div>
+            <div class="sum-val num" id="sheetExpense">Rp 0</div>
+          </div>
+        </div>
+        <div class="sheet-list" id="sheetList"></div>
+      </div>
+    </div>
+
+    <script>
+      /* ================= DATA (mock API payloads) ================= */
+      const ACCOUNTS = [
+        {
+          id: "a1",
+          name: "Cash",
+          type: "Cash Account",
+          iconSlug: "wallet",
+          color: "fx-yellow",
+          currentBalance: 3580000,
+          currency: "IDR",
+        },
+        {
+          id: "a2",
+          name: "Mandiri",
+          type: "Bank Account",
+          iconSlug: "bank",
+          color: "fx-blue",
+          currentBalance: 12450000,
+          currency: "IDR",
+        },
+        {
+          id: "a3",
+          name: "BCA Card",
+          type: "Credit Card",
+          iconSlug: "credit-card",
+          color: "fx-pink",
+          currentBalance: -1250000,
+          currency: "IDR",
+        },
+        {
+          id: "a4",
+          name: "Gold Vault",
+          type: "Savings Vault",
+          iconSlug: "vault",
+          color: "fx-purple",
+          currentBalance: 8000000,
+          currency: "IDR",
+        },
+      ];
+
+      const POCKETS = [
+        {
+          id: "p1",
+          name: "Emergency Fund",
+          type: "Saving",
+          iconSlug: "piggy-bank",
+          color: "fx-green",
+          currentBalance: 5000000,
+          autoAllocation: false,
+        },
+        {
+          id: "p2",
+          name: "Daily",
+          type: "General Pocket",
+          iconSlug: "folder",
+          color: "fx-orange",
+          currentBalance: 120000,
+          autoAllocation: null,
+        },
+        {
+          id: "p3",
+          name: "Holiday Trip",
+          type: "Saving",
+          iconSlug: "hand-coins",
+          color: "fx-blue",
+          currentBalance: 2300000,
+          autoAllocation: true,
+        },
+        {
+          id: "p4",
+          name: "Zakat",
+          type: "General Pocket",
+          iconSlug: "mosque",
+          color: "fx-purple",
+          currentBalance: 450000,
+          autoAllocation: null,
+        },
+      ];
+
+      const ICONS = {
+        wallet: "ph-wallet",
+        bank: "ph-bank",
+        "credit-card": "ph-credit-card",
+        coins: "ph-coins",
+        "piggy-bank": "ph-piggy-bank",
+        "hand-coins": "ph-hand-coins",
+        mosque: "ph-building",
+        vault: "ph-vault",
+        folder: "ph-folder-simple",
+      };
+
+      const CATEGORY = {
+        food: { icon: "ph-bowl-food", name: "Food" },
+        transport: { icon: "ph-car", name: "Transport" },
+        salary: { icon: "ph-money", name: "Salary" },
+        shopping: { icon: "ph-shopping-bag-open", name: "Shopping" },
+        bills: { icon: "ph-receipt", name: "Bills" },
+        entertainment: { icon: "ph-film-slate", name: "Entertainment" },
+        coffee: { icon: "ph-coffee", name: "Coffee" },
+        groceries: { icon: "ph-basket", name: "Groceries" },
+        transfer: { icon: "ph-arrows-left-right", name: "Transfer" },
+        bonus: { icon: "ph-gift", name: "Bonus" },
+      };
+
+      const TRANSACTIONS = [
+        {
+          id: "t1",
+          date: "2026-07-01",
+          amount: 450000,
+          type: "expense",
+          description: "Weekly groceries",
+          accountId: "a1",
+          pocketId: "p2",
+          categoryId: "groceries",
+        },
+        {
+          id: "t2",
+          date: "2026-07-03",
+          amount: 1200000,
+          type: "income",
+          description: "Freelance project",
+          accountId: "a2",
+          pocketId: null,
+          categoryId: "salary",
+        },
+        {
+          id: "t3",
+          date: "2026-07-05",
+          amount: 120000,
+          type: "expense",
+          description: "Netflix subscription",
+          accountId: "a3",
+          pocketId: null,
+          categoryId: "bills",
+        },
+        {
+          id: "t4",
+          date: "2026-07-07",
+          amount: 35000,
+          type: "expense",
+          description: "Morning coffee",
+          accountId: "a1",
+          pocketId: "p2",
+          categoryId: "coffee",
+        },
+        {
+          id: "t5",
+          date: "2026-07-08",
+          amount: 280000,
+          type: "expense",
+          description: "Grab to office",
+          accountId: "a1",
+          pocketId: "p2",
+          categoryId: "transport",
+        },
+        {
+          id: "t6",
+          date: "2026-07-10",
+          amount: 650000,
+          type: "expense",
+          description: "New shoes",
+          accountId: "a3",
+          pocketId: null,
+          categoryId: "shopping",
+        },
+        {
+          id: "t7",
+          date: "2026-07-12",
+          amount: 50000,
+          type: "expense",
+          description: "Parking & toll",
+          accountId: "a1",
+          pocketId: "p2",
+          categoryId: "transport",
+        },
+        {
+          id: "t8",
+          date: "2026-07-15",
+          amount: 180000,
+          type: "expense",
+          description: "Dinner with Yoga",
+          accountId: "a1",
+          pocketId: "p2",
+          categoryId: "food",
+        },
+        {
+          id: "t9",
+          date: "2026-07-15",
+          amount: 500000,
+          type: "income",
+          description: "Project bonus",
+          accountId: "a2",
+          pocketId: null,
+          categoryId: "bonus",
+        },
+        {
+          id: "t10",
+          date: "2026-07-18",
+          amount: 20000,
+          type: "expense",
+          description: "Lunch",
+          accountId: "a1",
+          pocketId: "p2",
+          categoryId: "food",
+        },
+        {
+          id: "t11",
+          date: "2026-07-18",
+          amount: 3800000,
+          type: "income",
+          description: "Salary",
+          accountId: "a2",
+          pocketId: null,
+          categoryId: "salary",
+        },
+        {
+          id: "t12",
+          date: "2026-07-20",
+          amount: 2500000,
+          type: "expense",
+          description: "Monthly rent",
+          accountId: "a2",
+          pocketId: null,
+          categoryId: "bills",
+        },
+        {
+          id: "t13",
+          date: "2026-07-22",
+          amount: 85000,
+          type: "expense",
+          description: "Movie night",
+          accountId: "a1",
+          pocketId: "p2",
+          categoryId: "entertainment",
+        },
+        {
+          id: "t14",
+          date: "2026-07-25",
+          amount: 320000,
+          type: "expense",
+          description: "Groceries",
+          accountId: "a1",
+          pocketId: "p2",
+          categoryId: "groceries",
+        },
+        {
+          id: "t15",
+          date: "2026-07-28",
+          amount: 1000000,
+          type: "expense",
+          description: "Transfer to Emergency Fund",
+          accountId: "a2",
+          pocketId: "p1",
+          categoryId: "transfer",
+        },
+        {
+          id: "t16",
+          date: "2026-07-30",
+          amount: 30000,
+          type: "expense",
+          description: "Coffee run",
+          accountId: "a1",
+          pocketId: "p2",
+          categoryId: "coffee",
+        },
+      ];
+
+      const ACCOUNTS_BY_ID = Object.fromEntries(ACCOUNTS.map((a) => [a.id, a]));
+      const POCKETS_BY_ID = Object.fromEntries(POCKETS.map((p) => [p.id, p]));
+
+      const TODAY = new Date(2026, 6, 18); // July 18, 2026
+      let viewYear = 2026,
+        viewMonth = 6; // 0-indexed
+      let selectedDate = fmtISO(TODAY);
+
+      /* ================= HELPERS ================= */
+      function fmtISO(d) {
+        return d.toISOString().slice(0, 10);
+      }
+      function fmtFull(n) {
+        const sign = n < 0 ? "-" : "";
+        return sign + "Rp " + Math.abs(n).toLocaleString("id-ID");
+      }
+      function fmtCompact(n) {
+        const abs = Math.abs(n);
+        let out;
+        if (abs >= 1000000)
+          out = (abs / 1000000).toFixed(1).replace(/\.0$/, "") + "M";
+        else if (abs >= 1000) out = Math.round(abs / 1000) + "K";
+        else out = abs.toString();
+        return (n < 0 ? "-" : "") + "Rp" + out;
+      }
+      function txByDate(iso) {
+        return TRANSACTIONS.filter((t) => t.date === iso);
+      }
+      function dayTotals(iso) {
+        const txs = txByDate(iso);
+        let income = 0,
+          expense = 0;
+        txs.forEach((t) =>
+          t.type === "income" ? (income += t.amount) : (expense += t.amount),
+        );
+        return { income, expense, count: txs.length };
+      }
+
+      /* ================= RENDER: BALANCE ================= */
+      function renderBalance() {
+        const total = ACCOUNTS.reduce((s, a) => s + a.currentBalance, 0);
+        let monthIncome = 0,
+          monthExpense = 0;
+        TRANSACTIONS.forEach((t) => {
+          const d = new Date(t.date);
+          if (d.getFullYear() === viewYear && d.getMonth() === viewMonth) {
+            t.type === "income"
+              ? (monthIncome += t.amount)
+              : (monthExpense += t.amount);
+          }
+        });
+        document.getElementById("totalBalance").textContent = fmtFull(total);
+        document.getElementById("monthIncome").textContent =
+          fmtFull(monthIncome);
+        document.getElementById("monthExpense").textContent =
+          fmtFull(monthExpense);
+      }
+
+      /* ================= RENDER: ACCOUNTS ================= */
+      function renderAccounts() {
+        const row = document.getElementById("accountsRow");
+        row.innerHTML = ACCOUNTS.map(
+          (a) => `
+    <div class="acct-card ${a.color}">
+      <div class="acct-icon"><i class="ph-bold ${ICONS[a.iconSlug] || "ph-wallet"}"></i></div>
+      <p class="acct-name">${a.name}</p>
+      <p class="acct-type">${a.type}</p>
+      <p class="acct-balance num">${fmtFull(a.currentBalance)}<span class="acct-currency">${a.currency}</span></p>
+    </div>
+  `,
+        ).join("");
+      }
+
+      /* ================= RENDER: POCKETS ================= */
+      function renderPockets() {
+        const row = document.getElementById("pocketsRow");
+        row.innerHTML = POCKETS.map((p) => {
+          let footer = `<span class="badge">${p.type}</span>`;
+          if (p.autoAllocation === true)
+            footer += `<span class="badge on">Auto Allocation ON</span>`;
+          else if (p.autoAllocation === false)
+            footer += `<span class="badge off">Auto Allocation OFF</span>`;
+          return `
+    <div class="pocket-card">
+      <div class="pocket-top">
+        <div class="pocket-icon ${p.color}"><i class="ph-bold ${ICONS[p.iconSlug] || "ph-folder-simple"}"></i></div>
+        <p class="pocket-name">${p.name}</p>
+      </div>
+      <p class="pocket-balance num">${fmtFull(p.currentBalance)}</p>
+      <div class="pocket-divider"></div>
+      <div class="pocket-footer">${footer}</div>
+    </div>`;
+        }).join("");
+      }
+
+      /* ================= RENDER: CALENDAR ================= */
+      const MONTH_NAMES = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ];
+
+      function renderCalendar() {
+        document.getElementById("calMonthLabel").textContent =
+          `${MONTH_NAMES[viewMonth]} ${viewYear}`;
+        const grid = document.getElementById("calGrid");
+        const firstDay = new Date(viewYear, viewMonth, 1).getDay();
+        const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+        let cells = "";
+        for (let i = 0; i < firstDay; i++)
+          cells += `<div class="day-cell empty"></div>`;
+
+        for (let d = 1; d <= daysInMonth; d++) {
+          const iso = `${viewYear}-${String(viewMonth + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+          const { income, expense, count } = dayTotals(iso);
+          const isToday = iso === fmtISO(TODAY);
+          const isSelected = iso === selectedDate;
+          let cls = "day-cell";
+          let amtHtml = "";
+          let dotsHtml = "";
+          if (income > 0 && expense > 0) {
+            cls += " has-both";
+            const bigger = expense >= income ? expense : income;
+            amtHtml = `<span class="d-amt num">${expense >= income ? "▲" : "▼"} ${fmtCompact(bigger)}</span>`;
+          } else if (expense > 0) {
+            cls += " has-expense";
+            amtHtml = `<span class="d-amt num">▲ ${fmtCompact(expense)}</span>`;
+          } else if (income > 0) {
+            cls += " has-income";
+            amtHtml = `<span class="d-amt num">▼ ${fmtCompact(income)}</span>`;
+          }
+          if (expense >= 1000000 || income >= 1000000) cls += " big-amt";
+          if (isToday) cls += " today";
+          if (isSelected) cls += " selected";
+          if (income > 0) dotsHtml += `<i class="dot-income"></i>`;
+          if (expense > 0) dotsHtml += `<i class="dot-expense"></i>`;
+
+          cells += `<div class="${cls}" data-date="${iso}">
+        <span class="d-num">${d}</span>
+        ${amtHtml}
+        <div class="dots">${dotsHtml}</div>
+      </div>`;
+        }
+        grid.innerHTML = cells;
+
+        grid.querySelectorAll(".day-cell:not(.empty)").forEach((cell) => {
+          cell.addEventListener("click", () => {
+            selectedDate = cell.dataset.date;
+            renderCalendar();
+            openSheet(selectedDate);
+          });
+        });
+      }
+
+      document.getElementById("prevMonth").addEventListener("click", () => {
+        viewMonth--;
+        if (viewMonth < 0) {
+          viewMonth = 11;
+          viewYear--;
+        }
+        renderCalendar();
+        renderBalance();
+      });
+      document.getElementById("nextMonth").addEventListener("click", () => {
+        viewMonth++;
+        if (viewMonth > 11) {
+          viewMonth = 0;
+          viewYear++;
+        }
+        renderCalendar();
+        renderBalance();
+      });
+
+      /* ================= RENDER: RECENT TRANSACTIONS ================= */
+      function txCardHTML(t) {
+        const cat = CATEGORY[t.categoryId] || {
+          icon: "ph-circle",
+          name: "Other",
+        };
+        const acct = ACCOUNTS_BY_ID[t.accountId];
+        const pocket = POCKETS_BY_ID[t.pocketId];
+        return `
+    <div class="tx-card">
+      <div class="tx-icon ${acct ? acct.color : "fx-yellow"}"><i class="ph-bold ${cat.icon}"></i></div>
+      <div class="tx-mid">
+        <p class="tx-desc">${t.description}</p>
+        <div class="tx-meta">
+          <span class="tx-tag">${cat.name}</span>
+          <span class="tx-tag">${acct ? acct.name : "—"}</span>
+          ${pocket ? `<span class="tx-tag">${pocket.name}</span>` : ""}
+        </div>
+      </div>
+      <div class="tx-amt ${t.type}">${t.type === "income" ? "+" : "-"}${fmtFull(t.amount)}</div>
+    </div>`;
+      }
+
+      function fmtDayLabel(iso) {
+        const d = new Date(iso + "T00:00:00");
+        const isToday = iso === fmtISO(TODAY);
+        const wd = d.toLocaleDateString("en-US", { weekday: "long" });
+        const label = `${wd}, ${MONTH_NAMES[d.getMonth()]} ${d.getDate()}`;
+        return isToday ? `Today · ${label}` : label;
+      }
+
+      function renderRecent() {
+        const grouped = {};
+        TRANSACTIONS.forEach((t) => {
+          (grouped[t.date] = grouped[t.date] || []).push(t);
+        });
+        const dates = Object.keys(grouped)
+          .sort((a, b) => b.localeCompare(a))
+          .slice(0, 6);
+        const el = document.getElementById("recentList");
+        el.innerHTML = dates
+          .map(
+            (iso) => `
+    <div class="day-group">
+      <p class="day-group-label">${fmtDayLabel(iso)}</p>
+      ${grouped[iso].map(txCardHTML).join("")}
+    </div>
+  `,
+          )
+          .join("");
+      }
+
+      /* ================= BOTTOM SHEET ================= */
+      const sheet = document.getElementById("bottomSheet");
+      const backdrop = document.getElementById("sheetBackdrop");
+
+      function openSheet(iso) {
+        const txs = txByDate(iso);
+        const { income, expense } = dayTotals(iso);
+        document.getElementById("sheetTitle").textContent = fmtDayLabel(iso);
+        document.getElementById("sheetIncome").textContent = fmtFull(income);
+        document.getElementById("sheetExpense").textContent = fmtFull(expense);
+        const list = document.getElementById("sheetList");
+        list.innerHTML = txs.length
+          ? txs.map(txCardHTML).join("")
+          : `<div class="sheet-empty">No transactions on this day.</div>`;
+        sheet.classList.add("open");
+        backdrop.classList.add("show");
+      }
+      function closeSheet() {
+        sheet.classList.remove("open");
+        backdrop.classList.remove("show");
+      }
+      document
+        .getElementById("sheetClose")
+        .addEventListener("click", closeSheet);
+      backdrop.addEventListener("click", closeSheet);
+
+      /* ================= FAB / NAV (visual demo) ================= */
+      document.getElementById("fabBtn").addEventListener("click", () => {
+        openSheet(selectedDate);
+        document.getElementById("sheetTitle").textContent = "Add Transaction";
+        document.getElementById("sheetList").innerHTML =
+          `<div class="sheet-empty">Add Transaction screen goes here.</div>`;
+      });
+      document.querySelectorAll(".nav-item").forEach((item) => {
+        item.addEventListener("click", () => {
+          document
+            .querySelectorAll(".nav-item")
+            .forEach((i) => i.classList.remove("active"));
+          item.classList.add("active");
+        });
+      });
+
+      /* ================= PULL TO REFRESH ================= */
+      const scrollArea = document.getElementById("scrollArea");
+      const pullIndicator = document.getElementById("pullIndicator");
+      let touchStartY = 0,
+        pulling = false;
+
+      scrollArea.addEventListener(
+        "touchstart",
+        (e) => {
+          if (scrollArea.scrollTop <= 0) {
+            touchStartY = e.touches[0].clientY;
+            pulling = true;
+          }
+        },
+        { passive: true },
+      );
+
+      scrollArea.addEventListener(
+        "touchmove",
+        (e) => {
+          if (!pulling) return;
+          const dy = e.touches[0].clientY - touchStartY;
+          if (dy > 0) {
+            const h = Math.min(dy * 0.5, 56);
+            pullIndicator.style.height = h + "px";
+            if (h > 40) pullIndicator.classList.add("spin");
+            else pullIndicator.classList.remove("spin");
+          }
+        },
+        { passive: true },
+      );
+
+      scrollArea.addEventListener(
+        "touchend",
+        () => {
+          if (!pulling) return;
+          pulling = false;
+          const wasRefreshing = pullIndicator.classList.contains("spin");
+          pullIndicator.style.height = "0px";
+          pullIndicator.classList.remove("spin");
+          if (wasRefreshing) {
+            setTimeout(() => {
+              renderBalance();
+              renderAccounts();
+              renderPockets();
+            }, 300);
+          }
+        },
+        { passive: true },
+      );
+
+      /* ================= INIT ================= */
+      renderBalance();
+      renderAccounts();
+      renderPockets();
+      renderCalendar();
+      renderRecent();
+    </script>
+  </body>
+</html>

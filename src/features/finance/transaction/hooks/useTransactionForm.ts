@@ -17,7 +17,11 @@ export function useTransactionForm(
     entityName: "transaction",
     defaultValues: defaultTransaction,
     queryKey: queryKeys.transaction.detail(transactionId || ""),
-    invalidateQueryKey: queryKeys.transaction.lists(),
+    invalidateQueryKey: [
+      ...queryKeys.transaction.lists(),
+      ...queryKeys.accounts.all,
+      ...queryKeys.pockets.all,
+    ],
 
     getDetail: async (id: string) => await transactionService.getDetail(id),
     createFn: transactionService.create,

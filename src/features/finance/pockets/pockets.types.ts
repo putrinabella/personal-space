@@ -19,6 +19,7 @@ export interface PocketsEntry extends BaseItem, PocketsFormData {
   isAutoAllocationActive: boolean;
   allocationDay: string;
   color: string;
+  currentBalance: string;
 }
 
 export const defaultPockets: PocketsFormData = {
