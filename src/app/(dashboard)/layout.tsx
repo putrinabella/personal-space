@@ -17,7 +17,7 @@ export default function DashboardShellLayout({
 
       {/* Lapisan Gradient belakang dock */}
       <div className="fixed bottom-0 left-0 right-0 z-40 pointer-events-none flex justify-center">
-        <div className="w-full max-w-7xl h-24 bg-gradient-to-t from-base-100 via-base-100/80 to-transparent px-4 md:px-8" />
+        <div className="w-full max-w-7xl h-24 bg-linear-to-t from-base-100 via-base-100/80 to-transparent px-4 md:px-8" />
       </div>
 
       {/* Kontainer Dock Fixed Full max-w-7xl */}

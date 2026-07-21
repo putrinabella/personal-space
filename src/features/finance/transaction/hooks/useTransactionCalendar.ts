@@ -51,13 +51,13 @@ export function useTransactionCalendar(transactions: any[]) {
       const totalInc = day.summary.incomeTotal;
 
       if (totalInc > 0 && totalExp === 0) {
-        day.badgeText = `▲ Rp${(totalInc / 1000).toFixed(0)}K`;
+        day.badgeText = `${(totalInc / 1000).toFixed(0)}K`;
         day.badgeType = "income";
       } else if (totalExp > 0 && totalInc === 0) {
-        day.badgeText = `▼ Rp${(totalExp / 1000).toFixed(0)}K`;
+        day.badgeText = `${(totalExp / 1000).toFixed(0)}K`;
         day.badgeType = "expense";
       } else {
-        day.badgeText = `Rp${((totalInc - totalExp) / 1000).toFixed(0)}K`;
+        day.badgeText = `${((totalInc - totalExp) / 1000).toFixed(0)}K`;
         day.badgeType = "neutral";
       }
     });

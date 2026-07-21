@@ -1,17 +1,18 @@
 export interface CalendarItem {
   id: string;
   title: string;
-  amount?: number | string;
-  type?: "income" | "expense" | "neutral" | string;
+  description?: string; // Tambahkan sebagai alternatif jika dibutuhkan
+  amount: number | string; // Diubah dari amount?: menjadi wajib (menghilangkan tanda ?)
+  type: "income" | "expense" | "neutral" | string; // Diubah dari type?: menjadi wajib
   badges?: string[];
   iconSlug?: string;
   color?: string;
-  [key: string]: any; // Fleksibel untuk data tambahan (misal: rating movie, kcal food)
+  [key: string]: any;
 }
 
 export interface DayData {
-  dateStr: string; // Format "YYYY-MM-DD"
-  badgeText?: string; // misal: "▲ Rp450K", "1,200 kcal", "2 Movies"
+  dateStr: string;
+  badgeText?: string;
   badgeType?: "income" | "expense" | "neutral";
   hasIncome?: boolean;
   hasExpense?: boolean;
@@ -23,4 +24,4 @@ export interface DayData {
   items: CalendarItem[];
 }
 
-export type CalendarDataMap = Record<string, DayData>; // Key-nya "YYYY-MM-DD"
+export type CalendarDataMap = Record<string, DayData>;

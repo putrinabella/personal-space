@@ -1,6 +1,7 @@
 "use client";
 import { useAccountsAll } from "@/features/finance/accounts/hooks/useAccountsAll";
 import AccountCard from "@/features/finance/components/AccountCard";
+import BalanceSummarySection from "@/features/finance/components/BalanceSummarySection";
 import FinanceCard from "@/features/finance/components/FinanceCard";
 import TransactionCard from "@/features/finance/components/TransactionCard";
 import { usePocketsAll } from "@/features/finance/pockets/hooks/usePocketsAll";
@@ -54,28 +55,9 @@ export default function FinancePage() {
           <span className="hidden sm:block">New Entry</span>
         </CardBox>
       </header>
-      <CardBox className="p-4 md:p-6 flex flex-col gap-2" rounded="2xl">
-        <div className="flex flex-row justify-between">
-          <p className="text-body uppercase tracking-widest opacity-70">
-            Total Balance
-          </p>
-          <h2 className="heading-h2 font-black">Rp 22.780.000</h2>
-        </div>
-        <div className="flex gap-4">
-          <div className="bg-black/10 p-4 rounded-xl flex-1">
-            <p className="text-body flex items-center gap-1 opacity-70">
-              <TrendUpIcon /> Income (Jul)
-            </p>
-            <p className="text-body font-bold">Rp 5.500.000</p>
-          </div>
-          <div className="bg-black/10 p-4 rounded-xl flex-1">
-            <p className="text-body flex items-center gap-1 opacity-70">
-              <TrendUpIcon className="rotate-180" /> Expense (Jul)
-            </p>
-            <p className="text-body font-bold">Rp 5.720.000</p>
-          </div>
-        </div>
-      </CardBox>
+
+      <BalanceSummarySection />
+
       {/* Accounts Section */}
       <section className="flex flex-col gap-2">
         <div className="flex justify-between items-center">
