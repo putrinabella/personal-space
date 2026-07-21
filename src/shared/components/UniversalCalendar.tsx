@@ -106,7 +106,7 @@ export default function UniversalCalendar({
 
   return (
     <div className="w-full flex flex-col gap-3">
-      {title && <h2 className="text-xl font-black uppercase">{title}</h2>}
+      {title && <h2 className="heading-h2 uppercase">{title}</h2>}
 
       {/* Layout Responsif: Kalender & Detail Transaksi Bersampingan di Desktop */}
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
@@ -125,9 +125,9 @@ export default function UniversalCalendar({
               >
                 <CaretLeft size={18} weight="bold" />
               </button>
-              <span className="font-black text-lg sm:text-xl text-neutral">
+              <h3 className="heading-h3 font-black text-neutral">
                 {monthNames[month]} {year}
-              </span>
+              </h3>
               <button
                 onClick={nextMonth}
                 className="w-9 h-9 bg-white border-2 border-black rounded-xl flex items-center justify-center font-bold hover:scale-105 active:scale-95 transition-transform shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] cursor-pointer"
@@ -137,7 +137,7 @@ export default function UniversalCalendar({
             </div>
 
             {/* Day Names Row */}
-            <div className="grid grid-cols-7 text-center font-black text-neutral/60 text-sm">
+            <div className="grid grid-cols-7 text-center font-black text-neutral/60 text-data">
               {dayLabels.map((day, idx) => (
                 <div key={idx} className="py-1">
                   {day}
@@ -185,7 +185,7 @@ export default function UniversalCalendar({
                     onClick={() => handleCellClick(dayNum)}
                     className={`h-14 sm:h-16 rounded-2xl flex flex-col items-center justify-between p-1.5 transition-all cursor-pointer ${bgStyle} ${borderStyle} active:scale-95`}
                   >
-                    <span className="font-black text-sm text-neutral">
+                    <span className="font-black text-data text-neutral">
                       {dayNum}
                     </span>
 
@@ -222,7 +222,7 @@ export default function UniversalCalendar({
             </div>
 
             {/* Legend */}
-            <div className="flex items-center gap-4 pt-2 px-1 text-xs font-bold text-neutral">
+            <div className="flex items-center gap-4 pt-2 px-1 text-caption font-bold text-neutral">
               {legends.map((leg, idx) => (
                 <div key={idx} className="flex items-center gap-1.5">
                   <span className={`w-2.5 h-2.5 rounded-full ${leg.color}`} />
@@ -238,14 +238,14 @@ export default function UniversalCalendar({
           <CardBox
             color="base-100"
             rounded="3xl"
-            className="p-5 flex flex-col gap-4 border-4 sticky top-6 min-h-[460px]"
+            className="p-5 flex flex-col gap-4 border-4 sticky top-6 min-h-115"
           >
             <div className="flex justify-between items-start pb-2 border-b-2 border-black/10">
               <div>
                 <span className="text-caption font-bold uppercase tracking-widest text-base-content/60 block mb-0.5">
                   Selected Date Details
                 </span>
-                <h3 className="font-black text-lg text-neutral">
+                <h3 className="heading-h3 font-black text-neutral">
                   {isNaN(selectedDateObj.getTime())
                     ? "Select a date"
                     : selectedDateObj.toLocaleDateString("en-US", {
@@ -264,10 +264,10 @@ export default function UniversalCalendar({
                 {selectedDayData.summary.incomeTotal !== undefined &&
                   selectedDayData.summary.incomeTotal > 0 && (
                     <div className="p-3 bg-emerald-100 border-2 border-black rounded-2xl flex flex-col shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                      <span className="text-xs font-bold opacity-70">
+                      <span className="text-caption font-bold opacity-70 uppercase">
                         Income
                       </span>
-                      <span className="font-black text-sm text-emerald-800">
+                      <span className="text-body font-black text-emerald-800">
                         Rp{" "}
                         {selectedDayData.summary.incomeTotal.toLocaleString(
                           "id-ID",
@@ -279,10 +279,10 @@ export default function UniversalCalendar({
                 {selectedDayData.summary.expenseTotal !== undefined &&
                   selectedDayData.summary.expenseTotal > 0 && (
                     <div className="p-3 bg-rose-100 border-2 border-black rounded-2xl flex flex-col shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                      <span className="text-xs font-bold opacity-70">
+                      <span className="text-caption font-bold opacity-70 uppercase">
                         Expense
                       </span>
-                      <span className="font-black text-sm text-rose-800">
+                      <span className="text-body font-black text-rose-800">
                         Rp{" "}
                         {selectedDayData.summary.expenseTotal.toLocaleString(
                           "id-ID",
@@ -294,7 +294,7 @@ export default function UniversalCalendar({
             )}
 
             {/* List Item / Transaksi pada Tanggal Tersebut */}
-            <div className="flex flex-col gap-3 max-h-[340px] overflow-y-auto pr-1">
+            <div className="flex flex-col gap-3 max-h-85 overflow-y-auto pr-1">
               {selectedDayData?.items && selectedDayData.items.length > 0 ? (
                 selectedDayData.items.map((item) => (
                   <div
@@ -313,7 +313,7 @@ export default function UniversalCalendar({
                         />
                       </div>
                       <div className="flex flex-col min-w-0">
-                        <p className="font-black text-xs truncate text-neutral">
+                        <p className="text-data font-black truncate text-neutral">
                           {item.title}
                         </p>
                         {item.badges && item.badges.length > 0 && (
@@ -333,7 +333,7 @@ export default function UniversalCalendar({
 
                     {item.amount && (
                       <span
-                        className={`font-black text-xs shrink-0 ${
+                        className={`text-data font-black shrink-0 ${
                           item.type === "income"
                             ? "text-emerald-600"
                             : item.type === "expense"
@@ -355,7 +355,7 @@ export default function UniversalCalendar({
                 ))
               ) : (
                 <div className="flex flex-col items-center justify-center gap-2 py-16 text-center">
-                  <p className="text-sm font-bold text-neutral/50">
+                  <p className="text-body font-bold text-neutral/50">
                     No transactions on this date.
                   </p>
                 </div>
@@ -382,7 +382,7 @@ export default function UniversalCalendar({
                   <span className="text-caption font-bold uppercase tracking-widest text-base-content/60 block mb-0.5">
                     Calendar Details
                   </span>
-                  <h3 className="font-black text-base text-neutral">
+                  <h3 className="heading-h4 font-black text-neutral">
                     {selectedDateObj.toLocaleDateString("en-US", {
                       weekday: "long",
                       month: "long",
@@ -406,10 +406,10 @@ export default function UniversalCalendar({
                   {selectedDayData.summary.incomeTotal !== undefined &&
                     selectedDayData.summary.incomeTotal > 0 && (
                       <div className="p-3 bg-emerald-100 border-2 border-black rounded-2xl flex flex-col shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                        <span className="text-xs font-bold opacity-70">
+                        <span className="text-caption font-bold opacity-70 uppercase">
                           Income
                         </span>
-                        <span className="font-black text-sm text-emerald-800">
+                        <span className="text-body font-black text-emerald-800">
                           Rp{" "}
                           {selectedDayData.summary.incomeTotal.toLocaleString(
                             "id-ID",
@@ -421,10 +421,10 @@ export default function UniversalCalendar({
                   {selectedDayData.summary.expenseTotal !== undefined &&
                     selectedDayData.summary.expenseTotal > 0 && (
                       <div className="p-3 bg-rose-100 border-2 border-black rounded-2xl flex flex-col shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                        <span className="text-xs font-bold opacity-70">
+                        <span className="text-caption font-bold opacity-70 uppercase">
                           Expense
                         </span>
-                        <span className="font-black text-sm text-rose-800">
+                        <span className="text-body font-black text-rose-800">
                           Rp{" "}
                           {selectedDayData.summary.expenseTotal.toLocaleString(
                             "id-ID",
@@ -455,7 +455,7 @@ export default function UniversalCalendar({
                           />
                         </div>
                         <div className="flex flex-col min-w-0">
-                          <p className="font-black text-xs truncate text-neutral">
+                          <p className="text-data font-black truncate text-neutral">
                             {item.title}
                           </p>
                           {item.badges && item.badges.length > 0 && (
@@ -475,7 +475,7 @@ export default function UniversalCalendar({
 
                       {item.amount && (
                         <span
-                          className={`font-black text-xs shrink-0 ${
+                          className={`text-data font-black shrink-0 ${
                             item.type === "income"
                               ? "text-emerald-600"
                               : item.type === "expense"
@@ -497,7 +497,7 @@ export default function UniversalCalendar({
                   ))
                 ) : (
                   <div className="flex flex-col items-center gap-2 py-8 text-center">
-                    <p className="text-sm font-bold text-neutral/50">
+                    <p className="text-body font-bold text-neutral/50">
                       No activities logged on this date.
                     </p>
                   </div>

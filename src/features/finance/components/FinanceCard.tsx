@@ -19,7 +19,7 @@ export default function FinanceCard({
   return (
     <CardBox
       // 1. Set width yang tetap (w-48 atau min-w-[12rem]) agar semua kartu seragam
-      className="p-4 md:p-6 flex flex-col gap-2 w-48 min-w-48 shrink-0"
+      className="p-4 md:p-6 flex flex-col gap-3 w-48 min-w-48 shrink-0"
       rounded="2xl"
       color={item.color}
     >
@@ -30,7 +30,7 @@ export default function FinanceCard({
 
         <button
           onClick={() => setShowBalance(!showBalance)}
-          className="opacity-50 hover:opacity-100 transition-opacity p-1"
+          className="opacity-50 hover:opacity-100 transition-opacity p-1 cursor-pointer"
         >
           {showBalance ? <Eye size={20} /> : <EyeSlash size={20} />}
         </button>
@@ -38,17 +38,17 @@ export default function FinanceCard({
 
       {/* 2. Text container dengan break-words agar teks panjang turun ke bawah */}
       <div className="grow wrap-break-word">
-        <p className="font-black text-lg uppercase leading-tight">
+        <h4 className="heading-h4 uppercase leading-tight truncate">
           {item.name}
-        </p>
-        <p className="text-sm font-medium opacity-70 capitalize mt-0.5">
+        </h4>
+        <p className="text-caption font-semibold uppercase tracking-wider opacity-70 mt-0.5">
           {item.type} {label}
         </p>
       </div>
 
-      <div className="">
-        <p className="text-sm font-bold opacity-70">Rp</p>
-        <p className="text-xl font-black truncate">
+      <div className="flex items-center gap-1.5 min-w-0 pt-1">
+        <span className="text-data font-bold opacity-70 shrink-0">Rp</span>
+        <p className="heading-h3 font-black truncate">
           {showBalance
             ? formatRupiah(item.currentBalance).replace("Rp", "").trim()
             : "••••••••"}

@@ -219,7 +219,7 @@ export default function UniversalCalendar({
           <CardBox
             color="base-100"
             rounded="3xl"
-            className="p-5 flex flex-col gap-4 border-4 sticky top-6 min-h-[460px]"
+            className="p-5 flex flex-col gap-4 border-4 sticky top-6 min-h-115"
           >
             <div className="flex justify-between items-start pb-2 border-b-2 border-black/10">
               <div>
@@ -275,7 +275,7 @@ export default function UniversalCalendar({
             )}
 
             {/* List Item / Transaksi pada Tanggal Tersebut */}
-            <div className="flex flex-col gap-3 max-h-[340px] overflow-y-auto pr-1">
+            <div className="flex flex-col gap-3 max-h-85 overflow-y-auto pr-1">
               {selectedDayData?.items && selectedDayData.items.length > 0 ? (
                 selectedDayData.items.map((item) => (
                   <div
