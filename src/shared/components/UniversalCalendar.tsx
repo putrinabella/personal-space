@@ -5,6 +5,7 @@ import { CaretLeft, CaretRight, X } from "@phosphor-icons/react";
 import CardBox from "@/shared/components/CardBox";
 import { CalendarDataMap, DayData } from "../types/calendar";
 import TransactionCard from "@/features/finance/components/TransactionCard";
+import { formatRupiah } from "@/utils/rupiahFormatter";
 
 interface UniversalCalendarProps {
   data?: CalendarDataMap;
@@ -105,7 +106,7 @@ export default function UniversalCalendar({
   const renderTransactionList = () => {
     if (selectedDayData?.items && selectedDayData.items.length > 0) {
       return (
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3 pr-1 pb-2">
           {selectedDayData.items.map((trx) => (
             <TransactionCard key={trx.id} transaction={trx} />
           ))}
@@ -124,7 +125,7 @@ export default function UniversalCalendar({
 
   return (
     <div className="w-full flex flex-col gap-3">
-      {title && <h2 className="heading-h2 uppercase">{title}</h2>}
+      {title && <h2 className="heading-h3 uppercase">{title}</h2>}
 
       {/* Layout Responsif: Kalender & Detail Transaksi Bersampingan di Desktop */}
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
@@ -240,9 +241,9 @@ export default function UniversalCalendar({
           >
             <div className="flex justify-between items-start pb-2 border-b-2 border-black/10">
               <div>
-                <span className="text-caption font-bold uppercase tracking-widest text-base-content/60 block mb-0.5">
+                {/* <span className="text-caption font-bold uppercase tracking-widest text-base-content/60 block mb-0.5">
                   Selected Date Details
-                </span>
+                </span> */}
                 <h3 className="heading-h3 font-black text-neutral">
                   {isNaN(selectedDateObj.getTime())
                     ? "Select a date"
@@ -259,35 +260,53 @@ export default function UniversalCalendar({
             {/* Summary Boxes */}
             {selectedDayData?.summary && (
               <div className="grid grid-cols-2 gap-3">
-                {selectedDayData.summary.incomeTotal !== undefined &&
-                  selectedDayData.summary.incomeTotal > 0 && (
-                    <div className="p-3 bg-success/40 border-2 border-black rounded-2xl flex flex-col shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                      <span className="text-caption font-bold opacity-70 uppercase">
-                        Income
-                      </span>
-                      <span className="text-body font-black text-base-content">
-                        Rp{" "}
-                        {selectedDayData.summary.incomeTotal.toLocaleString(
-                          "id-ID",
-                        )}
-                      </span>
-                    </div>
-                  )}
+                {selectedDayData.summary.incomeTotal !== undefined && (
+                  <CardBox
+                    className="p-4 flex flex-col w-full"
+                    rounded="2xl"
+                    color="success/40"
+                    shadowSize="sm"
+                  >
+                    <span className="text-caption font-bold opacity-70 uppercase">
+                      Income
+                    </span>
+                    <span className="text-body font-black text-base-content">
+                      {formatRupiah(selectedDayData.summary.incomeTotal)}
+                    </span>
+                  </CardBox>
+                  // <div className="p-3 bg-success/40 border-2 border-black rounded-2xl flex flex-col shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                  //   <span className="text-caption font-bold opacity-70 uppercase">
+                  //     Income
+                  //   </span>
+                  //   <span className="text-body font-black text-base-content">
+                  //     {formatRupiah(selectedDayData.summary.incomeTotal)}
+                  //   </span>
+                  // </div>
+                )}
 
-                {selectedDayData.summary.expenseTotal !== undefined &&
-                  selectedDayData.summary.expenseTotal > 0 && (
-                    <div className="p-3 bg-secondary/40 border-2 border-black rounded-2xl flex flex-col shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                      <span className="text-caption font-bold opacity-70 uppercase">
-                        Expense
-                      </span>
-                      <span className="text-body font-black text-base-content">
-                        Rp{" "}
-                        {selectedDayData.summary.expenseTotal.toLocaleString(
-                          "id-ID",
-                        )}
-                      </span>
-                    </div>
-                  )}
+                {selectedDayData.summary.expenseTotal !== undefined && (
+                  <CardBox
+                    className="p-4 flex flex-col w-full"
+                    rounded="2xl"
+                    color="secondary/40"
+                    shadowSize="sm"
+                  >
+                    <span className="text-caption font-bold opacity-70 uppercase">
+                      Expense
+                    </span>
+                    <span className="text-body font-black text-base-content">
+                      {formatRupiah(selectedDayData.summary.expenseTotal)}
+                    </span>
+                  </CardBox>
+                  // <div className="p-3 bg-secondary/40 border-2 border-black rounded-2xl flex flex-col shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                  // <span className="text-caption font-bold opacity-70 uppercase">
+                  //   Expense
+                  // </span>
+                  // <span className="text-body font-black text-base-content">
+                  //   {formatRupiah(selectedDayData.summary.expenseTotal)}
+                  // </span>
+                  // </div>
+                )}
               </div>
             )}
 
@@ -337,35 +356,37 @@ export default function UniversalCalendar({
               {/* Summary Mobile */}
               {selectedDayData?.summary && (
                 <div className="grid grid-cols-2 gap-3">
-                  {selectedDayData.summary.incomeTotal !== undefined &&
-                    selectedDayData.summary.incomeTotal > 0 && (
-                      <div className="p-3 bg-success/40 border-2 border-black rounded-2xl flex flex-col shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                        <span className="text-caption font-bold opacity-70 uppercase">
-                          Income
-                        </span>
-                        <span className="text-body font-black text-base-content">
-                          Rp{" "}
-                          {selectedDayData.summary.incomeTotal.toLocaleString(
-                            "id-ID",
-                          )}
-                        </span>
-                      </div>
-                    )}
+                  {selectedDayData.summary.incomeTotal !== undefined && (
+                    <CardBox
+                      className="p-4 flex flex-col w-full"
+                      rounded="2xl"
+                      color="success/40"
+                      shadowSize="sm"
+                    >
+                      <span className="text-caption font-bold opacity-70 uppercase">
+                        Income
+                      </span>
+                      <span className="text-body font-black text-base-content">
+                        {formatRupiah(selectedDayData.summary.incomeTotal)}
+                      </span>
+                    </CardBox>
+                  )}
 
-                  {selectedDayData.summary.expenseTotal !== undefined &&
-                    selectedDayData.summary.expenseTotal > 0 && (
-                      <div className="p-3 bg-secondary/40 border-2 border-black rounded-2xl flex flex-col shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                        <span className="text-caption font-bold opacity-70 uppercase">
-                          Expense
-                        </span>
-                        <span className="text-body font-black text-base-content">
-                          Rp{" "}
-                          {selectedDayData.summary.expenseTotal.toLocaleString(
-                            "id-ID",
-                          )}
-                        </span>
-                      </div>
-                    )}
+                  {selectedDayData.summary.expenseTotal !== undefined && (
+                    <CardBox
+                      className="p-4 flex flex-col w-full"
+                      rounded="2xl"
+                      color="secondary/40"
+                      shadowSize="sm"
+                    >
+                      <span className="text-caption font-bold opacity-70 uppercase">
+                        Expense
+                      </span>
+                      <span className="text-body font-black text-base-content">
+                        {formatRupiah(selectedDayData.summary.expenseTotal)}
+                      </span>
+                    </CardBox>
+                  )}
                 </div>
               )}
 

@@ -1,51 +1,119 @@
 "use client";
 
 import { useState } from "react";
-import { Eye, EyeSlash, TrendUpIcon } from "@phosphor-icons/react";
+import { Eye, EyeSlash } from "@phosphor-icons/react";
 import CardBox from "@/shared/components/CardBox";
 
 export default function BalanceSummarySection() {
-  const [showBalance, setShowBalance] = useState(false);
+  const [showTotal, setShowTotal] = useState(false);
+  const [showIncome, setShowIncome] = useState(false);
+  const [showExpense, setShowExpense] = useState(false);
 
   return (
-    <CardBox className="p-4 md:p-6 flex flex-col gap-3" rounded="2xl">
-      <div className="flex flex-row justify-between items-center">
-        <p className="text-caption font-bold uppercase tracking-widest text-base-content/60">
-          Total Balance
-        </p>
-        <div className="flex items-center gap-3">
-          <h2 className="heading-h2 font-black text-base-content">
-            {showBalance ? "Rp 22.780.000" : "••••••••"}
-          </h2>
-          <button
-            onClick={() => setShowBalance(!showBalance)}
-            className="opacity-50 hover:opacity-100 transition-opacity p-1 cursor-pointer"
-            aria-label="Toggle Balance Visibility"
+    <CardBox
+      className="p-4 md:p-6 flex flex-col gap-4 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+      rounded="2xl"
+      color="base-100"
+    >
+      <div className="pb-2 border-b-2 border-black/10">
+        <div className="flex sm:hidden items-center justify-between gap-2">
+          <div className="flex flex-col gap-1 min-w-0">
+            <p className="text-caption font-black uppercase tracking-widest text-base-content/70">
+              Total Balance
+            </p>
+            <h2 className="heading-h2 font-black text-base-content tracking-tight truncate">
+              {showTotal ? "Rp 22.780.000" : "••••••••"}
+            </h2>
+          </div>
+          <CardBox
+            className="w-10 h-10 p-0 flex items-center justify-center font-bold shrink-0"
+            rounded="xl"
+            shadowSize="xs"
+            color="base-300"
+            onClick={() => setShowTotal(!showTotal)}
+            pressable
           >
-            {showBalance ? <Eye size={20} /> : <EyeSlash size={20} />}
-          </button>
+            {showTotal ? (
+              <Eye size={18} weight="bold" />
+            ) : (
+              <EyeSlash size={18} weight="bold" />
+            )}
+          </CardBox>
+        </div>
+
+        <div className="hidden sm:flex sm:items-center justify-between gap-2">
+          <p className="text-caption font-black uppercase tracking-widest text-base-content/70">
+            Total Balance
+          </p>
+          <div className="flex items-center justify-between sm:justify-end gap-3">
+            <h2 className="heading-h2 font-black text-base-content tracking-tight">
+              {showTotal ? "Rp 22.780.000" : "••••••••"}
+            </h2>
+            <CardBox
+              className="w-10 h-10 p-0 flex items-center justify-center font-bold shrink-0"
+              rounded="xl"
+              shadowSize="xs"
+              color="base-300"
+              onClick={() => setShowTotal(!showTotal)}
+              pressable
+            >
+              {showTotal ? (
+                <Eye size={18} weight="bold" />
+              ) : (
+                <EyeSlash size={18} weight="bold" />
+              )}
+            </CardBox>
+          </div>
         </div>
       </div>
 
-      <div className="flex gap-4">
-        {/* Kotak Income */}
-        <div className="bg-black/5 border-2 border-black/10 p-4 rounded-xl flex-1 flex flex-col gap-1">
-          <p className="text-caption font-bold flex items-center gap-1 uppercase tracking-wider text-base-content/60">
-            <TrendUpIcon /> Income (Jul)
-          </p>
-          <p className="text-body font-black text-success">
-            {showBalance ? "Rp 5.500.000" : "••••••••"}
-          </p>
+      <div className="grid grid-cols-2 gap-3 md:gap-4">
+        <div className="bg-success/40 border-2 border-black p-3 md:p-4 rounded-xl flex flex-col justify-between shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+          <div className="flex items-center justify-between">
+            <p className="text-caption font-black uppercase tracking-wider text-neutral/70 truncate">
+              Income (Jul)
+            </p>
+            <button
+              onClick={() => setShowIncome(!showIncome)}
+              className="w-7 h-7 md:w-8 md:h-8 rounded-lg bg-base-100 border-2 border-black flex items-center justify-center shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-px hover:-translate-y-px active:translate-x-0 active:translate-y-0 transition-all cursor-pointer shrink-0"
+              aria-label="Toggle Income Visibility"
+            >
+              {showIncome ? (
+                <Eye size={13} weight="bold" />
+              ) : (
+                <EyeSlash size={13} weight="bold" />
+              )}
+            </button>
+          </div>
+          <div>
+            <p className="text-sm md:text-lg font-black text-neutral tracking-tight">
+              {showIncome ? "Rp 5.500.000" : "••••••••"}
+            </p>
+          </div>
         </div>
 
-        {/* Kotak Expense */}
-        <div className="bg-black/5 border-2 border-black/10 p-4 rounded-xl flex-1 flex flex-col gap-1">
-          <p className="text-caption font-bold flex items-center gap-1 uppercase tracking-wider text-base-content/60">
-            <TrendUpIcon className="rotate-180" /> Expense (Jul)
-          </p>
-          <p className="text-body font-black text-secondary">
-            {showBalance ? "Rp 5.720.000" : "••••••••"}
-          </p>
+        <div className="bg-secondary/40 border-2 border-black p-3 md:p-4 rounded-xl flex flex-col justify-between shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+          <div className="flex items-center justify-between">
+            <p className="text-caption font-black uppercase tracking-wider text-neutral/70 truncate">
+              Expense (Jul)
+            </p>
+            <button
+              onClick={() => setShowExpense(!showExpense)}
+              className="w-7 h-7 md:w-8 md:h-8 rounded-lg bg-base-100 border-2 border-black flex items-center justify-center shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-px hover:-translate-y-px active:translate-x-0 active:translate-y-0 transition-all cursor-pointer shrink-0"
+              aria-label="Toggle Expense Visibility"
+            >
+              {showExpense ? (
+                <Eye size={13} weight="bold" />
+              ) : (
+                <EyeSlash size={13} weight="bold" />
+              )}
+            </button>
+          </div>
+          <div>
+            <p className="text-sm md:text-lg font-black text-neutral tracking-tight">
+              {showExpense ? "Rp 5.720.000" : "••••••••"}
+            </p>
+          </div>
         </div>
       </div>
     </CardBox>

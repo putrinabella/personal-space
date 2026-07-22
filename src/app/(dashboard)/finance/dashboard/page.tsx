@@ -112,7 +112,7 @@ export default function FinancePage() {
       <section className="flex flex-col gap-2">
         <UniversalCalendar
           data={calendarData}
-          title={`Financial Calendar (${selectedMonth})`}
+          title={""}
           onMonthChange={(yearMonth) => setSelectedMonth(yearMonth)}
         />
       </section>

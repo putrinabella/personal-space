@@ -8,7 +8,7 @@ interface CardBoxProps {
   children: React.ReactNode;
   color?: DaisyColor | string;
   rounded?: "full" | "box" | "3xl" | "2xl" | "xl" | "lg" | "md" | "none";
-  shadowSize?: "sm" | "md" | "lg";
+  shadowSize?: "xs" | "sm" | "md" | "lg";
   href?: string;
   onClick?: () => void;
   className?: string;
@@ -26,8 +26,20 @@ export default function CardBox({
   pressable,
 }: CardBoxProps) {
   const isHex = color.startsWith("#");
-  const bgClass =
-    !isHex && isDaisyColor(color) ? bgMap[color as DaisyColor] : "";
+
+  // Periksa apakah format mengandung opasitas kustom (contoh: "success/40")
+  const hasOpacitySlash = color.includes("/");
+
+  let bgClass = "";
+  if (isHex) {
+    bgClass = "";
+  } else if (hasOpacitySlash) {
+    // Jika formatnya seperti "success/40", ubah menjadi kelas Tailwind "bg-success/45" atau gunakan langsung
+    bgClass = `bg-${color}`;
+  } else if (isDaisyColor(color)) {
+    bgClass = bgMap[color as DaisyColor];
+  }
+
   const customStyle = isHex ? { backgroundColor: color } : {};
 
   const roundedClassMap = {
@@ -43,6 +55,7 @@ export default function CardBox({
   const roundedClass = roundedClassMap[rounded];
 
   const shadowClassMap = {
+    xs: "shadow-[2px_2px_0px_rgba(74,62,61,1)]",
     sm: "shadow-[4px_4px_0px_rgba(74,62,61,1)]",
     md: "shadow-[6px_6px_0px_rgba(74,62,61,1)]",
     lg: "shadow-[8px_8px_0px_rgba(74,62,61,1)]",
