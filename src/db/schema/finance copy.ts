@@ -3,10 +3,7 @@ import {
   uuid,
   text,
   numeric,
-  integer,
-  date,
   boolean,
-  primaryKey,
   timestamp,
   pgSchema,
 } from "drizzle-orm/pg-core";

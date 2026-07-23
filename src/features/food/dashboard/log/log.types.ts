@@ -31,7 +31,7 @@ export const defaultLogs: LogFormData = {
   diningTypeId: "",
 };
 
-export const validateLogs = (payload: LogFormData): string[] => {
+export const validateLogs = (): string[] => {
   const errors: string[] = [];
   return errors;
 };

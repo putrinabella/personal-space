@@ -7,7 +7,7 @@ import {
   tags,
   restaurants,
 } from "@/db/schema/food";
-import { sql, and, eq, AnyColumn, isNull, ilike } from "drizzle-orm";
+import { sql, and, eq, AnyColumn, isNull } from "drizzle-orm";
 import { sendPaginatedResponse, sendStandardResponse } from "@/lib/apiResponse";
 function getTableSchema(type: string) {
   switch (type) {

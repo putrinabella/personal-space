@@ -3,7 +3,7 @@ import { useAccountsAll } from "@/features/finance/accounts/hooks/useAccountsAll
 import { usePocketsAll } from "@/features/finance/pockets/hooks/usePocketsAll";
 import { useTransactionAll } from "@/features/finance/transaction/hooks/useTransactionAll";
 import CardBox from "@/shared/components/CardBox";
-import { WalletIcon, PlusIcon, TrendUpIcon } from "@phosphor-icons/react";
+import { PlusIcon, TrendUpIcon } from "@phosphor-icons/react";
 
 export default function FinancePage() {
   const { data: accounts } = useAccountsAll();
@@ -20,8 +20,8 @@ export default function FinancePage() {
             Asset Narrative
           </h1>
           <p className="text-base-content mt-2 text-body md:text-base font-medium italic">
-            "Documenting the journey of resources, grounding every humble
-            pursuit."
+            &quot;Documenting the journey of resources, grounding every humble
+            pursuit.&quot;
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-3">

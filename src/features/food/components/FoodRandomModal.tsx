@@ -33,7 +33,7 @@ export const FoodRandomModal = ({
                 Random Pick
               </span>
               <h2 className="text-xl font-black text-base-content">
-                Today's Recommendation
+                Today&apos;s Recommendation
               </h2>
             </div>
             <button

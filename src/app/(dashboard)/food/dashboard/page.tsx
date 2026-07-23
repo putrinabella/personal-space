@@ -74,7 +74,7 @@ export default function FoodView() {
     data: randomFood,
     refetch: fetchRandom,
     isFetching: loadingRandom,
-    error: randomError,
+    // error: randomError,
   } = useRandomFood(showRandomModal, activeFilters);
 
   const handleRoll = (e?: React.MouseEvent) => {
@@ -100,7 +100,7 @@ export default function FoodView() {
             Culinary Archive
           </h1>
           <p className="text-base-content mt-2 text-body md:text-base font-medium italic">
-            "Curating flavors, documenting the soul of every bite."
+            &quot;Curating flavors, documenting the soul of every bite.&quot;
           </p>
         </div>
 

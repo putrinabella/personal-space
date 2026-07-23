@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Check, ChevronDown, Eye, EyeOff, type LucideIcon } from "lucide-react";
 import type { ChangeEvent } from "react";
+import Image from "next/image";
 
 type BaseOption = {
   label: string;
@@ -163,7 +164,7 @@ const FormInput = ({
   const [, setWarning] = useState<string | null>(null);
   const flattenOptions = (): string[] => {
     if (!options) return [];
-    let list: string[] = [];
+    const list: string[] = [];
 
     options.forEach((opt) => {
       if (typeof opt === "string") list.push(opt);
@@ -357,11 +358,19 @@ const FormInput = ({
               }`}
               >
                 {opt.image ? (
-                  <img
-                    src={opt.image}
-                    alt={opt.label}
-                    className="w-full h-full object-cover rounded-xl"
-                  />
+                  // <img
+                  //   src={opt.image}
+                  //   alt={opt.label}
+                  //   className="w-full h-full object-cover rounded-xl"
+                  // />
+                  <div className="relative w-full h-full">
+                    <Image
+                      src={opt.image}
+                      alt={opt.label || "Image option"}
+                      fill
+                      className="object-cover rounded-xl"
+                    />
+                  </div>
                 ) : (
                   opt.initials || opt.label?.slice(0, 2)
                 )}
@@ -667,10 +676,18 @@ const FormInput = ({
                         >
                           <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center overflow-hidden text-data font-bold text-primary">
                             {opt.image ? (
-                              <img
+                              // <img
+                              //   src={opt.image}
+                              //   alt={opt.label || "Image option"}
+                              //   loading="lazy"
+                              //   decoding="async"
+                              //   width={36}
+                              //   height={36}
+                              //   className="w-full h-full rounded-full object-cover"
+                              // />
+                              <Image
                                 src={opt.image}
-                                loading="lazy"
-                                decoding="async"
+                                alt={opt.label || "Image option"}
                                 width={36}
                                 height={36}
                                 className="w-full h-full rounded-full object-cover"

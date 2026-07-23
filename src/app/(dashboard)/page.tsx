@@ -3,15 +3,7 @@
 import { createClient } from "@/lib/supabase/client";
 import CardBox from "@/shared/components/CardBox";
 import { useLogout } from "@/shared/hooks/use-logout";
-import {
-  Hamburger,
-  Wallet,
-  FilmStrip,
-  SignOut,
-  CalendarBlank,
-  CircleNotch,
-  Sparkle,
-} from "@phosphor-icons/react";
+import { SignOut, Sparkle } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
 
 export default function HomePage() {
@@ -40,7 +32,7 @@ export default function HomePage() {
           Eunoia
         </h1>
         <p className="text-body font-medium italic mt-3 text-base-content/80">
-          "One Home for Everything That Matters."
+          &quot;One Home for Everything That Matters.&quot;
         </p>
       </div>
 

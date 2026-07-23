@@ -4,7 +4,7 @@ import CardBox from "@/shared/components/CardBox";
 import CardHeader from "@/shared/components/CardHeader";
 import FormInput from "@/shared/components/FormInput";
 import { MapPinAreaIcon } from "@phosphor-icons/react/dist/ssr";
-import { Check, ArrowLeft, X } from "@phosphor-icons/react";
+import { Check, X } from "@phosphor-icons/react";
 import { useRouter } from "next/navigation";
 import { useRestaurantsForm } from "@/features/food/restaurants/hooks/useRestaurantForm";
 

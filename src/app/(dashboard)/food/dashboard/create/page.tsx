@@ -4,7 +4,7 @@ import { useState } from "react";
 import CardBox from "@/shared/components/CardBox";
 import CardHeader from "@/shared/components/CardHeader";
 import FormInput from "@/shared/components/FormInput";
-import { ForkKnife, Check, ArrowLeft, X } from "@phosphor-icons/react";
+import { ForkKnife, Check, X } from "@phosphor-icons/react";
 import { useRouter } from "next/navigation";
 import { useCategoryAll } from "@/features/food/category/hooks/useCategoryAll";
 import { useFoodAll } from "@/features/food/dashboard/hooks/useFoodAll";

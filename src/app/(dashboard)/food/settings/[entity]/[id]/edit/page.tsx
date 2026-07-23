@@ -3,13 +3,7 @@
 import { useParams, useRouter } from "next/navigation";
 import CardBox from "@/shared/components/CardBox";
 import CardHeader from "@/shared/components/CardHeader";
-import {
-  Check,
-  ArrowLeft,
-  Plus,
-  PencilSimpleIcon,
-  X,
-} from "@phosphor-icons/react";
+import { Check, PencilSimpleIcon, X } from "@phosphor-icons/react";
 import { useEntityForm } from "@/features/food/hooks/useEntityForm";
 import { EntityFields } from "@/features/food/components/EntityField";
 

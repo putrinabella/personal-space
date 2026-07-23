@@ -3,7 +3,7 @@
 import { useParams, useRouter } from "next/navigation";
 import CardBox from "@/shared/components/CardBox";
 import CardHeader from "@/shared/components/CardHeader";
-import { Check, ArrowLeft, Plus, X } from "@phosphor-icons/react";
+import { Check, Plus, X } from "@phosphor-icons/react";
 import { useEntityForm } from "@/features/finance/hooks/useEntityForm";
 import { EntityFields } from "@/features/finance/components/EntityField";
 

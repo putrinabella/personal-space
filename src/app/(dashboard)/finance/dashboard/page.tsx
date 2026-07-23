@@ -1,27 +1,16 @@
 "use client";
 import { useAccountsAll } from "@/features/finance/accounts/hooks/useAccountsAll";
-import AccountCard from "@/features/finance/components/AccountCard";
 import BalanceSummarySection from "@/features/finance/components/BalanceSummarySection";
 import FinanceCard from "@/features/finance/components/FinanceCard";
-import TransactionCard from "@/features/finance/components/TransactionCard";
 import { usePocketsAll } from "@/features/finance/pockets/hooks/usePocketsAll";
 import { useSumarriesAll } from "@/features/finance/summaries/hooks/useSumarriesAll";
 import { useTransactionAll } from "@/features/finance/transaction/hooks/useTransactionAll";
 import { calculateTransactionCalendar } from "@/features/finance/transaction/hooks/useTransactionCalendar";
-import { useTransactionList } from "@/features/finance/transaction/hooks/useTransactionList";
 import CardBox from "@/shared/components/CardBox";
 import DataSection from "@/shared/components/DataSection";
 import UniversalCalendar from "@/shared/components/UniversalCalendar";
 import { getCurrentYearMonth } from "@/utils/dateFormatter";
-import { formatRupiah } from "@/utils/rupiahFormatter";
-import {
-  WalletIcon,
-  PlusIcon,
-  TrendUpIcon,
-  ArrowRightIcon,
-  Eye,
-  EyeSlash,
-} from "@phosphor-icons/react";
+import { PlusIcon, ArrowRightIcon } from "@phosphor-icons/react";
 import { useMemo, useState } from "react";
 
 export default function FinancePage() {

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useMemo } from "react";
 import { CaretLeft, CaretRight, X } from "@phosphor-icons/react";
 import CardBox from "@/shared/components/CardBox";
 import { CalendarDataMap, DayData } from "../types/calendar";
@@ -38,18 +38,43 @@ export default function UniversalCalendar({
     return `${y}-${m}`;
   };
 
-  const [selectedDateStr, setSelectedDateStr] = useState<string>(todayStr);
+  // State untuk tanggal yang dipilih user secara manual
+  const [manualSelectedDateStr, setManualSelectedDateStr] = useState<
+    string | null
+  >(null);
   const [isMobileModalOpen, setIsMobileModalOpen] = useState(false);
+
+  // Menentukan selectedDateStr secara reaktif tanpa useEffect (mencegah cascading renders)
+  const selectedDateStr = useMemo(() => {
+    if (manualSelectedDateStr) {
+      // Pastikan manual selected masih di bulan yang sama dengan currentDate
+      const [manYear, manMonth] = manualSelectedDateStr.split("-").map(Number);
+      if (manYear === year && manMonth === month + 1) {
+        return manualSelectedDateStr;
+      }
+    }
+
+    const formattedMonth = String(month + 1).padStart(2, "0");
+    const currentYearMonth = `${year}-${formattedMonth}`;
+    const todayYearMonth = formatYearMonth(new Date());
+
+    if (currentYearMonth === todayYearMonth) {
+      return todayStr;
+    }
+    return `${currentYearMonth}-01`;
+  }, [manualSelectedDateStr, year, month, todayStr]);
 
   const prevMonth = () => {
     const newDate = new Date(year, month - 1, 1);
     setCurrentDate(newDate);
+    setManualSelectedDateStr(null); // Reset manual select saat ganti bulan
     if (onMonthChange) onMonthChange(formatYearMonth(newDate));
   };
 
   const nextMonth = () => {
     const newDate = new Date(year, month + 1, 1);
     setCurrentDate(newDate);
+    setManualSelectedDateStr(null); // Reset manual select saat ganti bulan
     if (onMonthChange) onMonthChange(formatYearMonth(newDate));
   };
 
@@ -72,24 +97,12 @@ export default function UniversalCalendar({
   ];
   const dayLabels = ["S", "M", "T", "W", "T", "F", "S"];
 
-  useEffect(() => {
-    const formattedMonth = String(month + 1).padStart(2, "0");
-    const currentYearMonth = `${year}-${formattedMonth}`;
-    const todayYearMonth = formatYearMonth(new Date());
-
-    if (currentYearMonth === todayYearMonth) {
-      setSelectedDateStr(todayStr);
-    } else {
-      setSelectedDateStr(`${currentYearMonth}-01`);
-    }
-  }, [currentDate, year, month, todayStr]);
-
   const handleCellClick = (dayNum: number) => {
     const formattedDay = String(dayNum).padStart(2, "0");
     const formattedMonth = String(month + 1).padStart(2, "0");
     const dateStr = `${year}-${formattedMonth}-${formattedDay}`;
 
-    setSelectedDateStr(dateStr);
+    setManualSelectedDateStr(dateStr);
 
     if (window.innerWidth < 768) {
       setIsMobileModalOpen(true);
@@ -102,7 +115,7 @@ export default function UniversalCalendar({
   const selectedDateObj = new Date(selectedDateStr + "T00:00:00");
   const selectedDayData = data[selectedDateStr];
 
-  // Helper untuk merender isi list transaksi menggunakan TransactionCard agar kodenya DRY (Don't Repeat Yourself)
+  // Helper untuk merender isi list transaksi menggunakan TransactionCard
   const renderTransactionList = () => {
     if (selectedDayData?.items && selectedDayData.items.length > 0) {
       return (
@@ -122,7 +135,6 @@ export default function UniversalCalendar({
       </div>
     );
   };
-
   return (
     <div className="w-full flex flex-col gap-3">
       {title && <h2 className="heading-h3 uppercase">{title}</h2>}

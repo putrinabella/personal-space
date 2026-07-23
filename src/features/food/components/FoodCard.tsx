@@ -125,7 +125,7 @@ export const FoodCard = ({ food, onDetailClick }: FoodCardProps) => {
       {food.latestLog?.reviewText && (
         <div className="flex items-start gap-2.5 pl-3 border-l-2 border-base-300 text-caption text-base-content">
           <p className="line-clamp-2 flex-1 text-left">
-            "{food.latestLog.reviewText}"
+            &quot;{food.latestLog.reviewText}&quot;
           </p>
           <span className="text-caption font-bold text-base-content uppercase whitespace-nowrap shrink-0">
             {formatDateIndo(food.latestLog.dateVisited, true)}

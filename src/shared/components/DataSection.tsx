@@ -4,7 +4,7 @@ import { IndicatorLoading } from "./IndicatorLoading";
 import { IndicatorError } from "./IndicatorError";
 import { IndicatorEmpty } from "./IndicatorEmptyData";
 
-interface DataSectionProps<T> {
+interface DataSectionProps {
   loading: boolean;
   error: boolean | Error | null;
   data: any;
@@ -25,7 +25,7 @@ interface DataSectionProps<T> {
   icon?: LucideIcon;
 }
 
-export default function DataSection<T>({
+export default function DataSection({
   loading,
   error,
   data,
@@ -37,7 +37,7 @@ export default function DataSection<T>({
   onRetry,
   description = "There doesn't seem to be any content yet. Once items are added, they'll show up here.",
   icon,
-}: DataSectionProps<T>) {
+}: DataSectionProps) {
   if (loading) {
     if (LoadingComponent) return <LoadingComponent />;
     return <IndicatorLoading text="Just a moment..." />;

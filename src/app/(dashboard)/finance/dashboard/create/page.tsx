@@ -1,13 +1,12 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import CardBox from "@/shared/components/CardBox";
 import CardHeader from "@/shared/components/CardHeader";
 import FormInput from "@/shared/components/FormInput";
 import {
   Wallet,
   Check,
-  ArrowLeft,
   ArrowDownRight,
   ArrowUpRight,
   X,
@@ -21,13 +20,13 @@ import SelectionItem from "@/shared/components/SelectionItem";
 
 export default function CreateTransactionPage() {
   const router = useRouter();
-  const [expandedParentId, setExpandedParentId] = useState<string | null>(null);
   const { data, setField, handleSubmit, saving } = useTransactionForm();
 
-  // Fetch data account & pocket
+  // Fetch data account, pocket, & categories
   const { data: accounts } = useAccountsAll();
   const { data: pockets } = usePocketsAll();
   const { data: categories } = useCategoriesAll();
+
   // Mencari informasi saldo dari akun yang dipilih
   const selectedAccount = useMemo(
     () => accounts.find((a) => a.id === data.accountId),
@@ -35,24 +34,31 @@ export default function CreateTransactionPage() {
   );
 
   // Mencari informasi saldo dari pocket yang dipilih
-  const selectedPocket = useMemo(
-    () => pockets.find((p) => p.id === data.pocketId),
-    [pockets, data.pocketId],
-  );
+  // const selectedPocket = useMemo(
+  //   () => pockets.find((p) => p.id === data.pocketId),
+  //   [pockets, data.pocketId],
+  // );
+
   const filteredCategories = useMemo(
     () => categories.filter((cat) => cat.type === data.type),
     [categories, data.type],
   );
-  useEffect(() => {
-    if (categories.length > 0 && data.type === "expense") {
+
+  // State interaktif untuk manual toggle parent kategori
+  const [manualExpandedId, setManualExpandedId] = useState<string | null>(null);
+
+  // Menentukan expanded parent secara reaktif tanpa useEffect (mencegah cascading renders)
+  const expandedParentId = useMemo(() => {
+    if (manualExpandedId) return manualExpandedId;
+    if (data.type === "expense" && categories.length > 0) {
       const firstExpenseParent = categories.find(
         (cat) => cat.type === "expense" && !cat.parentId,
       );
-      if (firstExpenseParent) {
-        setExpandedParentId(firstExpenseParent.id);
-      }
+      return firstExpenseParent ? firstExpenseParent.id : null;
     }
-  }, [categories, data.type]);
+    return null;
+  }, [manualExpandedId, categories, data.type]);
+
   return (
     <div className="flex flex-col gap-8 max-w-7xl mx-auto">
       <CardHeader title="NEW TRANSACTION" icon={Wallet} color="primary" />
@@ -72,6 +78,7 @@ export default function CreateTransactionPage() {
             <ArrowDownRight size={18} /> Income
           </button>
         </div>
+
         {/* ACCOUNT SELECTION */}
         <div className="space-y-2">
           <div className="flex justify-between items-center">
@@ -101,15 +108,15 @@ export default function CreateTransactionPage() {
             viewType="card"
             selectedId={data.categoryId}
             onSelect={(item) => setField("categoryId", item.id)}
-            // Tambahkan logic ini jika komponen SelectionItem mendukungnya
             expandedParentId={expandedParentId}
             onToggleParent={(parentId) =>
-              setExpandedParentId((prev) =>
+              setManualExpandedId((prev) =>
                 prev === parentId ? null : parentId,
               )
             }
           />
         </div>
+
         {/* POCKET & EXTRA INFO */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormInput
@@ -128,6 +135,7 @@ export default function CreateTransactionPage() {
             onChange={(val) => setField("amount", val)}
           />
         </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormInput
             label="Date"
@@ -142,8 +150,8 @@ export default function CreateTransactionPage() {
             onChange={(val) => setField("description", val)}
           />
         </div>
-        {/* ACTIONS */}
 
+        {/* ACTIONS */}
         <div className="flex flex-col md:flex-row gap-4 pt-4">
           <CardBox
             className="px-6 py-3 flex items-center justify-center gap-2 font-bold flex-1"
@@ -159,7 +167,7 @@ export default function CreateTransactionPage() {
                 <Check size={18} /> Confirm Transaction
               </>
             )}
-          </CardBox>{" "}
+          </CardBox>
           <CardBox
             className="px-6 py-3 flex items-center justify-center gap-2 font-bold flex-1"
             rounded="xl"

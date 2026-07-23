@@ -1,14 +1,6 @@
 import IconRenderer from "./IconRenderer";
 import ActionButton from "./ActionButton";
 import { Pencil, Trash } from "@phosphor-icons/react";
-import { BaseItem } from "@/shared/types/base.types";
-
-type Props<T extends BaseItem> = {
-  data: T[];
-  viewType: "list" | "card";
-  onEdit?: (item: T) => void;
-  onDelete?: (item: T) => void;
-};
 
 export default function DataRenderer({
   data,

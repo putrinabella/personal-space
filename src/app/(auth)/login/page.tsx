@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import CardBox from "@/shared/components/CardBox";
 import FormInput from "@/shared/components/FormInput";
-import { ForkKnife, WarningCircle, CircleNotch } from "@phosphor-icons/react";
+import { WarningCircle, CircleNotch } from "@phosphor-icons/react";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");

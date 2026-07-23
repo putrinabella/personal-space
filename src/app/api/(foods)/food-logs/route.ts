@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { db } from "@/db";
 import { foods, foodLogs, foodLogTags } from "@/db/schema/food";
-import { eq, desc, and, sql } from "drizzle-orm";
+import { eq, desc, sql } from "drizzle-orm";
 import { sendPaginatedResponse, sendStandardResponse } from "@/lib/apiResponse";
 
 export async function GET(request: NextRequest) {

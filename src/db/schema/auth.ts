@@ -7,7 +7,7 @@ export const users = authSchema.table(
   {
     id: uuid("id").primaryKey(),
   },
-  (table) => {
-    return {};
-  },
+  // (table) => {
+  //   return {};
+  // },
 );

@@ -10,10 +10,8 @@ import {
   Hamburger,
   MapPin,
   MapPinAreaIcon,
-  PlusIcon,
   Star,
 } from "@phosphor-icons/react";
-import Link from "next/link";
 import { useState } from "react";
 
 export default function FoodView() {
@@ -22,7 +20,7 @@ export default function FoodView() {
   const {
     data: foodLogs,
     loading,
-    error,
+    // error,
     total,
     lastPage,
     perPage,
@@ -38,7 +36,7 @@ export default function FoodView() {
             Culinary Archive
           </h1>
           <p className="text-slate-500 mt-2 text-sm md:text-base font-medium italic">
-            "Curating flavors, documenting the soul of every bite."
+            &quot;Curating flavors, documenting the soul of every bite.&quot;
           </p>
         </div>
 

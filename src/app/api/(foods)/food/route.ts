@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { db } from "@/db";
 import { foods } from "@/db/schema/food";
-import { eq, sql, desc, and } from "drizzle-orm";
+import { eq, sql, desc } from "drizzle-orm";
 import { sendPaginatedResponse, sendStandardResponse } from "@/lib/apiResponse";
 import { validate as validateUuid } from "uuid";
 export async function GET(request: NextRequest) {

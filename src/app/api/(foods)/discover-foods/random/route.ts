@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { and, desc, eq, gte, ilike, lte, sql, count, or } from "drizzle-orm";
+import { and, desc, eq, ilike, sql, count, or } from "drizzle-orm";
 import { db } from "@/db";
 import {
   foods,

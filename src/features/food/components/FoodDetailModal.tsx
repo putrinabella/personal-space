@@ -118,7 +118,7 @@ export const FoodDetailModal = ({ food, isOpen, onClose }: ModalProps) => {
 
                         {log.reviewText && (
                           <p className="text-caption text-base-content leading-relaxed border-t border-base-300/70 pt-2.5">
-                            "{log.reviewText}"
+                            &quot;{log.reviewText}&quot;
                           </p>
                         )}
                       </div>
