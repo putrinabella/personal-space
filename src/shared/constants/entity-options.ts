@@ -129,8 +129,8 @@ export const ICON_LIBRARY = {
   ],
 };
 export const CURRENCY_OPTIONS = [
-  { label: "IDR (Indonesian Rupiah)", value: "IDR" },
-  { label: "USD (US Dollar)", value: "USD" },
-  { label: "JPY (Japanese Yen)", value: "JPY" },
-  { label: "EUR (Euro)", value: "EUR" },
+  { label: "IDR", value: "IDR" },
+  { label: "USD", value: "USD" },
+  { label: "JPY", value: "JPY" },
+  { label: "EUR ", value: "EUR" },
 ];
