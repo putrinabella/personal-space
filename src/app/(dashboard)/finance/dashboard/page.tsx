@@ -98,9 +98,12 @@ export default function FinancePage() {
         <section className="flex flex-col gap-2">
           <div className="flex justify-between items-center">
             <h2 className="text-body font-black uppercase">Pockets</h2>
-            <span className="text-sm font-bold flex flex-row gap-2 items-center cursor-pointer hover:underline">
+            <Link
+              href="/finance/dashboard/pocket"
+              className="text-sm font-bold flex flex-row gap-2 items-center cursor-pointer hover:underline"
+            >
               See all <ArrowRightIcon />
-            </span>
+            </Link>
           </div>
           <DataSection
             loading={loadingPocket}
