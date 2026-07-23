@@ -1,13 +1,48 @@
 "use client";
-
 import { useState } from "react";
 import { Eye, EyeSlash } from "@phosphor-icons/react";
 import CardBox from "@/shared/components/CardBox";
+import { formatRupiah } from "@/utils/rupiahFormatter";
 
-export default function BalanceSummarySection() {
+interface BalanceSummarySectionProps {
+  summary?: any | null; // Menerima 1 objek data summary tunggal
+  selectedMonth?: string; // Format "YYYY-MM", contoh: "2026-07"
+}
+
+export default function BalanceSummarySection({
+  summary,
+  selectedMonth,
+}: BalanceSummarySectionProps) {
   const [showTotal, setShowTotal] = useState(false);
   const [showIncome, setShowIncome] = useState(false);
   const [showExpense, setShowExpense] = useState(false);
+
+  // Ambil nilai langsung dari objek summary tunggal
+  const currentIncome = Number(summary?.totalIncome || 0);
+  const currentExpense = Number(summary?.totalExpense || 0);
+  const currentTotalBalance = Number(summary?.totalBalance || 0);
+
+  // Buat label singkat bulan berdasarkan selectedMonth
+  let monthLabel = "Bulan Ini";
+  if (selectedMonth) {
+    const [, monthStr] = selectedMonth.split("-");
+    const targetMonth = Number(monthStr);
+    const monthNames = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "Mei",
+      "Jun",
+      "Jul",
+      "Agu",
+      "Sep",
+      "Okt",
+      "Nov",
+      "Des",
+    ];
+    monthLabel = monthNames[targetMonth - 1] || "Bulan Ini";
+  }
 
   return (
     <CardBox
@@ -16,13 +51,14 @@ export default function BalanceSummarySection() {
       color="base-100"
     >
       <div className="pb-2 border-b-2 border-black/10">
+        {/* --- TAMPILAN MOBILE --- */}
         <div className="flex sm:hidden items-center justify-between gap-2">
           <div className="flex flex-col gap-1 min-w-0">
             <p className="text-caption font-black uppercase tracking-widest text-base-content/70">
               Total Balance
             </p>
             <h2 className="heading-h2 font-black text-base-content tracking-tight truncate">
-              {showTotal ? "Rp 22.780.000" : "••••••••"}
+              {showTotal ? formatRupiah(currentTotalBalance) : "••••••••"}
             </h2>
           </div>
           <CardBox
@@ -41,13 +77,14 @@ export default function BalanceSummarySection() {
           </CardBox>
         </div>
 
+        {/* --- TAMPILAN DESKTOP --- */}
         <div className="hidden sm:flex sm:items-center justify-between gap-2">
           <p className="text-caption font-black uppercase tracking-widest text-base-content/70">
             Total Balance
           </p>
           <div className="flex items-center justify-between sm:justify-end gap-3">
             <h2 className="heading-h2 font-black text-base-content tracking-tight">
-              {showTotal ? "Rp 22.780.000" : "••••••••"}
+              {showTotal ? formatRupiah(currentTotalBalance) : "••••••••"}
             </h2>
             <CardBox
               className="w-10 h-10 p-0 flex items-center justify-center font-bold shrink-0"
@@ -67,11 +104,13 @@ export default function BalanceSummarySection() {
         </div>
       </div>
 
+      {/* Income & Expense Cards */}
       <div className="grid grid-cols-2 gap-3 md:gap-4">
+        {/* Kotak Income */}
         <div className="bg-success/40 border-2 border-black p-3 md:p-4 rounded-xl flex flex-col justify-between shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
           <div className="flex items-center justify-between">
             <p className="text-caption font-black uppercase tracking-wider text-neutral/70 truncate">
-              Income (Jul)
+              Income ({monthLabel})
             </p>
             <button
               onClick={() => setShowIncome(!showIncome)}
@@ -87,15 +126,16 @@ export default function BalanceSummarySection() {
           </div>
           <div>
             <p className="text-sm md:text-lg font-black text-neutral tracking-tight">
-              {showIncome ? "Rp 5.500.000" : "••••••••"}
+              {showIncome ? formatRupiah(currentIncome) : "••••••••"}
             </p>
           </div>
         </div>
 
+        {/* Kotak Expense */}
         <div className="bg-secondary/40 border-2 border-black p-3 md:p-4 rounded-xl flex flex-col justify-between shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
           <div className="flex items-center justify-between">
             <p className="text-caption font-black uppercase tracking-wider text-neutral/70 truncate">
-              Expense (Jul)
+              Expense ({monthLabel})
             </p>
             <button
               onClick={() => setShowExpense(!showExpense)}
@@ -111,7 +151,7 @@ export default function BalanceSummarySection() {
           </div>
           <div>
             <p className="text-sm md:text-lg font-black text-neutral tracking-tight">
-              {showExpense ? "Rp 5.720.000" : "••••••••"}
+              {showExpense ? formatRupiah(currentExpense) : "••••••••"}
             </p>
           </div>
         </div>

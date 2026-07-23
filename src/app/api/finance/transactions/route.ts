@@ -2,6 +2,7 @@ import { db } from "@/db";
 import {
   financeAccounts,
   financeCategories,
+  financeMonthlySummaries,
   financePockets,
   financeTransactions,
 } from "@/db/schema";
@@ -242,7 +243,7 @@ export async function POST(request: NextRequest) {
     // Pastikan status default-nya 'completed' jika tidak ada input
     const transactionStatus = status || "completed";
     const numericAmount = Number(amount);
-
+    const transactionDate = date ? new Date(date) : new Date(); // Simpan referensi tanggal
     const result = await db.transaction(async (tx) => {
       // 1. Simpan Transaksi
       const [newTransaction] = await tx
@@ -285,7 +286,7 @@ export async function POST(request: NextRequest) {
             .where(eq(financePockets.id, pocketId));
         }
       }
-
+      await updateMonthlySummary(tx, householdId, transactionDate);
       return newTransaction;
     });
 
@@ -298,25 +299,22 @@ export async function POST(request: NextRequest) {
 export async function PUT(req: Request) {
   try {
     const body = await req.json();
-    const { id, status, amount, type, accountId } = body; // Anda perlu kirim data ini dari frontend
+    const { id, status } = body;
 
     const result = await db.transaction(async (tx) => {
-      // 1. Ambil transaksi lama untuk cek status sebelumnya
       const oldTransaction = await tx.query.financeTransactions.findFirst({
         where: eq(financeTransactions.id, id),
       });
 
       if (!oldTransaction) throw new Error("Transaction not found");
 
-      // 2. Update status transaksi
       const [updated] = await tx
         .update(financeTransactions)
         .set({ status })
         .where(eq(financeTransactions.id, id))
         .returning();
 
-      // 3. Logika Koreksi Saldo
-      // Jika sebelumnya bukan cancelled, dan sekarang jadi cancelled => kembalikan saldo
+      // Logika Koreksi Saldo Akun (Kode lama Anda)
       if (oldTransaction.status !== "cancelled" && status === "cancelled") {
         const reverseAdjustment =
           oldTransaction.type === "income"
@@ -328,10 +326,7 @@ export async function PUT(req: Request) {
             currentBalance: sql`${financeAccounts.currentBalance} + ${reverseAdjustment}`,
           })
           .where(eq(financeAccounts.id, oldTransaction.accountId));
-      }
-
-      // Jika sebelumnya cancelled, dan sekarang jadi completed/pending => potong saldo
-      else if (
+      } else if (
         oldTransaction.status === "cancelled" &&
         status !== "cancelled"
       ) {
@@ -347,6 +342,12 @@ export async function PUT(req: Request) {
           .where(eq(financeAccounts.id, oldTransaction.accountId));
       }
 
+      await updateMonthlySummary(
+        tx,
+        oldTransaction.householdId,
+        new Date(oldTransaction.date),
+      );
+
       return updated;
     });
 
@@ -355,54 +356,129 @@ export async function PUT(req: Request) {
     return sendStandardResponse(null, err.message, 500, "error");
   }
 }
+// export async function PUT(req: Request) {
+//   try {
+//     const body = await req.json();
+//     const { id, status, amount, type, accountId } = body; // Anda perlu kirim data ini dari frontend
+
+//     const result = await db.transaction(async (tx) => {
+//       // 1. Ambil transaksi lama untuk cek status sebelumnya
+//       const oldTransaction = await tx.query.financeTransactions.findFirst({
+//         where: eq(financeTransactions.id, id),
+//       });
+
+//       if (!oldTransaction) throw new Error("Transaction not found");
+
+//       // 2. Update status transaksi
+//       const [updated] = await tx
+//         .update(financeTransactions)
+//         .set({ status })
+//         .where(eq(financeTransactions.id, id))
+//         .returning();
+
+//       // 3. Logika Koreksi Saldo
+//       // Jika sebelumnya bukan cancelled, dan sekarang jadi cancelled => kembalikan saldo
+//       if (oldTransaction.status !== "cancelled" && status === "cancelled") {
+//         const reverseAdjustment =
+//           oldTransaction.type === "income"
+//             ? -Number(oldTransaction.amount)
+//             : Number(oldTransaction.amount);
+//         await tx
+//           .update(financeAccounts)
+//           .set({
+//             currentBalance: sql`${financeAccounts.currentBalance} + ${reverseAdjustment}`,
+//           })
+//           .where(eq(financeAccounts.id, oldTransaction.accountId));
+//       }
+
+//       // Jika sebelumnya cancelled, dan sekarang jadi completed/pending => potong saldo
+//       else if (
+//         oldTransaction.status === "cancelled" &&
+//         status !== "cancelled"
+//       ) {
+//         const adjustment =
+//           oldTransaction.type === "income"
+//             ? Number(oldTransaction.amount)
+//             : -Number(oldTransaction.amount);
+//         await tx
+//           .update(financeAccounts)
+//           .set({
+//             currentBalance: sql`${financeAccounts.currentBalance} + ${adjustment}`,
+//           })
+//           .where(eq(financeAccounts.id, oldTransaction.accountId));
+//       }
+
+//       return updated;
+//     });
+
+//     return sendStandardResponse(result, "Transaction updated successfully.");
+//   } catch (err: any) {
+//     return sendStandardResponse(null, err.message, 500, "error");
+//   }
+// }
 
 export async function DELETE(req: Request) {
   return (await h()).DELETE(req);
 }
 
-// export async function POST(request: NextRequest) {
-//   try {
-//     // Ambil keduanya sekaligus
-//     const { householdId, userId } = await getHouseholdAuth();
+async function updateMonthlySummary(
+  tx: any,
+  householdId: string,
+  transactionDate: Date,
+) {
+  const month = transactionDate.getMonth() + 1; // 1 - 12
+  const year = transactionDate.getFullYear();
 
-//     const body = await request.json();
-//     const { accountId, categoryId, amount, type, description, pocketId, date } =
-//       body;
+  // Hitung total income, expense, dan net balance dari transaksi yang valid (tidak cancelled & tidak deleted)
+  const [summaryData] = await tx
+    .select({
+      totalIncome: sql`coalesce(sum(case when ${financeTransactions.type} = 'income' then ${financeTransactions.amount} else 0 end), 0)`,
+      totalExpense: sql`coalesce(sum(case when ${financeTransactions.type} = 'expense' then ${financeTransactions.amount} else 0 end), 0)`,
+    })
+    .from(financeTransactions)
+    .where(
+      and(
+        eq(financeTransactions.householdId, householdId),
+        sql`extract(month from ${financeTransactions.date}) = ${month}`,
+        sql`extract(year from ${financeTransactions.date}) = ${year}`,
+        sql`(${financeTransactions.status} != 'cancelled' OR ${financeTransactions.status} IS NULL)`,
+        isNull(financeTransactions.deletedAt),
+      ),
+    );
 
-//     const result = await db.transaction(async (tx) => {
-//       // 1. Simpan Transaksi dengan userId yang didapat dari auth
-//       const [newTransaction] = await tx
-//         .insert(financeTransactions)
-//         .values({
-//           householdId,
-//           accountId,
-//           pocketId: pocketId || null,
-//           categoryId,
-//           amount: String(amount),
-//           type,
-//           description,
-//           date: date ? new Date(date) : new Date(),
-//           createdById: userId, // Gunakan userId dari Supabase
-//         })
-//         .returning();
+  const totalIncome = Number(summaryData?.totalIncome ?? 0);
+  const totalExpense = Number(summaryData?.totalExpense ?? 0);
+  const netBalance = totalIncome - totalExpense;
 
-//       // 2. Update Saldo Akun
-//       const adjustment = type === "income" ? amount : -amount;
-//       await tx
-//         .update(financeAccounts)
-//         .set({
-//           currentBalance: sql`${financeAccounts.currentBalance} + ${adjustment}`,
-//         })
-//         .where(eq(financeAccounts.id, accountId));
+  // Lakukan Upsert ke tabel finance_monthly_summaries
+  // Catatan: Pastikan Anda memiliki unique constraint pada (householdId, month, year) di database,
+  // atau gunakan cara cek lalu update/insert manual jika belum ada unique index.
+  const existing = await tx.query.financeMonthlySummaries.findFirst({
+    where: and(
+      eq(financeMonthlySummaries.householdId, householdId),
+      eq(financeMonthlySummaries.month, month),
+      eq(financeMonthlySummaries.year, year),
+    ),
+  });
 
-//       return newTransaction;
-//     });
-
-//     return sendStandardResponse(result, "Transaction saved successfully.", 201);
-//   } catch (err: any) {
-//     return sendStandardResponse(null, err.message, 500, "error");
-//   }
-// }
-// export async function PUT(req: Request) {
-//   return (await h()).PUT(req);
-// }
+  if (existing) {
+    await tx
+      .update(financeMonthlySummaries)
+      .set({
+        totalIncome: String(totalIncome),
+        totalExpense: String(totalExpense),
+        netBalance: String(netBalance),
+        updatedAt: new Date(),
+      })
+      .where(eq(financeMonthlySummaries.id, existing.id));
+  } else {
+    await tx.insert(financeMonthlySummaries).values({
+      householdId,
+      month,
+      year,
+      totalIncome: String(totalIncome),
+      totalExpense: String(totalExpense),
+      netBalance: String(netBalance),
+    });
+  }
+}

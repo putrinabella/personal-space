@@ -5,6 +5,7 @@ import BalanceSummarySection from "@/features/finance/components/BalanceSummaryS
 import FinanceCard from "@/features/finance/components/FinanceCard";
 import TransactionCard from "@/features/finance/components/TransactionCard";
 import { usePocketsAll } from "@/features/finance/pockets/hooks/usePocketsAll";
+import { useSumarriesAll } from "@/features/finance/summaries/hooks/useSumarriesAll";
 import { useTransactionAll } from "@/features/finance/transaction/hooks/useTransactionAll";
 import { calculateTransactionCalendar } from "@/features/finance/transaction/hooks/useTransactionCalendar";
 import { useTransactionList } from "@/features/finance/transaction/hooks/useTransactionList";
@@ -25,32 +26,34 @@ import { useMemo, useState } from "react";
 
 export default function FinancePage() {
   const [selectedMonth, setSelectedMonth] = useState(getCurrentYearMonth());
-
+  const { yearStr, monthStr } = useMemo(() => {
+    const [year, month] = selectedMonth.split("-");
+    return { yearStr: year, monthStr: month };
+  }, [selectedMonth]);
   const {
     data: dataAccounts,
     isLoading: loadingAccount,
     error: errorAccount,
   } = useAccountsAll();
+
   const {
     data: dataPockets,
     isLoading: loadingPocket,
     error: errorPocket,
   } = usePocketsAll();
-
-  // Mengambil transaksi berdasarkan filter bulan aktif
-  // Di dalam FinancePage:
+  const { data: summaryData } = useSumarriesAll({
+    year: yearStr,
+    month: monthStr,
+  });
   const { data: transactions = [] } = useTransactionAll({
     month: selectedMonth,
   });
-
-  // Bungkus dengan useMemo di tingkat atas komponen React
   const calendarData = useMemo(() => {
     return calculateTransactionCalendar(transactions);
   }, [transactions]);
 
   return (
     <div className="flex flex-col gap-8 max-w-7xl mx-auto">
-      {/* 1. Header (Tetap di atas) */}
       <header className="flex items-center justify-between gap-4">
         <div>
           <span className="text-caption font-bold tracking-[0.2em] uppercase text-base-content/60 mb-0.5 block">
@@ -60,7 +63,6 @@ export default function FinancePage() {
             Asset Narrative
           </h1>
         </div>
-
         <CardBox
           className="px-3 sm:px-5 py-2.5 sm:py-3 flex items-center gap-2 text-sm font-bold shadow-sm hover:shadow-md transition-all shrink-0"
           rounded="xl"
@@ -73,12 +75,12 @@ export default function FinancePage() {
         </CardBox>
       </header>
 
-      {/* 2. Balance Summary (Ringkasan Saldo Global) */}
-      <BalanceSummarySection />
+      <BalanceSummarySection
+        summary={summaryData}
+        selectedMonth={selectedMonth}
+      />
 
-      {/* 3. Accounts & Pockets (Digabung dalam Grid/Section ringkas agar tidak memakan terlalu banyak vertikal space) */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Accounts Section */}
         <section className="flex flex-col gap-2">
           <div className="flex justify-between items-center">
             <h2 className="text-body font-black uppercase">Accounts</h2>
@@ -100,7 +102,6 @@ export default function FinancePage() {
           )}
         </section>
 
-        {/* Pockets Section */}
         <section className="flex flex-col gap-2">
           <div className="flex justify-between items-center">
             <h2 className="text-body font-black uppercase">Pockets</h2>
@@ -123,7 +124,6 @@ export default function FinancePage() {
         </section>
       </div>
 
-      {/* 4. Calendar Section (Dijadikan Pusat Interaksi Utama Bulanan) */}
       <section className="flex flex-col gap-2">
         <UniversalCalendar
           data={calendarData}
