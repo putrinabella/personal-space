@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 interface UseBaseDetailProps<T> {
   id?: string;
   queryKey: readonly unknown[];
-  fetcher: (id: string) => Promise<T>;
+  fetcher: (id: string) => Promise<T | null>; 
 }
 
 export function useBaseDetail<T>({

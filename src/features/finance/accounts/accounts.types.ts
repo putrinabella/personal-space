@@ -13,7 +13,7 @@ export interface AccountsFormData {
 export interface AccountsEntry extends BaseItem, AccountsFormData {
   householdId: string;
   type: string;
-  currentBalance: string;
+  currentBalance: number;
   currency: string;
   iconSlug: string;
   isArchived: boolean;

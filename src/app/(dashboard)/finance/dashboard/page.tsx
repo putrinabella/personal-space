@@ -20,6 +20,7 @@ export default function FinancePage() {
     const [year, month] = selectedMonth.split("-");
     return { yearStr: year, monthStr: month };
   }, [selectedMonth]);
+
   const {
     data: dataAccounts,
     isLoading: loadingAccount,
@@ -31,13 +32,16 @@ export default function FinancePage() {
     isLoading: loadingPocket,
     error: errorPocket,
   } = usePocketsAll();
-  const { data: summaryData } = useSumarriesAll({
+
+  const { data: dataSummary } = useSumarriesAll({
     year: yearStr,
     month: monthStr,
   });
+
   const { data: transactions = [] } = useTransactionAll({
     month: selectedMonth,
   });
+
   const calendarData = useMemo(() => {
     return calculateTransactionCalendar(transactions);
   }, [transactions]);
@@ -66,7 +70,7 @@ export default function FinancePage() {
       </header>
 
       <BalanceSummarySection
-        summary={summaryData}
+        summary={dataSummary}
         selectedMonth={selectedMonth}
       />
 
