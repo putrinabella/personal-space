@@ -17,4 +17,5 @@ export const queryKeys = {
   accounts: createQueryKeys("accounts"),
   transaction: createQueryKeys("transaction"),
   summaries: createQueryKeys("summaries"),
+  budgets: createQueryKeys("budgets"),
 };
