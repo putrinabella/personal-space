@@ -261,6 +261,29 @@ export const getCurrentYearMonth = () => {
   return `${year}-${month}`;
 };
 
+export function getMonthShortName(selectedMonth?: string): string {
+  if (!selectedMonth) return "This month";
+
+  const [, monthStr] = selectedMonth.split("-");
+  const targetMonth = Number(monthStr);
+
+  const monthNames = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+
+  return monthNames[targetMonth - 1] || "This month";
+}
 /* Contoh penggunaan:
 getAgeFromDob("2000-01-15");
 getAgeYearsOnly("2000-01-15");

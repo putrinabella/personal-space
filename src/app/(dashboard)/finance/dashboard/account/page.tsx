@@ -28,12 +28,16 @@ export default function AccountPage() {
         </div>
 
         <div className="w-full sm:w-auto">
-          <BalanceOverview
+          {/* <BalanceOverview
             amount={totalBalance}
             subLabel={`${dataAccounts.length} Accounts`}
-          />
+          /> */}
         </div>
       </header>
+      <BalanceOverview
+        amount={totalBalance}
+        subLabel={`${dataAccounts.length} Accounts`}
+      />
       <section className="flex flex-col gap-4">
         <DataSection
           loading={loadingAccount}

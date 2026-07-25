@@ -3,56 +3,40 @@ import { useState } from "react";
 import { Eye, EyeSlash } from "@phosphor-icons/react";
 import CardBox from "@/shared/components/CardBox";
 import { formatRupiah } from "@/utils/rupiahFormatter";
+import { getMonthShortName } from "@/utils/dateFormatter";
 
 interface BalanceSummarySectionProps {
-  summary?: any | null; // Menerima 1 objek data summary tunggal
+  currentBalance?: any;
+  income?: any;
+  expense?: any;
   selectedMonth?: string; // Format "YYYY-MM", contoh: "2026-07"
 }
 
 export default function BalanceSummarySection({
-  summary,
+  currentBalance = 0,
+  income = 0,
+  expense = 0,
   selectedMonth,
 }: BalanceSummarySectionProps) {
   const [showTotal, setShowTotal] = useState(false);
   const [showIncome, setShowIncome] = useState(false);
   const [showExpense, setShowExpense] = useState(false);
 
-  // Ambil nilai langsung dari objek summary tunggal
-  const currentIncome = Number(summary?.totalIncome || 0);
-  const currentExpense = Number(summary?.totalExpense || 0);
-  const currentTotalBalance = Number(summary?.totalBalance || 0);
+  // Ambil nilai langsung dari props terpisah dengan fallback 0
+  const currentTotalBalance = Number(currentBalance || 0);
+  const currentIncome = Number(income || 0);
+  const currentExpense = Number(expense || 0);
 
-  // Buat label singkat bulan berdasarkan selectedMonth
-  let monthLabel = "Bulan Ini";
-  if (selectedMonth) {
-    const [, monthStr] = selectedMonth.split("-");
-    const targetMonth = Number(monthStr);
-    const monthNames = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "Mei",
-      "Jun",
-      "Jul",
-      "Agu",
-      "Sep",
-      "Okt",
-      "Nov",
-      "Des",
-    ];
-    monthLabel = monthNames[targetMonth - 1] || "Bulan Ini";
-  }
-
+  const monthLabel = getMonthShortName(selectedMonth);
   return (
     <CardBox
-      className="p-4 md:p-6 flex flex-col gap-4 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+      className="p-4 md:p-5 flex flex-col gap-4 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
       rounded="2xl"
       color="base-100"
     >
       <div className="pb-2 border-b-2 border-black/10">
-        {/* --- TAMPILAN MOBILE --- */}
-        <div className="flex sm:hidden items-center justify-between gap-2">
+        {/* --- TAMPILAN MOBILE & DESKTOP DIGABUNG AGAR LEBIH RINGKAS --- */}
+        <div className="flex items-center justify-between gap-2">
           <div className="flex flex-col gap-1 min-w-0">
             <p className="text-caption font-black uppercase tracking-widest text-base-content/70">
               Total Balance
@@ -75,32 +59,6 @@ export default function BalanceSummarySection({
               <EyeSlash size={18} weight="bold" />
             )}
           </CardBox>
-        </div>
-
-        {/* --- TAMPILAN DESKTOP --- */}
-        <div className="hidden sm:flex sm:items-center justify-between gap-2">
-          <p className="text-caption font-black uppercase tracking-widest text-base-content/70">
-            Total Balance
-          </p>
-          <div className="flex items-center justify-between sm:justify-end gap-3">
-            <h2 className="heading-h2 font-black text-base-content tracking-tight">
-              {showTotal ? formatRupiah(currentTotalBalance) : "••••••••"}
-            </h2>
-            <CardBox
-              className="w-10 h-10 p-0 flex items-center justify-center font-bold shrink-0"
-              rounded="xl"
-              shadowSize="xs"
-              color="base-300"
-              onClick={() => setShowTotal(!showTotal)}
-              pressable
-            >
-              {showTotal ? (
-                <Eye size={18} weight="bold" />
-              ) : (
-                <EyeSlash size={18} weight="bold" />
-              )}
-            </CardBox>
-          </div>
         </div>
       </div>
 

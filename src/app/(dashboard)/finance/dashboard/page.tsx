@@ -33,10 +33,13 @@ export default function FinancePage() {
     error: errorPocket,
   } = usePocketsAll();
 
-  const { data: dataSummary } = useSumarriesAll({
+  const { data: dataSummary = [] } = useSumarriesAll({
     year: yearStr,
     month: monthStr,
   });
+
+  // Ambil elemen pertama dengan aman menggunakan optional chaining (?.) dan fallback objek kosong
+  const currentSummary = dataSummary?.[0] || {};
 
   const { data: transactions = [] } = useTransactionAll({
     month: selectedMonth,
@@ -70,7 +73,9 @@ export default function FinancePage() {
       </header>
 
       <BalanceSummarySection
-        summary={dataSummary}
+        currentBalance={currentSummary.totalBalance}
+        income={currentSummary.totalIncome}
+        expense={currentSummary.totalExpense}
         selectedMonth={selectedMonth}
       />
 

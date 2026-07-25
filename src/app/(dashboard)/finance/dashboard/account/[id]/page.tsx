@@ -1,5 +1,5 @@
 "use client";
-import { useState, use } from "react";
+import { useState, use, useMemo } from "react";
 // import { useRouter } from "next/router";
 import { FunnelIcon, ArrowClockwiseIcon } from "@phosphor-icons/react";
 import CardBox from "@/shared/components/CardBox";
@@ -11,8 +11,9 @@ import TransactionCard from "@/features/finance/components/TransactionCard";
 import Pagination from "@/shared/components/Pagination";
 import { useCategoriesAll } from "@/features/finance/categories/hooks/useCategoriesAll";
 import { useAccountDetail } from "@/features/finance/accounts/hooks/useAccountDetail";
-import BalanceOverview from "@/features/finance/components/BalanceOverview";
-
+// import BalanceOverview from "@/features/finance/components/BalanceOverview";
+import { getCurrentYearMonth } from "@/utils/dateFormatter";
+import BalanceSummarySection from "@/features/finance/components/BalanceSummarySection";
 export default function AccountDetailPage({
   params,
 }: {
@@ -35,7 +36,7 @@ export default function AccountDetailPage({
     accountId: id,
     type: "",
     categoryId: "",
-    month: "",
+    month: getCurrentYearMonth(),
     status: "",
   });
 
@@ -56,9 +57,22 @@ export default function AccountDetailPage({
     loading: loadingAccount,
     error: errorAccount,
   } = useAccountDetail(id);
-
+  const { totalIncome, totalExpense } = useMemo(() => {
+    return dataTransactions.reduce(
+      (acc: { totalIncome: number; totalExpense: number }, tx: any) => {
+        const amount = Number(tx.amount || 0);
+        if (tx.type === "income") {
+          acc.totalIncome += amount;
+        } else if (tx.type === "expense") {
+          acc.totalExpense += amount;
+        }
+        return acc;
+      },
+      { totalIncome: 0, totalExpense: 0 },
+    );
+  }, [dataTransactions]);
   const activeFilterCount = [
-    filters.month,
+    filters.month !== getCurrentYearMonth() ? filters.month : null,
     filters.categoryId,
     filters.type,
     filters.status,
@@ -86,37 +100,41 @@ export default function AccountDetailPage({
     },
     {},
   );
-
+  if (loadingAccount || errorAccount || !dataAccount) {
+    return (
+      <div className="flex flex-col gap-8 max-w-7xl mx-auto">
+        <DataSection
+          loading={loadingAccount}
+          error={errorAccount}
+          data={dataAccount}
+        />
+      </div>
+    );
+  }
   return (
     <div className="flex flex-col gap-8 max-w-7xl mx-auto">
       {/* Header Halaman Detail Akun */}
-      <DataSection
-        loading={loadingAccount}
-        error={errorAccount}
-        data={dataAccount}
-      />
-      {!loadingAccount && !errorAccount && dataAccount && (
-        <>
-          <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 w-full">
-            <div>
-              <span className="text-caption font-bold tracking-[0.2em] uppercase text-base-content/60 mb-0.5 block">
-                Eounia / Finance / Account
-              </span>
-              <h1 className="heading-h1 font-extrabold uppercase tracking-tight text-base-content">
-                {dataAccount.name}
-              </h1>
-            </div>
-            <div className="w-full sm:w-auto">
-              <BalanceOverview
-                amount={dataAccount.currentBalance}
-                // subLabel={`${dataAccounts.length} Accounts`}
-              />
-            </div>
-          </header>
-        </>
-      )}
 
+      <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 w-full">
+        <div>
+          <span className="text-caption font-bold tracking-[0.2em] uppercase text-base-content/60 mb-0.5 block">
+            Eounia / Finance / Account
+          </span>
+          <h1 className="heading-h1 font-extrabold uppercase tracking-tight text-base-content">
+            {dataAccount.name}
+          </h1>
+        </div>
+        <div className="w-full sm:w-auto">
+          {/* <BalanceOverview amount={dataAccount.currentBalance} /> */}
+        </div>
+      </header>
       {/* Section Filter & Search */}
+      {/* <BalanceOverview amount={dataAccount.currentBalance} /> */}
+      <BalanceSummarySection
+        currentBalance={dataAccount.currentBalance}
+        income={totalIncome}
+        expense={totalExpense}
+      />
       <CardBox
         className="p-4 md:p-6 flex flex-col gap-4 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
         rounded="2xl"

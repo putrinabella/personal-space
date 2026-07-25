@@ -3,13 +3,6 @@ import { useBaseAll } from "@/shared/hooks/core/use-base-all";
 import { SumarriesEntry } from "../sumarries.types";
 import { summariesService } from "../sumarries.service";
 
-// export function useSumarriesAll() {
-//   return useBaseAll<SumarriesEntry>({
-//     queryKey: queryKeys.summaries.all(),
-
-//     fetcher: summariesService.getAll,
-//   });
-// }
 export interface SumarriesFilterParams {
   year?: string;
   month?: string;
