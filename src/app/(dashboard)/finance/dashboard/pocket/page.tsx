@@ -27,13 +27,17 @@ export default function PocketPage() {
           </h1>
         </div>
 
-        <div className="w-full sm:w-auto">
+        {/* <div className="w-full sm:w-auto">
           <BalanceOverview
             amount={totalBalance}
             subLabel={`${dataPockets.length} Pockets`}
           />
-        </div>
-      </header>
+        </div> */}
+      </header>{" "}
+      <BalanceOverview
+        amount={totalBalance}
+        subLabel={`${dataPockets.length} Pockets`}
+      />
       <section className="flex flex-col gap-4">
         <DataSection
           loading={loadingPocket}
