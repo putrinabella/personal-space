@@ -43,7 +43,10 @@ export default function PocketPage() {
 
         {!loadingPocket && !errorPocket && dataPockets.length > 0 && (
           <div className="flex flex-col gap-3">
-            <GroupedFinanceList items={dataPockets} />
+            <GroupedFinanceList
+              items={dataPockets}
+              baseRoute="/finance/dashboard/pocket"
+            />
           </div>
         )}
       </section>
