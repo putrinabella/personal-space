@@ -61,7 +61,7 @@ export default function CreateTransactionPage() {
 
   return (
     <div className="flex flex-col gap-8 max-w-7xl mx-auto">
-      <CardHeader title="NEW TRANSACTION" icon={Wallet} color="primary" />
+      <CardHeader title="NEW TRANSACTION" icon={Wallet} color="secondary" />
 
       <CardBox className="p-4 md:p-6 flex flex-col gap-6" rounded="2xl">
         <div className="flex bg-base-200 p-1 rounded-xl">

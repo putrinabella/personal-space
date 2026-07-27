@@ -256,7 +256,7 @@ export default function BudgetPage() {
             return (
               <CardBox
                 key={item.id}
-                className="p-5 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex flex-col justify-between gap-4 bg-base-100"
+                className="p-5 flex flex-col justify-between gap-4 bg-base-100"
                 rounded="2xl"
               >
                 {/* Header Kategori */}

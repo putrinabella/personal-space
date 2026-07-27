@@ -3,10 +3,19 @@ import { useBaseAll } from "@/shared/hooks/core/use-base-all";
 import { budgetsService } from "../budgets.service";
 import { BudgetsEntry } from "../budgets.types";
 
-export function useBudgetsAll() {
-  return useBaseAll<BudgetsEntry>({
-    queryKey: queryKeys.budgets.all(),
+export interface BudgetParams {
+  month?: string;
+  year?: string;
+}
 
-    fetcher: budgetsService.getAll,
+export function useBudgetAll(
+  filters: Partial<BudgetParams> = {},
+  options?: { enabled?: boolean },
+) {
+  return useBaseAll<BudgetsEntry, Partial<BudgetParams>>({
+    queryKey: queryKeys.transaction.all(filters),
+    fetcher: (params) => budgetsService.getAll(params),
+    params: filters,
+    enabled: options?.enabled,
   });
 }

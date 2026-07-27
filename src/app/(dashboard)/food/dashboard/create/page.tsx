@@ -169,7 +169,8 @@ export default function CreateFoodEntryPage() {
         <div className="grid grid-cols-2 gap-4">
           <FormInput
             label="Price"
-            placeholder="Rp 0"
+            type="money"
+            placeholder="0"
             value={data.price}
             onChange={(val) => setField("price", val)}
           />

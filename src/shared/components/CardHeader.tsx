@@ -32,7 +32,7 @@ export default function CardHeader({
     >
       {IconComponent && (
         <CardBox
-          color="bg-white text-neutral"
+          color="primary"
           rounded="xl"
           shadowSize="sm"
           className="p-3 border-3 flex items-center justify-center shrink-0 select-none active:translate-y-0"

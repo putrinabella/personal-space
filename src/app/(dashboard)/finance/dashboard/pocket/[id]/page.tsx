@@ -134,10 +134,7 @@ export default function PocketDetailPage({
         income={totalIncome}
         expense={totalExpense}
       />
-      <CardBox
-        className="p-4 md:p-6 flex flex-col gap-4 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
-        rounded="2xl"
-      >
+      <CardBox className="p-4 md:p-6 flex flex-col gap-4" rounded="2xl">
         <div className="flex flex-col md:flex-row gap-3 md:items-end">
           <div className="flex-1">
             <FormInput

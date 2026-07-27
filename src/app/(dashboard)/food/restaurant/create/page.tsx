@@ -13,27 +13,27 @@ export default function CreateRestaurantPage() {
   const { data, setField, handleSubmit, saving } = useRestaurantsForm();
 
   return (
-    <div className="flex flex-col gap-8 max-w-3xl mx-auto ">
+    <div className="flex flex-col gap-8 max-w-7xl mx-auto">
       <CardHeader
-        title="ADD NEW RESTORAN BARU"
+        title="ADD NEW RESTORAN"
         icon={MapPinAreaIcon}
         color="secondary"
       />
 
       <CardBox className="p-4 md:p-6 flex flex-col gap-6" rounded="2xl">
         <FormInput
-          label="Nama Restoran/Cafe"
+          label="Restaurant/Cafe Name"
           value={data.name}
           onChange={(val) => setField("name", val)}
-          placeholder="Contoh: Kedai Kopi Senja"
+          placeholder="e.g. Sunset Coffee Shop"
           required
         />
 
         <FormInput
-          label="Alamat Lengkap"
+          label="Full Address"
           value={data.address}
           onChange={(val) => setField("address", val)}
-          placeholder="Jl. Contoh No. 123..."
+          placeholder="123 Example St..."
           required
         />
 
@@ -55,10 +55,8 @@ export default function CreateRestaurantPage() {
                 : "border-base-200"
             }`}
           >
-            <p className="font-bold">Kategori Restoran</p>
-            <p className="text-sm opacity-60">
-              Tandai sebagai restoran favorit
-            </p>
+            <p className="font-bold">Restaurant Category</p>
+            <p className="text-sm opacity-60">Mark as favorite restaurant</p>
           </div>
 
           <div
@@ -69,8 +67,8 @@ export default function CreateRestaurantPage() {
                 : "border-base-200"
             }`}
           >
-            <p className="font-bold">Kategori Cafe</p>
-            <p className="text-sm opacity-60">Tandai sebagai cafe favorit</p>
+            <p className="font-bold">Cafe Category</p>
+            <p className="text-sm opacity-60">Mark as favorite cafe</p>
           </div>
         </div>
 

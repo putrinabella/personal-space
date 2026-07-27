@@ -1,4 +1,5 @@
 import { BaseItem } from "@/shared/types/base.types";
+import { CategoriesEntry } from "../categories/categories.types";
 
 export interface BudgetsFormData {
   householdId: string;
@@ -16,6 +17,7 @@ export interface BudgetsEntry extends BaseItem, BudgetsFormData {
   allocationDay?: string;
   color?: string;
   currentBalance?: string;
+  category?: CategoriesEntry;
 }
 
 export const defaultBudgets: BudgetsFormData = {

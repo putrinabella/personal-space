@@ -30,13 +30,13 @@ export default function BalanceSummarySection({
   const monthLabel = getMonthShortName(selectedMonth);
   return (
     <CardBox
-      className="p-4 md:p-5 flex flex-col gap-4 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+      className="p-4 md:p-5 flex flex-col gap-4 border-2"
       rounded="2xl"
       color="base-100"
     >
       <div className="pb-2 border-b-2 border-black/10">
-        {/* --- TAMPILAN MOBILE & DESKTOP DIGABUNG AGAR LEBIH RINGKAS --- */}
-        <div className="flex items-center justify-between gap-2">
+        {/* --- TAMPILAN MOBILE --- */}
+        <div className="flex sm:hidden items-center justify-between gap-2">
           <div className="flex flex-col gap-1 min-w-0">
             <p className="text-caption font-black uppercase tracking-widest text-base-content/70">
               Total Balance
@@ -59,6 +59,32 @@ export default function BalanceSummarySection({
               <EyeSlash size={18} weight="bold" />
             )}
           </CardBox>
+        </div>
+
+        {/* --- TAMPILAN DESKTOP --- */}
+        <div className="hidden sm:flex sm:items-center justify-between gap-2">
+          <p className="text-caption font-black uppercase tracking-widest text-base-content/70">
+            Total Balance
+          </p>
+          <div className="flex items-center justify-between sm:justify-end gap-3">
+            <h2 className="heading-h2 font-black text-base-content tracking-tight">
+              {showTotal ? formatRupiah(currentTotalBalance) : "••••••••"}
+            </h2>
+            <CardBox
+              className="w-10 h-10 p-0 flex items-center justify-center font-bold shrink-0"
+              rounded="xl"
+              shadowSize="xs"
+              color="base-300"
+              onClick={() => setShowTotal(!showTotal)}
+              pressable
+            >
+              {showTotal ? (
+                <Eye size={18} weight="bold" />
+              ) : (
+                <EyeSlash size={18} weight="bold" />
+              )}
+            </CardBox>
+          </div>
         </div>
       </div>
 
