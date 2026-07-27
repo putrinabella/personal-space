@@ -13,7 +13,12 @@ export function useRestaurantsForm(restaurantsId?: string) {
     entityName: "restaurants",
     defaultValues: defaultRestaurants,
     queryKey: queryKeys.restaurants.detail(restaurantsId || ""),
-    invalidateQueryKey: queryKeys.restaurants.lists(),
+    invalidateQueryKey: [
+      ...queryKeys.restaurants.lists(),
+      ...queryKeys.restaurants.all(),
+      ...queryKeys.discoverFoods.lists(),
+      ...queryKeys.food.all(),
+    ],
     getDetail: async (id) => {
       const data = await restaurantsService.getDetail(id);
       return data as any;
