@@ -20,7 +20,7 @@ export function useBudgetsForm(budgetsId?: string, enabled: boolean = true) {
     createFn: budgetsService.create,
     updateFn: budgetsService.update,
     validate: validateBudgets,
-    redirectTo: "/finance/settings",
+    redirectTo: "/finance/analytics",
     messages: {
       createSuccess: "Budget created successfully",
       updateSuccess: "Budget updated successfully",

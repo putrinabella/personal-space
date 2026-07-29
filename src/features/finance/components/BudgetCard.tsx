@@ -1,7 +1,8 @@
-import { CheckCircle, Warning, Folder } from "@phosphor-icons/react";
+import { CheckCircle, Warning } from "@phosphor-icons/react";
 import { BudgetsEntry } from "../budgets/budgets.types";
 import { formatRupiah } from "@/utils/rupiahFormatter";
 import CardBox from "@/shared/components/CardBox";
+import IconRenderer from "@/shared/components/IconRenderer";
 
 interface BudgetCardProps {
   budget: BudgetsEntry;
@@ -33,6 +34,7 @@ export default function BudgetCard({ budget }: BudgetCardProps) {
 
   const categoryName = budget.category?.name || "Category";
   const categoryColor = budget.category?.color || budget.color || "#e4e4e7";
+  const iconSlug = budget.category?.iconSlug || "Folder";
 
   return (
     <CardBox className="p-4 flex flex-col gap-2" rounded="2xl">
@@ -43,7 +45,7 @@ export default function BudgetCard({ budget }: BudgetCardProps) {
             className="w-12 h-12 rounded-xl border-2 border-neutral flex items-center justify-center text-neutral shadow-[2px_2px_0px_0px_#4a3e3d]"
             style={{ backgroundColor: categoryColor }}
           >
-            <Folder size={22} weight="bold" />
+            <IconRenderer name={iconSlug} size={22} weight="bold" />
           </div>
           <div>
             <h3 className="heading-h4 text-neutral">{categoryName}</h3>
