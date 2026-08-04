@@ -16,11 +16,10 @@ export async function GET(req: NextRequest) {
     const { householdId } = await getHouseholdAuth();
     const { searchParams } = new URL(req.url);
 
-    const monthStr = searchParams.get("month");
-    const yearStr = searchParams.get("year");
+    const monthParam = searchParams.get("month"); // Format: "YYYY-MM" (misal: "2026-07")
 
-    // Jika frontend meminta budget beserta kalkulasi progress pengeluarannya
-    if (monthStr && yearStr) {
+    if (monthParam) {
+      const [yearStr, monthStr] = monthParam.split("-");
       const month = Number(monthStr);
       const year = Number(yearStr);
 
@@ -35,6 +34,9 @@ export async function GET(req: NextRequest) {
         "Budgets with progress retrieved successfully.",
       );
     }
+
+    // Fallback handler bawaan jika tidak ada parameter month
+    return (await getHandler()).GET(req);
   } catch (error: any) {
     return sendStandardResponse(
       null,
@@ -44,7 +46,6 @@ export async function GET(req: NextRequest) {
     );
   }
 }
-
 export async function POST(req: Request) {
   return (await getHandler()).POST(req);
 }

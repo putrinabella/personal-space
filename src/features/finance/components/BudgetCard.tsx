@@ -18,18 +18,18 @@ export default function BudgetCard({ budget }: BudgetCardProps) {
 
   const isOverBudget = percentage > 100;
 
-  let progressColor = "bg-success";
-  let badgeColor = "text-success";
-  let statusText = "On Track";
+  let progressColor = "bg-primary";
+  let badgeColor = "bg-primary/80";
+  // let statusText = "On Track";
 
   if (isOverBudget) {
     progressColor = "bg-error";
-    badgeColor = "text-error";
-    statusText = "Limit Exceeded!";
+    badgeColor = "bg-error/80";
+    // statusText = "Exceeded";
   } else if (percentage >= 85) {
     progressColor = "bg-warning";
-    badgeColor = "text-warning";
-    statusText = "Approaching Limit";
+    badgeColor = "bg-warning/80";
+    // statusText = "Near Limit";
   }
 
   const categoryName = budget.category?.name || "Category";
@@ -37,70 +37,73 @@ export default function BudgetCard({ budget }: BudgetCardProps) {
   const iconSlug = budget.category?.iconSlug || "Folder";
 
   return (
-    <CardBox className="p-4 flex flex-col gap-2" rounded="2xl">
-      {/* Header: Icon & Nama Kategori */}
-      <div className="flex items-start justify-between">
-        <div className="flex items-center gap-3">
-          <div
-            className="w-12 h-12 rounded-xl border-2 border-neutral flex items-center justify-center text-neutral shadow-[2px_2px_0px_0px_#4a3e3d]"
-            style={{ backgroundColor: categoryColor }}
-          >
-            <IconRenderer name={iconSlug} size={22} weight="bold" />
-          </div>
-          <div>
-            <h3 className="heading-h4 text-neutral">{categoryName}</h3>
-            <p className="text-caption">
-              Target Limit: {formatRupiah(targetLimit)}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Spent & Percentage */}
-      <div className="flex justify-between items-center text-body mb-0.5">
-        <span className="text-base-content/70 font-medium text-xs md:text-sm">
-          Spent:{" "}
-          <strong className="text-data text-sm md:text-base">
-            {formatRupiah(totalSpent)}
-          </strong>
-        </span>
+    <CardBox
+      className="relative p-3 sm:p-4 flex flex-col gap-2.5 mt-3"
+      rounded="2xl"
+    >
+      {/* Badge Absolut di atas kartu */}
+      <div
+        className={`absolute top-0 right-4 ${badgeColor} px-2 py-1 rounded-b-lg shadow-sm z-10d`}
+      >
         <div
-          className={`flex items-center gap-1 text-xs font-bold ${badgeColor}`}
+          className={`flex items-center gap-1 text-caption text-base-content font-bold`}
         >
           {isOverBudget ? (
-            <Warning size={14} weight="bold" />
+            <Warning size={12} weight="bold" />
           ) : (
-            <CheckCircle size={14} weight="bold" />
+            <CheckCircle size={12} weight="bold" />
           )}
-          <span>{percentage.toFixed(1)}%</span>
+          <span>{percentage.toFixed(0)}%</span>
         </div>
       </div>
-
-      {/* Progress Bar */}
-      <div className="w-full bg-base-200 border-2 border-neutral h-3.5 rounded-full overflow-hidden p-0.5">
+      {/* <div className="absolute -top-3 right-4 z-10">
         <div
-          className={`h-full rounded-full transition-all duration-500 ${progressColor}`}
+          className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-caption font-bold border-2 border-neutral shadow-[2px_2px_0px_0px_#4a3e3d] bg-base-100 ${badgeColor}`}
+        >
+          {isOverBudget ? (
+            <Warning size={12} weight="bold" />
+          ) : (
+            <CheckCircle size={12} weight="bold" />
+          )}
+          <span>{percentage.toFixed(0)}%</span>
+        </div>
+      </div> */}
+
+      {/* Header: Icon & Nama Kategori */}
+      <div className="flex items-start justify-between gap-1.5">
+        <div className="flex items-center gap-2 min-w-0">
+          <div
+            className="w-9 h-9 sm:w-10 sm:h-10 shrink-0 rounded-xl border-2 border-neutral flex items-center justify-center text-neutral shadow-[2px_2px_0px_0px_#4a3e3d]"
+            style={{ backgroundColor: categoryColor }}
+          >
+            <IconRenderer name={iconSlug} size={18} weight="bold" />
+          </div>
+          <div className="min-w-0">
+            <h3 className="heading-h4 truncate">{categoryName}</h3>
+            <p className="text-caption truncate">{formatRupiah(targetLimit)}</p>
+          </div>
+        </div>
+      </div>
+      {/* Progress Bar */}
+      <div className="w-full bg-base-200 border border-neutral/40 h-1.5 sm:h-2 rounded-full overflow-hidden">
+        <div
+          className={`h-full transition-all duration-500 ${progressColor}`}
           style={{ width: `${Math.min(percentage, 100)}%` }}
         />
       </div>
-
-      {/* Footer: Remaining & Status */}
-      <div className="flex justify-between items-center text-xs pt-1">
-        <span className="text-caption">
-          Remaining:{" "}
-          <strong
-            className={remaining < 0 ? "text-error font-bold" : "text-data"}
+      <div className="flex flex-col md:flex-row justify-between pt-1 border-t border-base-content/10">
+        <div className="flex flex-row justify-between md:gap-2 ">
+          <span className="text-caption uppercase font-semibold">Spent</span>
+          <span className="text-data truncate">{formatRupiah(totalSpent)}</span>
+        </div>
+        <div className="flex flex-row justify-between md:gap-2 ">
+          <span className="text-caption uppercase font-semibold">Left</span>
+          <span
+            className={`text-data truncate ${remaining < 0 ? "text-error font-bold" : ""}`}
           >
             {formatRupiah(remaining)}
-          </strong>
-        </span>
-        <span
-          className={`font-semibold tracking-wide ${
-            isOverBudget ? "text-error" : "text-base-content/70"
-          }`}
-        >
-          {statusText}
-        </span>
+          </span>
+        </div>
       </div>
     </CardBox>
   );

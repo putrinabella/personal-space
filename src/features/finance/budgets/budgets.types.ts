@@ -33,7 +33,5 @@ export const validateBudgets = (payload: BudgetsFormData): string[] => {
   if (!payload.categoryId) errors.push("Kategori wajib dipilih.");
   if (!payload.amount || Number(payload.amount) <= 0)
     errors.push("Jumlah budget wajib diisi dan harus lebih dari 0.");
-  // if (!payload.month) errors.push("Bulan wajib diisi.");
-  // if (!payload.year) errors.push("Tahun wajib diisi.");
   return errors;
 };

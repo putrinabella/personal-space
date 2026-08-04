@@ -151,13 +151,32 @@ const FormInput = ({
       )
     : normalizedOptions;
 
+  // const baseClasses1 =
+  //   "w-full px-4 py-2.5 border-2 border-black shadow-[6px_6px_0px_rgba(74,62,61,1)] rounded-xl text-body transition-colors duration-200" +
+  //   (error
+  //     ? " border-error focus:ring-2 focus:ring-error focus:border-transparent focus:outline-none"
+  //     : " border-base-300 focus:ring-2 focus:ring-primary focus:border-transparent focus:outline-none") +
+  //   (readOnly ? " bg-base-200 cursor-not-allowed" : " bg-base-100");
   const baseClasses =
-    "w-full px-4 py-2.5 border-2 border-black shadow-[6px_6px_0px_rgba(74,62,61,1)] rounded-xl text-body transition-colors duration-200" +
+    "h-12 w-full px-4 py-2.5 border-4 border-neutral shadow-[4px_4px_0px_rgba(74,62,61,1)] rounded-2xl text-body font-bold transition-all duration-100" +
     (error
-      ? " border-error focus:ring-2 focus:ring-error focus:border-transparent focus:outline-none"
-      : " border-base-300 focus:ring-2 focus:ring-primary focus:border-transparent focus:outline-none") +
-    (readOnly ? " bg-base-200 cursor-not-allowed" : " bg-base-100");
-
+      ? " border-error focus:ring-0 focus:outline-none"
+      : " focus:ring-0 focus:outline-none") +
+    (readOnly ? " bg-base-200 cursor-not-allowed" : " bg-base-100") +
+    " hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:translate-x-[4px] active:translate-y-[4px] active:shadow-none";
+  // const baseClasses2 =
+  //   "w-full px-4 py-2.5 border-4 border-neutral shadow-[6px_6px_0px_rgba(74,62,61,1)] rounded-2xl text-body font-bold transition-all duration-100" +
+  //   (error
+  //     ? " border-error focus:ring-0 focus:outline-none"
+  //     : " focus:ring-0 focus:outline-none") +
+  //   (readOnly ? " bg-base-200 cursor-not-allowed" : " bg-base-100") +
+  //   " hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:translate-x-[4px] active:translate-y-[4px] active:shadow-none";
+  // const baseClassesq =
+  //   "w-full px-4 py-2.5 flex items-center justify-center gap-2 text-body font-bold border-2 border-black shadow-[6px_6px_0px_rgba(74,62,61,1)] rounded-xl transition-colors duration-200" +
+  //   (error
+  //     ? " border-error focus:ring-2 focus:ring-error focus:border-transparent focus:outline-none"
+  //     : " border-base-300 focus:ring-2 focus:ring-primary focus:border-transparent focus:outline-none") +
+  //   (readOnly ? " bg-base-200 cursor-not-allowed" : " bg-base-100");
   const [query, setQuery] = useState(value || "");
   const [open, setOpen] = useState(false);
   const [showPassword, setShowPassword] = useState(false);

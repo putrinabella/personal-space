@@ -14,7 +14,7 @@ export function useBudgetsForm(budgetsId?: string, enabled: boolean = true) {
     entityName: "budgets",
     defaultValues: defaultBudgets,
     queryKey: queryKeys.budgets.detail(budgetsId || ""),
-    invalidateQueryKey: queryKeys.budgets.lists(),
+    invalidateQueryKey: queryKeys.budgets.all(),
 
     getDetail: async (id: string) => await budgetsService.getDetail(id),
     createFn: budgetsService.create,

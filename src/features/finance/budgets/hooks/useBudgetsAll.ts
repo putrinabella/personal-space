@@ -5,7 +5,6 @@ import { BudgetsEntry } from "../budgets.types";
 
 export interface BudgetParams {
   month?: string;
-  year?: string;
 }
 
 export function useBudgetAll(
@@ -13,7 +12,7 @@ export function useBudgetAll(
   options?: { enabled?: boolean },
 ) {
   return useBaseAll<BudgetsEntry, Partial<BudgetParams>>({
-    queryKey: queryKeys.transaction.all(filters),
+    queryKey: queryKeys.budgets.all(filters),
     fetcher: (params) => budgetsService.getAll(params),
     params: filters,
     enabled: options?.enabled,
