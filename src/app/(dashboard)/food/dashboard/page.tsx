@@ -90,7 +90,7 @@ export default function FoodView() {
     filters.diningTypeId,
   ].filter(Boolean).length;
   return (
-    <div className="flex flex-col gap-8 max-w-7xl mx-auto">
+    <div className="flex flex-col gap-4 md:gap-8 max-w-7xl mx-auto">
       <header className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
         <div>
           <span className="text-caption font-bold tracking-[0.2em] uppercase text-base-content mb-2 block">
@@ -261,7 +261,7 @@ export default function FoodView() {
       <div>
         <DataSection loading={loading} error={error} data={foodData} />
         {!loading && !error && foodData.length > 0 && (
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-4 md:gap-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {foodData.map((food) => (
                 <FoodCard

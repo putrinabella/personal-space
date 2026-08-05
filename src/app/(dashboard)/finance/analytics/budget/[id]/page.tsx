@@ -8,11 +8,10 @@ import { useDataFilters } from "@/shared/hooks/use-data-filters";
 import { useTransactionList } from "@/features/finance/transaction/hooks/useTransactionList";
 import TransactionCard from "@/features/finance/components/TransactionCard";
 import Pagination from "@/shared/components/Pagination";
-import { useCategoriesAll } from "@/features/finance/categories/hooks/useCategoriesAll";
 import { getCurrentYearMonth } from "@/utils/dateFormatter";
 import BalanceSummarySection from "@/features/finance/components/BalanceSummarySection";
-import { usePocketDetail } from "@/features/finance/pockets/hooks/usePocketDetail";
-export default function PocketDetailPage({
+import { useBudgetDetail } from "@/features/finance/budgets/hooks/useBudgetDetail";
+export default function BudgetDetailPage({
   params,
 }: {
   params: Promise<{ id: string }>;
@@ -31,13 +30,13 @@ export default function PocketDetailPage({
     resetFilters,
   } = useDataFilters({
     search: "",
-    pocketId: id,
-    type: "",
-    categoryId: "",
+    categoryId: id,
     month: getCurrentYearMonth(),
     status: "",
   });
-
+  const handleResetAll = () => {
+    resetFilters({ month: "" });
+  };
   const {
     data: dataTransactions = [],
     loading: loadingTransactions,
@@ -47,14 +46,11 @@ export default function PocketDetailPage({
     perPage,
   } = useTransactionList(page, activeFilters);
 
-  const { data: dataCategories, isLoading: loadingCategories } =
-    useCategoriesAll();
-
   const {
-    data: dataPocket,
-    loading: loadingPocket,
-    error: errorPocket,
-  } = usePocketDetail(id);
+    data: dataBudget,
+    loading: loadingBudget,
+    error: errorBudget,
+  } = useBudgetDetail(id);
 
   const { totalIncome, totalExpense } = useMemo(() => {
     return dataTransactions.reduce(
@@ -70,16 +66,10 @@ export default function PocketDetailPage({
       { totalIncome: 0, totalExpense: 0 },
     );
   }, [dataTransactions]);
-  const activeFilterCount = [
-    filters.month !== getCurrentYearMonth() ? filters.month : null,
-    filters.categoryId,
-    filters.type,
-    filters.status,
-  ].filter(Boolean).length;
+  const activeFilterCount = [filters.month, filters.status].filter(
+    Boolean,
+  ).length;
 
-  const selectableCategories = dataCategories.filter(
-    (category: any) => category.parentId !== null,
-  );
   // Kelompokkan transaksi berdasarkan tanggal (Grouping by Date)
   const groupedTransactions = dataTransactions.reduce(
     (acc: Record<string, any[]>, tx: any) => {
@@ -99,38 +89,38 @@ export default function PocketDetailPage({
     },
     {},
   );
-  if (loadingPocket || errorPocket || !dataPocket) {
+  if (loadingBudget || errorBudget || !dataBudget) {
     return (
-      <div className="flex flex-col gap-8 max-w-7xl mx-auto">
+      <div className="flex flex-col gap-4 md:gap-8 max-w-7xl mx-auto">
         <DataSection
-          loading={loadingPocket}
-          error={errorPocket}
-          data={dataPocket}
+          loading={loadingBudget}
+          error={errorBudget}
+          data={dataBudget}
         />
       </div>
     );
   }
   return (
-    <div className="flex flex-col gap-8 max-w-7xl mx-auto">
+    <div className="flex flex-col gap-4 md:gap-8 max-w-7xl mx-auto">
       {/* Header Halaman Detail Akun */}
 
       <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 w-full">
         <div>
           <span className="text-caption font-bold tracking-[0.2em] uppercase text-base-content/60 mb-0.5 block">
-            Eounia / Finance / Pocket
+            Eounia / Finance / Budget
           </span>
           <h1 className="heading-h1 font-extrabold uppercase tracking-tight text-base-content">
-            {dataPocket.name}
+            {dataBudget.name}
           </h1>
         </div>
         <div className="w-full sm:w-auto">
-          {/* <BalanceOverview amount={dataPocket.currentBalance} /> */}
+          {/* <BalanceOverview amount={dataBudget.currentBalance} /> */}
         </div>
       </header>
       {/* Section Filter & Search */}
-      {/* <BalanceOverview amount={dataPocket.currentBalance} /> */}
+      {/* <BalanceOverview amount={dataBudget.currentBalance} /> */}
       <BalanceSummarySection
-        currentBalance={dataPocket.currentBalance}
+        currentBalance={dataBudget.currentBalance}
         income={totalIncome}
         expense={totalExpense}
       />
@@ -166,7 +156,7 @@ export default function PocketDetailPage({
               className="px-4 h-11 flex items-center justify-center gap-2 text-sm font-bold flex-1 md:flex-none border-2 border-black"
               rounded="xl"
               color="base-300"
-              onClick={resetFilters}
+              onClick={handleResetAll}
               pressable
             >
               <ArrowClockwiseIcon weight="bold" size={18} />
@@ -184,35 +174,10 @@ export default function PocketDetailPage({
           <div className={showFilters ? "overflow-visible" : "overflow-hidden"}>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 pt-3 border-t-2 border-black/10">
               <FormInput
-                label="Type"
-                value={filters.type}
-                onChange={(val) => handleFilterChange("type", val)}
-                options={[
-                  { label: "Income", value: "income" },
-                  { label: "Expense", value: "expense" },
-                ]}
-                dropdownType="select"
-                placeholder="All Types"
-                searchable={false}
-              />
-
-              <FormInput
                 type="month"
                 label="Month & Year"
                 value={filters.month}
                 onChange={(val) => handleFilterChange("month", val)}
-              />
-              <FormInput
-                label="Category"
-                options={selectableCategories.map((category) => ({
-                  label: category.name,
-                  value: category.id,
-                }))}
-                dropdownType="select"
-                value={filters.categoryId}
-                onChange={(val) => handleFilterChange("categoryId", val)}
-                placeholder="Select category"
-                disabled={loadingCategories}
               />
 
               <FormInput
@@ -234,7 +199,7 @@ export default function PocketDetailPage({
       </CardBox>
 
       {/* Section List Transaksi Dikelompokkan Berdasarkan Tanggal */}
-      <section className="flex flex-col gap-6">
+      <section className="flex flex-col gap-4 md:gap-6">
         <h2 className="text-body font-black uppercase">Transaction History</h2>
 
         <DataSection
@@ -246,7 +211,7 @@ export default function PocketDetailPage({
         {!loadingTransactions &&
           !errorTransactions &&
           dataTransactions.length > 0 && (
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-4 md:gap-6">
               {Object.entries(groupedTransactions).map(([dateLabel, txs]) => (
                 <div key={dateLabel} className="flex flex-col gap-3">
                   {/* Judul Tanggal / Header Grup */}

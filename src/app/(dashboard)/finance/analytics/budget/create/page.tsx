@@ -49,10 +49,10 @@ export default function CreateBudgetPage() {
   };
 
   return (
-    <div className="flex flex-col gap-8 max-w-7xl mx-auto">
+    <div className="flex flex-col gap-4 md:gap-8 max-w-7xl mx-auto">
       <CardHeader title="SET MONTHLY BUDGET" icon={WalletIcon} color="accent" />
       <CardBox
-        className="p-4 md:p-6 flex flex-col gap-6 bg-base-100 border-2 border-neutral shadow-sm"
+        className="p-4 md:p-6 flex flex-col gap-4 md:gap-6 bg-base-100 border-2 border-neutral shadow-sm"
         rounded="2xl"
       >
         <FormInput

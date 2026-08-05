@@ -18,14 +18,17 @@ export default function CreatePage() {
     | "tags";
   const { data, setField, handleSubmit, saving } = useEntityForm(entity);
   return (
-    <div className="flex flex-col gap-8 max-w-7xl mx-auto">
+    <div className="flex flex-col gap-4 md:gap-8 max-w-7xl mx-auto">
       <CardHeader
         title={`ADD NEW ${entity.toUpperCase()}`}
         icon={Plus}
         color="primary"
       />
 
-      <CardBox className="p-4 md:p-6 flex flex-col gap-6" rounded="2xl">
+      <CardBox
+        className="p-4 md:p-6 flex flex-col gap-4 md:gap-6"
+        rounded="2xl"
+      >
         <EntityFields entity={entity} data={data} setField={setField} />
 
         <div className="flex flex-col md:flex-row gap-4 pt-4">

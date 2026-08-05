@@ -91,12 +91,12 @@ export default function SettingsPage() {
   );
 
   return (
-    <div className="flex flex-col gap-8 max-w-7xl mx-auto">
+    <div className="flex flex-col gap-4 md:gap-8 max-w-7xl mx-auto">
       <CardHeader title="S E T T I N G S" icon={Sliders} color="accent" />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="md:col-span-1 flex flex-col gap-6">
-          <div className="flex flex-col gap-6">
+        <div className="md:col-span-1 flex flex-col gap-4 md:gap-6">
+          <div className="flex flex-col gap-4 md:gap-6">
             <CardSection
               title="Data Management"
               headerColor="primary"
@@ -140,7 +140,7 @@ export default function SettingsPage() {
         </div>
 
         <div className="md:col-span-2">
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-4 md:gap-6">
             <CardSection
               title={`${TAB_CONFIG.find((t) => t.id === activeTab)?.label} List`}
               action={

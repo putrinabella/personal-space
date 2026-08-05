@@ -27,7 +27,7 @@ interface GroupedFinanceListProps {
 
 export default function GroupedFinanceList({
   items,
-  baseRoute = "/finance/dashboard/account",
+  baseRoute = "",
   isClickable = true,
   onItemClick,
 }: GroupedFinanceListProps) {
@@ -56,7 +56,7 @@ export default function GroupedFinanceList({
   if (items.length === 0) return null;
 
   return (
-    <div className="flex flex-col gap-6 w-full">
+    <div className="flex flex-col gap-4 md:gap-6 w-full">
       {Object.entries(groupedData).map(([typeKey, groupItems]) => {
         const categoryTitle =
           typeKey.charAt(0).toUpperCase() + typeKey.slice(1);

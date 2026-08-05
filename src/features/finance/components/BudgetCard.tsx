@@ -3,12 +3,22 @@ import { BudgetsEntry } from "../budgets/budgets.types";
 import { formatRupiah } from "@/utils/rupiahFormatter";
 import CardBox from "@/shared/components/CardBox";
 import IconRenderer from "@/shared/components/IconRenderer";
+import { useRouter } from "next/navigation";
 
 interface BudgetCardProps {
   budget: BudgetsEntry;
+  baseRoute?: string;
+  isClickable?: boolean;
+  onItemClick?: (item: BudgetsEntry) => void;
 }
 
-export default function BudgetCard({ budget }: BudgetCardProps) {
+export default function BudgetCard({
+  budget,
+  baseRoute = "",
+  isClickable = true,
+  onItemClick,
+}: BudgetCardProps) {
+  const router = useRouter();
   const targetLimit = parseFloat(budget.amount || "0");
   const totalSpent = (budget as any).totalSpent || 0;
   const remaining = (budget as any).remaining || targetLimit - totalSpent;
@@ -36,12 +46,24 @@ export default function BudgetCard({ budget }: BudgetCardProps) {
   const categoryColor = budget.category?.color || budget.color || "#e4e4e7";
   const iconSlug = budget.category?.iconSlug || "Folder";
 
+  const handleCardClick = () => {
+    if (!isClickable) return;
+    if (onItemClick) {
+      onItemClick(budget);
+    } else {
+      router.push(`${baseRoute}/${budget.id}`);
+    }
+  };
   return (
     <CardBox
-      className="relative p-3 sm:p-4 flex flex-col gap-2.5 mt-3"
+      className={`relative p-3 sm:p-4 flex flex-col gap-2.5 mt-3 transition-all ${
+        isClickable
+          ? "hover:bg-primary/20 cursor-pointer group"
+          : "cursor-default"
+      }`}
       rounded="2xl"
+      onClick={handleCardClick}
     >
-      {/* Badge Absolut di atas kartu */}
       <div
         className={`absolute top-0 right-4 ${badgeColor} px-2 py-1 rounded-b-lg shadow-sm z-10d`}
       >
@@ -69,7 +91,6 @@ export default function BudgetCard({ budget }: BudgetCardProps) {
         </div>
       </div> */}
 
-      {/* Header: Icon & Nama Kategori */}
       <div className="flex items-start justify-between gap-1.5">
         <div className="flex items-center gap-2 min-w-0">
           <div
@@ -84,7 +105,6 @@ export default function BudgetCard({ budget }: BudgetCardProps) {
           </div>
         </div>
       </div>
-      {/* Progress Bar */}
       <div className="w-full bg-base-200 border border-neutral/40 h-1.5 sm:h-2 rounded-full overflow-hidden">
         <div
           className={`h-full transition-all duration-500 ${progressColor}`}

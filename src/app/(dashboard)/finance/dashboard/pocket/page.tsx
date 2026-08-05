@@ -16,7 +16,7 @@ export default function PocketPage() {
     0,
   );
   return (
-    <div className="flex flex-col gap-8 max-w-7xl mx-auto">
+    <div className="flex flex-col gap-4 md:gap-8 max-w-7xl mx-auto">
       <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 w-full">
         <div>
           <span className="text-caption font-bold tracking-[0.2em] uppercase text-base-content/60 mb-0.5 block">

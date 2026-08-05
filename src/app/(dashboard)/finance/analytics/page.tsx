@@ -63,7 +63,7 @@ export default function BudgetPage() {
   );
 
   return (
-    <div className="flex flex-col gap-6 sm:gap-8 max-w-7xl mx-auto pb-8 sm:pb-12">
+    <div className="flex flex-col gap-4 md:gap-6 sm:gap-8 max-w-7xl mx-auto pb-8 sm:pb-12">
       {/* <header className="flex flex-col gap-1">
         <span className="text-caption uppercase">Eounia / Finance</span>
         <h1 className="heading-h1 uppercase tracking-tight text-base-content">
@@ -148,7 +148,11 @@ export default function BudgetPage() {
         {!loadingBudget && !errorBudget && dataBudget.length > 0 && (
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
             {dataBudget.map((budget) => (
-              <BudgetCard key={budget.id} budget={budget} />
+              <BudgetCard
+                key={budget.id}
+                budget={budget}
+                baseRoute="/finance/analytics/budget"
+              />
             ))}
           </div>
         )}

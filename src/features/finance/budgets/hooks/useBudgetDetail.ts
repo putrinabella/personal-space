@@ -3,11 +3,11 @@ import { BudgetsEntry } from "../budgets.types";
 import { queryKeys } from "@/lib/queryKeys";
 import { budgetsService } from "../budgets.service";
 
-export function usePocketDetail(pocketId?: string) {
+export function useBudgetDetail(budgetId?: string) {
   return useBaseDetail<BudgetsEntry>({
-    id: pocketId,
+    id: budgetId,
 
-    queryKey: queryKeys.budgets.detail(pocketId || ""),
+    queryKey: queryKeys.budgets.detail(budgetId || ""),
 
     fetcher: budgetsService.getDetail,
   });

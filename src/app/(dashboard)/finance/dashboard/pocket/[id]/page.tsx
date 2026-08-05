@@ -9,9 +9,9 @@ import { useTransactionList } from "@/features/finance/transaction/hooks/useTran
 import TransactionCard from "@/features/finance/components/TransactionCard";
 import Pagination from "@/shared/components/Pagination";
 import { useCategoriesAll } from "@/features/finance/categories/hooks/useCategoriesAll";
-import { getCurrentYearMonth } from "@/utils/dateFormatter";
 import BalanceSummarySection from "@/features/finance/components/BalanceSummarySection";
 import { usePocketDetail } from "@/features/finance/pockets/hooks/usePocketDetail";
+import { getCurrentYearMonth } from "@/utils/dateFormatter";
 export default function PocketDetailPage({
   params,
 }: {
@@ -37,7 +37,9 @@ export default function PocketDetailPage({
     month: getCurrentYearMonth(),
     status: "",
   });
-
+  const handleResetAll = () => {
+    resetFilters({ month: "" });
+  };
   const {
     data: dataTransactions = [],
     loading: loadingTransactions,
@@ -71,7 +73,7 @@ export default function PocketDetailPage({
     );
   }, [dataTransactions]);
   const activeFilterCount = [
-    filters.month !== getCurrentYearMonth() ? filters.month : null,
+    filters.month,
     filters.categoryId,
     filters.type,
     filters.status,
@@ -101,7 +103,7 @@ export default function PocketDetailPage({
   );
   if (loadingPocket || errorPocket || !dataPocket) {
     return (
-      <div className="flex flex-col gap-8 max-w-7xl mx-auto">
+      <div className="flex flex-col gap-4 md:gap-8 max-w-7xl mx-auto">
         <DataSection
           loading={loadingPocket}
           error={errorPocket}
@@ -111,7 +113,7 @@ export default function PocketDetailPage({
     );
   }
   return (
-    <div className="flex flex-col gap-8 max-w-7xl mx-auto">
+    <div className="flex flex-col gap-4 md:gap-8 max-w-7xl mx-auto">
       {/* Header Halaman Detail Akun */}
 
       <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 w-full">
@@ -166,7 +168,7 @@ export default function PocketDetailPage({
               className="px-4 h-11 flex items-center justify-center gap-2 text-sm font-bold flex-1 md:flex-none border-2 border-black"
               rounded="xl"
               color="base-300"
-              onClick={resetFilters}
+              onClick={handleResetAll}
               pressable
             >
               <ArrowClockwiseIcon weight="bold" size={18} />
@@ -234,7 +236,7 @@ export default function PocketDetailPage({
       </CardBox>
 
       {/* Section List Transaksi Dikelompokkan Berdasarkan Tanggal */}
-      <section className="flex flex-col gap-6">
+      <section className="flex flex-col gap-4 md:gap-6">
         <h2 className="text-body font-black uppercase">Transaction History</h2>
 
         <DataSection
@@ -246,7 +248,7 @@ export default function PocketDetailPage({
         {!loadingTransactions &&
           !errorTransactions &&
           dataTransactions.length > 0 && (
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-4 md:gap-6">
               {Object.entries(groupedTransactions).map(([dateLabel, txs]) => (
                 <div key={dateLabel} className="flex flex-col gap-3">
                   {/* Judul Tanggal / Header Grup */}

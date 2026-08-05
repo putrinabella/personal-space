@@ -24,7 +24,7 @@ export const FoodRandomModal = ({
     >
       <div onClick={(e) => e.stopPropagation()}>
         <CardBox
-          className="max-w-md w-full p-6 flex flex-col gap-6"
+          className="max-w-md w-full p-6 flex flex-col gap-4 md:gap-6"
           rounded="2xl"
         >
           <div className="flex justify-between items-start gap-4">

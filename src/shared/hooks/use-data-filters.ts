@@ -14,9 +14,7 @@ export function useDataFilters<T extends Record<string, any>>(
   const { debounceDelay = 500, searchKey = "search" } = options;
 
   const [page, setPage] = useState(1);
-
   const [searchTitle, setSearchTitle] = useState("");
-
   const [filters, setFilters] = useState<T>(initialFilters);
 
   const debouncedSearchValue = useDebounce(searchTitle, debounceDelay);
@@ -36,9 +34,12 @@ export function useDataFilters<T extends Record<string, any>>(
     setPage(1);
   };
 
-  const resetFilters = () => {
+  // Ubah agar resetFilters bisa menerima override parsial atau total
+  const resetFilters = (overrides?: Partial<T>) => {
     setSearchTitle("");
-    setFilters(initialFilters);
+    setFilters(
+      overrides ? { ...initialFilters, ...overrides } : initialFilters,
+    );
     setPage(1);
   };
 

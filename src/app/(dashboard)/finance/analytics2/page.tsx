@@ -155,7 +155,7 @@ export default function BudgetPage() {
   };
 
   return (
-    <div className="flex flex-col gap-8 max-w-7xl mx-auto pb-12">
+    <div className="flex flex-col gap-4 md:gap-8 max-w-7xl mx-auto pb-12">
       {/* Header Halaman */}
       <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>

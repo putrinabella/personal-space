@@ -11,15 +11,14 @@ import TransactionCard from "@/features/finance/components/TransactionCard";
 import Pagination from "@/shared/components/Pagination";
 import { useCategoriesAll } from "@/features/finance/categories/hooks/useCategoriesAll";
 import { useAccountDetail } from "@/features/finance/accounts/hooks/useAccountDetail";
-// import BalanceOverview from "@/features/finance/components/BalanceOverview";
-import { getCurrentYearMonth } from "@/utils/dateFormatter";
 import BalanceSummarySection from "@/features/finance/components/BalanceSummarySection";
+import { getCurrentYearMonth } from "@/utils/dateFormatter";
 export default function AccountDetailPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const { id } = use(params); // Mengambil ID Akun dari URL
+  const { id } = use(params);
   const [showFilters, setShowFilters] = useState(false);
 
   const {
@@ -39,7 +38,9 @@ export default function AccountDetailPage({
     month: getCurrentYearMonth(),
     status: "",
   });
-
+  const handleResetAll = () => {
+    resetFilters({ month: "" });
+  };
   const {
     data: dataTransactions = [],
     loading: loadingTransactions,
@@ -72,7 +73,7 @@ export default function AccountDetailPage({
     );
   }, [dataTransactions]);
   const activeFilterCount = [
-    filters.month !== getCurrentYearMonth() ? filters.month : null,
+    filters.month,
     filters.categoryId,
     filters.type,
     filters.status,
@@ -102,7 +103,7 @@ export default function AccountDetailPage({
   );
   if (loadingAccount || errorAccount || !dataAccount) {
     return (
-      <div className="flex flex-col gap-8 max-w-7xl mx-auto">
+      <div className="flex flex-col gap-4 md:gap-8 max-w-7xl mx-auto">
         <DataSection
           loading={loadingAccount}
           error={errorAccount}
@@ -112,7 +113,7 @@ export default function AccountDetailPage({
     );
   }
   return (
-    <div className="flex flex-col gap-8 max-w-7xl mx-auto">
+    <div className="flex flex-col gap-4 md:gap-8 max-w-7xl mx-auto">
       {/* Header Halaman Detail Akun */}
 
       <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 w-full">
@@ -167,7 +168,7 @@ export default function AccountDetailPage({
               className="px-4 h-11 flex items-center justify-center gap-2 text-sm font-bold flex-1 md:flex-none border-2 border-black"
               rounded="xl"
               color="base-300"
-              onClick={resetFilters}
+              onClick={handleResetAll}
               pressable
             >
               <ArrowClockwiseIcon weight="bold" size={18} />
@@ -235,7 +236,7 @@ export default function AccountDetailPage({
       </CardBox>
 
       {/* Section List Transaksi Dikelompokkan Berdasarkan Tanggal */}
-      <section className="flex flex-col gap-6">
+      <section className="flex flex-col gap-4 md:gap-6">
         <h2 className="text-body font-black uppercase">Transaction History</h2>
 
         <DataSection
@@ -247,7 +248,7 @@ export default function AccountDetailPage({
         {!loadingTransactions &&
           !errorTransactions &&
           dataTransactions.length > 0 && (
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-4 md:gap-6">
               {Object.entries(groupedTransactions).map(([dateLabel, txs]) => (
                 <div key={dateLabel} className="flex flex-col gap-3">
                   {/* Judul Tanggal / Header Grup */}

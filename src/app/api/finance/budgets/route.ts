@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
     const { householdId } = await getHouseholdAuth();
     const { searchParams } = new URL(req.url);
 
-    const monthParam = searchParams.get("month"); // Format: "YYYY-MM" (misal: "2026-07")
+    const monthParam = searchParams.get("month");
 
     if (monthParam) {
       const [yearStr, monthStr] = monthParam.split("-");
@@ -35,7 +35,6 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    // Fallback handler bawaan jika tidak ada parameter month
     return (await getHandler()).GET(req);
   } catch (error: any) {
     return sendStandardResponse(

@@ -13,14 +13,17 @@ export default function CreateRestaurantPage() {
   const { data, setField, handleSubmit, saving } = useRestaurantsForm();
 
   return (
-    <div className="flex flex-col gap-8 max-w-7xl mx-auto">
+    <div className="flex flex-col gap-4 md:gap-8 max-w-7xl mx-auto">
       <CardHeader
         title="ADD NEW RESTORAN"
         icon={MapPinAreaIcon}
         color="secondary"
       />
 
-      <CardBox className="p-4 md:p-6 flex flex-col gap-6" rounded="2xl">
+      <CardBox
+        className="p-4 md:p-6 flex flex-col gap-4 md:gap-6"
+        rounded="2xl"
+      >
         <FormInput
           label="Restaurant/Cafe Name"
           value={data.name}

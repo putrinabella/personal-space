@@ -26,7 +26,7 @@ export default function FoodView() {
     perPage,
   } = useLogsList(page);
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-4 md:gap-6">
       <header className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
         <div>
           <span className="text-xs font-bold tracking-[0.2em] uppercase text-slate-400 mb-2 block">
@@ -178,7 +178,7 @@ export default function FoodView() {
             Loading culinary spots...
           </div>
         ) : (
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-4 md:gap-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {foodLogs?.map((data) => (
                 <CardBox
