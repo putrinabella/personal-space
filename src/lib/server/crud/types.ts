@@ -5,7 +5,8 @@ export interface CrudHandlerOptions {
   table: AnyPgTable;
   entity: string;
   searchableColumns?: AnyPgColumn[];
-  defaultWhere?: SQL; // Tambahkan ini
+  filterableColumns?: string[];
+  defaultWhere?: SQL;
   enablePagination?: boolean;
   enableSoftDelete?: boolean;
 }

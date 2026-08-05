@@ -14,40 +14,30 @@ import {
 import { useRouter } from "next/navigation";
 import { useTransactionForm } from "@/features/finance/transaction/hooks/useTransactionForm";
 import { useAccountsAll } from "@/features/finance/accounts/hooks/useAccountsAll";
-import { usePocketsAll } from "@/features/finance/pockets/hooks/usePocketsAll";
+import { usePocketAll } from "@/features/finance/pockets/hooks/usePocketAll";
 import { useCategoriesAll } from "@/features/finance/categories/hooks/useCategoriesAll";
 import SelectionItem from "@/shared/components/SelectionItem";
 
 export default function CreateTransactionPage() {
   const router = useRouter();
   const { data, setField, handleSubmit, saving } = useTransactionForm();
-
-  // Fetch data account, pocket, & categories
   const { data: accounts } = useAccountsAll();
-  const { data: pockets } = usePocketsAll();
+  const { data: pockets } = usePocketAll();
   const { data: categories } = useCategoriesAll();
-
-  // Mencari informasi saldo dari akun yang dipilih
   const selectedAccount = useMemo(
-    () => accounts.find((a) => a.id === data.accountId),
+    () => accounts.find((account) => account.id === data.accountId),
     [accounts, data.accountId],
   );
-
-  // Mencari informasi saldo dari pocket yang dipilih
-  // const selectedPocket = useMemo(
-  //   () => pockets.find((p) => p.id === data.pocketId),
-  //   [pockets, data.pocketId],
-  // );
+  const selectedPocket = useMemo(
+    () => pockets.find((pocket) => pocket.id === data.pocketId),
+    [pockets, data.pocketId],
+  );
 
   const filteredCategories = useMemo(
     () => categories.filter((cat) => cat.type === data.type),
     [categories, data.type],
   );
-
-  // State interaktif untuk manual toggle parent kategori
   const [manualExpandedId, setManualExpandedId] = useState<string | null>(null);
-
-  // Menentukan expanded parent secara reaktif tanpa useEffect (mencegah cascading renders)
   const expandedParentId = useMemo(() => {
     if (manualExpandedId) return manualExpandedId;
     if (data.type === "expense" && categories.length > 0) {
@@ -67,7 +57,7 @@ export default function CreateTransactionPage() {
         <div className="flex bg-base-200 p-1 rounded-xl">
           <button
             onClick={() => setField("type", "expense")}
-            className={`flex-1 py-2 rounded-lg font-bold transition flex items-center justify-center gap-2  ${data.type === "expense" ? "bg-error text-white shadow" : "opacity-60"}`}
+            className={`flex-1 py-2 rounded-lg font-bold transition flex items-center justify-center gap-2  ${data.type === "expense" ? "bg-secondary text-white shadow" : "opacity-60"}`}
           >
             <ArrowUpRight size={18} /> Expense
           </button>
@@ -79,14 +69,12 @@ export default function CreateTransactionPage() {
           </button>
         </div>
 
-        {/* ACCOUNT SELECTION */}
         <div className="space-y-2">
           <div className="flex justify-between items-center">
             <h3 className="text-body tracking-wider">Select Account</h3>
             {selectedAccount && (
               <span className="text-body bg-primary/10 px-3 py-1 text-bold rounded-full">
-                Balance: Rp{" "}
-                {Number(selectedAccount.currentBalance).toLocaleString()}
+                Balance: Rp {selectedAccount.currentBalance}
               </span>
             )}
           </div>
@@ -99,7 +87,6 @@ export default function CreateTransactionPage() {
           />
         </div>
 
-        {/* CATEGORY SELECTION */}
         <div className="space-y-2">
           <h3 className="text-body tracking-wider">Select Category</h3>
           <SelectionItem
@@ -117,16 +104,26 @@ export default function CreateTransactionPage() {
           />
         </div>
 
-        {/* POCKET & EXTRA INFO */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormInput
-            label="Pocket (Optional)"
-            options={pockets.map((p) => ({ label: p.name, value: p.id }))}
-            dropdownType="select"
-            value={data.pocketId}
-            onChange={(val) => setField("pocketId", val)}
-            placeholder="Select pocket"
-          />
+          <div className="space-y-2">
+            <div className="flex justify-between items-center">
+              <h3 className="text-body tracking-wider">Pocket (Optional)</h3>
+              {selectedPocket && (
+                <span className="text-body bg-primary/10 px-3 py-1 text-bold rounded-full">
+                  Balance: Rp {selectedPocket.currentBalance}
+                </span>
+              )}
+            </div>
+            <FormInput
+              options={pockets.map((p) => ({ label: p.name, value: p.id }))}
+              dropdownType="select"
+              value={data.pocketId}
+              onChange={(val) => setField("pocketId", val)}
+              placeholder="Select pocket"
+              label={""}
+            />
+          </div>
+
           <FormInput
             label="Amount"
             type="money"
@@ -151,7 +148,6 @@ export default function CreateTransactionPage() {
           />
         </div>
 
-        {/* ACTIONS */}
         <div className="flex flex-col md:flex-row gap-4 pt-4">
           <CardBox
             className="px-6 py-3 flex items-center justify-center gap-2 font-bold flex-1"

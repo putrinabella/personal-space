@@ -1,14 +1,18 @@
 import { financePockets } from "@/db/schema/finance";
 import { createCrudHandler } from "@/lib/server/crud/createCrudHandler";
-import { getHouseholdAuth } from "@/lib/financeAuth"; // Import helper auth Anda
+import { getHouseholdAuth } from "@/lib/financeAuth";
 import { eq } from "drizzle-orm";
+
 async function getHandler() {
   const { householdId } = await getHouseholdAuth();
   return createCrudHandler({
     table: financePockets,
     entity: "Pocket",
+    // searchableColumns: [financePockets.name, financePockets.description],
+    // filterableColumns: ["type", "status"],
     searchableColumns: [financePockets.name],
-    defaultWhere: eq(financePockets.householdId, householdId), // Filter keamanan
+    filterableColumns: ["type"],
+    defaultWhere: eq(financePockets.householdId, householdId),
   });
 }
 export async function GET(req: Request) {

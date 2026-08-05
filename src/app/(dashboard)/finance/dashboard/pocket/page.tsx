@@ -1,5 +1,5 @@
 "use client";
-import { usePocketsAll } from "@/features/finance/pockets/hooks/usePocketsAll";
+import { usePocketAll } from "@/features/finance/pockets/hooks/usePocketAll";
 import BalanceOverview from "@/features/finance/components/BalanceOverview";
 import GroupedFinanceList from "@/features/finance/components/GroupedFinanceList";
 import DataSection from "@/shared/components/DataSection";
@@ -9,7 +9,7 @@ export default function PocketPage() {
     data: dataPockets = [],
     isLoading: loadingPocket,
     error: errorPocket,
-  } = usePocketsAll();
+  } = usePocketAll();
 
   const totalBalance = dataPockets.reduce(
     (sum, account: any) => sum + Number(account.currentBalance || 0),

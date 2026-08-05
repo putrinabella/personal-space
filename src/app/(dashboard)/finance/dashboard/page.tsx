@@ -2,7 +2,7 @@
 import { useAccountsAll } from "@/features/finance/accounts/hooks/useAccountsAll";
 import BalanceSummarySection from "@/features/finance/components/BalanceSummarySection";
 import FinanceCard from "@/features/finance/components/FinanceCard";
-import { usePocketsAll } from "@/features/finance/pockets/hooks/usePocketsAll";
+import { usePocketAll } from "@/features/finance/pockets/hooks/usePocketAll";
 import { useSumarriesAll } from "@/features/finance/summaries/hooks/useSumarriesAll";
 import { useTransactionAll } from "@/features/finance/transaction/hooks/useTransactionAll";
 import { calculateTransactionCalendar } from "@/features/finance/transaction/hooks/useTransactionCalendar";
@@ -31,7 +31,7 @@ export default function FinancePage() {
     data: dataPockets,
     isLoading: loadingPocket,
     error: errorPocket,
-  } = usePocketsAll();
+  } = usePocketAll();
 
   const { data: dataSummary = [] } = useSumarriesAll({
     year: yearStr,
@@ -119,7 +119,7 @@ export default function FinancePage() {
             error={errorPocket}
             data={dataPockets}
           />
-          {!loadingPocket && !errorPocket && dataAccounts.length > 0 && (
+          {!loadingPocket && !errorPocket && dataPockets.length > 0 && (
             <div className="flex gap-4 overflow-x-auto pb-2 pr-2 custom-horizontal-scroll">
               {dataPockets.map((pocket) => (
                 <FinanceCard key={pocket.id} item={pocket} label="Pocket" />

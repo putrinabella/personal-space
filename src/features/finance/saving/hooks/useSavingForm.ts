@@ -20,7 +20,7 @@ export function useSavingForm(savingId?: string, enabled: boolean = true) {
     createFn: savingService.create,
     updateFn: savingService.update,
     validate: validateSaving,
-    redirectTo: "/finance/dashboard",
+    redirectTo: "/finance/analytics",
     messages: {
       createSuccess: "Saving created successfully",
       updateSuccess: "Saving updated successfully",
