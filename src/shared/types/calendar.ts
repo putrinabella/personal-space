@@ -1,3 +1,5 @@
+import { TransactionEntry } from "@/features/finance/transaction/transaction.types";
+
 export interface CalendarItem {
   id: string;
   title: string;
@@ -21,7 +23,7 @@ export interface DayData {
     expenseTotal?: number;
     [key: string]: any;
   };
-  items: CalendarItem[];
+  items: TransactionEntry[];
 }
 
 export type CalendarDataMap = Record<string, DayData>;

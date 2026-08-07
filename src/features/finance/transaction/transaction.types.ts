@@ -1,4 +1,7 @@
 import { BaseItem } from "@/shared/types/base.types";
+import { AccountsEntry } from "../accounts/accounts.types";
+import { PocketsEntry } from "../pockets/pockets.types";
+import { CategoriesEntry } from "../categories/categories.types";
 
 export interface TransactionFormData {
   householdId: string;
@@ -14,16 +17,9 @@ export interface TransactionFormData {
 }
 
 export interface TransactionEntry extends BaseItem, TransactionFormData {
-  householdId: string;
-  accountId: string;
-  pocketId: string;
-  categoryId: string;
-  createdById: string;
-  amount: number;
-  type: string;
-  status: string;
-  description: string;
-  date: string;
+  account: AccountsEntry;
+  pocket: PocketsEntry;
+  category: CategoriesEntry;
 }
 
 export const defaultTransaction: TransactionFormData = {
