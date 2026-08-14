@@ -56,31 +56,37 @@ export default function TransactionCard({ transaction }: TransactionCardProps) {
           </p>
         </div>
       </div>
+      {/* Hanya tampilkan garis dan badge jika minimal ada salah satu data yang tersedia */}
+      {(transaction.account?.name ||
+        transaction.pocket?.name ||
+        transaction.category?.name) && (
+        <>
+          <div className="w-full h-0.5 bg-base-300" />
 
-      <div className="w-full h-0.5 bg-black/10" />
+          <div className="flex items-center gap-2 flex-wrap">
+            {transaction.account?.name && (
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-base-200 text-base-content border-2 border-black text-data rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                <Bank size={12} weight="bold" />
+                {transaction.account.name}
+              </span>
+            )}
 
-      <div className="flex items-center gap-2 flex-wrap">
-        {transaction.account?.name && (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-base-200 text-base-content border-2 border-black text-data rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-            <Bank size={12} weight="bold" />
-            {transaction.account.name}
-          </span>
-        )}
+            {transaction.pocket?.name && (
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-secondary text-secondary-content border-2 border-black text-data rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                <Wallet size={12} weight="bold" />
+                {transaction.pocket.name}
+              </span>
+            )}
 
-        {transaction.pocket?.name && (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-secondary text-secondary-content border-2 border-black text-data rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-            <Wallet size={12} weight="bold" />
-            {transaction.pocket.name}
-          </span>
-        )}
-
-        {transaction.category?.name && (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-accent text-accent-content border-2 border-black text-data rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-            <Tag size={12} weight="bold" />
-            {transaction.category.name}
-          </span>
-        )}
-      </div>
+            {transaction.category?.name && (
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-accent text-accent-content border-2 border-black text-data rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                <Tag size={12} weight="bold" />
+                {transaction.category.name}
+              </span>
+            )}
+          </div>
+        </>
+      )}
     </CardBox>
   );
 }

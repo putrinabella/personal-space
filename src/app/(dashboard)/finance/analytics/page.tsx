@@ -146,13 +146,9 @@ export default function BudgetPage() {
           data={dataBudget}
         />
         {!loadingBudget && !errorBudget && dataBudget.length > 0 && (
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
             {dataBudget.map((budget) => (
-              <BudgetCard
-                key={budget.id}
-                budget={budget}
-                baseRoute="/finance/analytics/budget"
-              />
+              <BudgetCard key={budget.id} budget={budget} />
             ))}
           </div>
         )}
@@ -209,7 +205,7 @@ export default function BudgetPage() {
           data={dataSaving}
         />
         {!loadingSaving && !errorSaving && dataSaving.length > 0 && (
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
             {dataSaving.map((saving) => (
               <SavingCard key={saving.id} saving={saving} />
             ))}
