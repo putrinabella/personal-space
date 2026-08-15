@@ -1,0 +1,29 @@
+import { skincareCategories } from "@/db/schema/skincare";
+import { getHouseholdAuth } from "@/lib/financeAuth";
+import { createCrudHandler } from "@/lib/server/crud/createCrudHandler";
+import { eq } from "drizzle-orm";
+
+async function getHandler() {
+  const { householdId } = await getHouseholdAuth();
+  return createCrudHandler({
+    table: skincareCategories,
+    entity: "Categories",
+    // searchableColumns: [skincareCategories.name, skincareCategories.description],
+    // filterableColumns: ["type", "status"],
+    searchableColumns: [skincareCategories.name],
+    filterableColumns: ["type"],
+    defaultWhere: eq(skincareCategories.householdId, householdId),
+  });
+}
+export async function GET(req: Request) {
+  return (await getHandler()).GET(req);
+}
+export async function POST(req: Request) {
+  return (await getHandler()).POST(req);
+}
+export async function PUT(req: Request) {
+  return (await getHandler()).PUT(req);
+}
+export async function DELETE(req: Request) {
+  return (await getHandler()).DELETE(req);
+}

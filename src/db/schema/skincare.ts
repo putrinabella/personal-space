@@ -10,7 +10,8 @@ import {
   pgSchema,
   foreignKey,
 } from "drizzle-orm/pg-core";
-import { users } from "./auth"; // Menggunakan referensi tabel users yang sama
+import { users } from "./auth";
+import { households } from "./finance"; // Mengimpor households dari schema finance yang sudah ada
 
 export const skincareSchema = pgSchema("skincare");
 
@@ -25,37 +26,13 @@ const auditColumns = {
   deletedAt: timestamp("deleted_at", { withTimezone: true }),
 };
 
-// 1. Households / Shared Shelves (jika ingin fitur kolaborasi rak skincare)
-export const skincareHouseholds = skincareSchema.table("households", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  name: text("name").notNull(),
-  ...auditColumns,
-});
-
-export const skincareHouseholdMembers = skincareSchema.table(
-  "household_members",
-  {
-    id: uuid("id").defaultRandom().primaryKey(),
-    householdId: uuid("household_id")
-      .references(() => skincareHouseholds.id)
-      .notNull(),
-    userId: uuid("user_id")
-      .references(() => users.id)
-      .notNull(),
-    role: text("role", { enum: ["owner", "member"] })
-      .default("member")
-      .notNull(),
-    ...auditColumns,
-  },
-);
-
-// 2. Kategori Skincare (Cleanser, Toner, Serum, dll)
+// 1. Kategori Skincare (Cleanser, Toner, Serum, dll)
 export const skincareCategories = skincareSchema.table(
   "skincare_categories",
   {
     id: uuid("id").defaultRandom().primaryKey(),
     householdId: uuid("household_id")
-      .references(() => skincareHouseholds.id)
+      .references(() => households.id) // Merujuk langsung ke tabel finance.households
       .notNull(),
     parentId: uuid("parent_id"),
     name: text("name").notNull(),
@@ -72,11 +49,11 @@ export const skincareCategories = skincareSchema.table(
   }),
 );
 
-// 3. Produk Skincare (Inventaris Utama)
+// 2. Produk Skincare (Inventaris Utama)
 export const skincareItems = skincareSchema.table("skincare_items", {
   id: uuid("id").defaultRandom().primaryKey(),
   householdId: uuid("household_id")
-    .references(() => skincareHouseholds.id)
+    .references(() => households.id)
     .notNull(),
   categoryId: uuid("category_id")
     .references(() => skincareCategories.id)
@@ -103,17 +80,17 @@ export const skincareItems = skincareSchema.table("skincare_items", {
   purchaseDate: date("purchase_date"),
   expiryDate: date("expiry_date"),
   dateOpened: date("date_opened"),
-  paoMonths: integer("pao_months"), // Periode After Opening (bulan)
-  rating: integer("rating"), // Skala 1-10
+  paoMonths: integer("pao_months"),
+  rating: integer("rating"),
   notes: text("notes"),
   ...auditColumns,
 });
 
-// 4. Target Perawatan / Skin Concerns (Hidrasi, Jerawat, Anti-Aging, dll)
+// 3. Target Perawatan / Skin Concerns
 export const skincareConcerns = skincareSchema.table("skincare_concerns", {
   id: uuid("id").defaultRandom().primaryKey(),
   householdId: uuid("household_id")
-    .references(() => skincareHouseholds.id)
+    .references(() => households.id)
     .notNull(),
   name: text("name").notNull(),
   color: text("color"),
@@ -138,11 +115,11 @@ export const skincareItemConcerns = skincareSchema.table(
   }),
 );
 
-// 5. Wishlist Produk Skincare
+// 4. Wishlist Produk Skincare
 export const skincareWishlist = skincareSchema.table("skincare_wishlist", {
   id: uuid("id").defaultRandom().primaryKey(),
   householdId: uuid("household_id")
-    .references(() => skincareHouseholds.id)
+    .references(() => households.id)
     .notNull(),
   name: text("name").notNull(),
   brand: text("brand").notNull(),
@@ -162,13 +139,13 @@ export const skincareWishlist = skincareSchema.table("skincare_wishlist", {
   ...auditColumns,
 });
 
-// 6. Riwayat Produk Terbuang (Waste Tracker untuk Analitik)
+// 5. Riwayat Produk Terbuang (Waste Tracker)
 export const skincareWasteHistory = skincareSchema.table(
   "skincare_waste_history",
   {
     id: uuid("id").defaultRandom().primaryKey(),
     householdId: uuid("household_id")
-      .references(() => skincareHouseholds.id)
+      .references(() => households.id)
       .notNull(),
     itemId: uuid("item_id").references(() => skincareItems.id),
     name: text("name").notNull(),
@@ -186,38 +163,12 @@ export const skincareWasteHistory = skincareSchema.table(
 // RELATIONS DEFINITIONS
 // ==========================================
 
-export const skincareHouseholdsRelations = relations(
-  skincareHouseholds,
-  ({ many }) => ({
-    members: many(skincareHouseholdMembers),
-    categories: many(skincareCategories),
-    items: many(skincareItems),
-    concerns: many(skincareConcerns),
-    wishlist: many(skincareWishlist),
-    wasteHistory: many(skincareWasteHistory),
-  }),
-);
-
-export const skincareHouseholdMembersRelations = relations(
-  skincareHouseholdMembers,
-  ({ one }) => ({
-    household: one(skincareHouseholds, {
-      fields: [skincareHouseholdMembers.householdId],
-      references: [skincareHouseholds.id],
-    }),
-    user: one(users, {
-      fields: [skincareHouseholdMembers.userId],
-      references: [users.id],
-    }),
-  }),
-);
-
 export const skincareCategoriesRelations = relations(
   skincareCategories,
   ({ one, many }) => ({
-    household: one(skincareHouseholds, {
+    household: one(households, {
       fields: [skincareCategories.householdId],
-      references: [skincareHouseholds.id],
+      references: [households.id],
     }),
     parent: one(skincareCategories, {
       fields: [skincareCategories.parentId],
@@ -234,9 +185,9 @@ export const skincareCategoriesRelations = relations(
 export const skincareItemsRelations = relations(
   skincareItems,
   ({ one, many }) => ({
-    household: one(skincareHouseholds, {
+    household: one(households, {
       fields: [skincareItems.householdId],
-      references: [skincareHouseholds.id],
+      references: [households.id],
     }),
     category: one(skincareCategories, {
       fields: [skincareItems.categoryId],
@@ -253,9 +204,9 @@ export const skincareItemsRelations = relations(
 export const skincareConcernsRelations = relations(
   skincareConcerns,
   ({ one, many }) => ({
-    household: one(skincareHouseholds, {
+    household: one(households, {
       fields: [skincareConcerns.householdId],
-      references: [skincareHouseholds.id],
+      references: [households.id],
     }),
     items: many(skincareItemConcerns),
   }),
@@ -278,9 +229,9 @@ export const skincareItemConcernsRelations = relations(
 export const skincareWishlistRelations = relations(
   skincareWishlist,
   ({ one }) => ({
-    household: one(skincareHouseholds, {
+    household: one(households, {
       fields: [skincareWishlist.householdId],
-      references: [skincareHouseholds.id],
+      references: [households.id],
     }),
   }),
 );
@@ -288,9 +239,9 @@ export const skincareWishlistRelations = relations(
 export const skincareWasteHistoryRelations = relations(
   skincareWasteHistory,
   ({ one }) => ({
-    household: one(skincareHouseholds, {
+    household: one(households, {
       fields: [skincareWasteHistory.householdId],
-      references: [skincareHouseholds.id],
+      references: [households.id],
     }),
     item: one(skincareItems, {
       fields: [skincareWasteHistory.itemId],
