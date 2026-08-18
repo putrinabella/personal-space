@@ -19,4 +19,10 @@ export const queryKeys = {
   summaries: createQueryKeys("summaries"),
   budgets: createQueryKeys("budgets"),
   saving: createQueryKeys("saving"),
+
+  // beauty keys
+  stores: createQueryKeys("stores"),
+  categoriesBeauty: createQueryKeys("categories-beauty"),
+  brands: createQueryKeys("brands"),
+  concerns: createQueryKeys("concerns"),
 };
