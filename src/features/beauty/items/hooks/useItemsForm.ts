@@ -1,10 +1,10 @@
 import { queryKeys } from "@/lib/queryKeys";
 import { defaultItems, ItemsFormData, validateItems } from "../items.types";
 import { itemsService } from "../items.service";
-import { useHouseholdForm } from "@/shared/hooks/use-household-form";
+import { useHouseholdWithAuthForm } from "@/shared/hooks/use-household-form";
 
 export function useItemsForm(itemsId?: string, enabled: boolean = true) {
-  return useHouseholdForm<ItemsFormData>({
+  return useHouseholdWithAuthForm<ItemsFormData>({
     id: itemsId,
     enabled,
     entityName: "items",
@@ -16,7 +16,7 @@ export function useItemsForm(itemsId?: string, enabled: boolean = true) {
     createFn: itemsService.create,
     updateFn: itemsService.update,
     validate: validateItems,
-    redirectTo: "/beauty/settings",
+    redirectTo: "/beauty/dashboard",
     messages: {
       createSuccess: "Item created successfully",
       updateSuccess: "Item updated successfully",

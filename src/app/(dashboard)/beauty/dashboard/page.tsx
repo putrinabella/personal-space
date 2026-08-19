@@ -59,7 +59,7 @@ export default function SkincareDashboardPage() {
   );
 
   const statusOptions = [
-    { label: "All Status", value: "" },
+    { label: "Select Status", value: "" },
     { label: "Active", value: "active" },
     { label: "Backup", value: "backup" },
     { label: "Finished", value: "finished" },
@@ -91,7 +91,7 @@ export default function SkincareDashboardPage() {
           className="px-3 sm:px-5 py-2.5 sm:py-3 flex items-center gap-2 text-sm font-bold shadow-sm hover:shadow-md transition-all shrink-0"
           rounded="xl"
           color="accent"
-          href="/finance/dashboard/create"
+          href="/beauty/dashboard/create"
           pressable
         >
           <PlusIcon weight="bold" size={20} />

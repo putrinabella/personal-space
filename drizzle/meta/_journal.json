@@ -29,6 +29,13 @@
       "when": 1787024811098,
       "tag": "0003_steep_spyke",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1787126592407,
+      "tag": "0004_small_ego",
+      "breakpoints": true
     }
   ]
 }

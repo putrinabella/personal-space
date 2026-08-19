@@ -126,9 +126,10 @@ export const beautyItems = beautySchema.table("beauty_items", {
   quantity: integer("quantity").default(1).notNull(),
   minStock: integer("min_stock").default(1).notNull(),
   price: numeric("price", { precision: 15, scale: 2 }).default("0").notNull(),
-  purchaseDate: date("purchase_date"),
-  expiryDate: date("expiry_date"),
-  dateOpened: date("date_opened"),
+  // Di schema beauty
+  purchaseDate: timestamp("purchase_date", { withTimezone: true }),
+  expiryDate: timestamp("expiry_date", { withTimezone: true }),
+  dateOpened: timestamp("date_opened", { withTimezone: true }),
   paoMonths: integer("pao_months"),
   rating: integer("rating"),
   notes: text("notes"),

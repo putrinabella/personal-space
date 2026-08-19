@@ -77,14 +77,19 @@ export async function GET(request: NextRequest) {
     }
 
     // Filter berdasarkan Expiry Window (Bulan Ini)
+    // Filter berdasarkan Expiry Window (Bulan Ini)
     if (expiryWindow === "expiring_this_month") {
       const now = new Date();
-      const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
-        .toISOString()
-        .split("T")[0];
-      const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0)
-        .toISOString()
-        .split("T")[0];
+      // Bungkus dengan new Date() agar tipe datanya sesuai dengan timestamp column
+      const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+      const endOfMonth = new Date(
+        now.getFullYear(),
+        now.getMonth() + 1,
+        0,
+        23,
+        59,
+        59,
+      );
 
       filters.push(
         gte(beautyItems.expiryDate, startOfMonth),

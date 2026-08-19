@@ -17,7 +17,7 @@ export interface ItemsFormData {
   paoMonths: string;
   rating: string;
   notes: string;
-  color: string;
+  concernIds: string[];
 }
 
 export interface ItemsEntry extends BaseItem, ItemsFormData {}
@@ -25,7 +25,6 @@ export interface ItemsEntry extends BaseItem, ItemsFormData {}
 export const defaultItems: ItemsFormData = {
   householdId: "",
   name: "",
-  color: "",
   categoryId: "",
   createdById: "",
   brandId: "",
@@ -40,6 +39,7 @@ export const defaultItems: ItemsFormData = {
   paoMonths: "",
   rating: "",
   notes: "",
+  concernIds: [],
 };
 
 export const validateItems = (payload: ItemsFormData): string[] => {

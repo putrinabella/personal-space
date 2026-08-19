@@ -193,10 +193,13 @@ const FormInput = ({
 
     return list;
   };
-
   const flatOptions = flattenOptions();
   const filtered = flatOptions.filter((o) => {
-    return o && o.toLowerCase().includes(query.toLowerCase());
+    // Berikan pengaman (String(...)) untuk mencegah error jika query bernilai non-string/undefined
+    const safeQuery = String(searchText || query || "");
+    const safeOptionText = String(o || "");
+
+    return safeOptionText.toLowerCase().includes(safeQuery.toLowerCase());
   });
 
   const dropdownRef = useRef<HTMLDivElement>(null);
