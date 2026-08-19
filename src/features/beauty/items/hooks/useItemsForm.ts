@@ -10,7 +10,7 @@ export function useItemsForm(itemsId?: string, enabled: boolean = true) {
     entityName: "items",
     defaultValues: defaultItems,
     queryKey: queryKeys.items.detail(itemsId || ""),
-    invalidateQueryKey: queryKeys.items.lists(),
+    invalidateQueryKey: queryKeys.items.all(),
 
     getDetail: async (id: string) => await itemsService.getDetail(id),
     createFn: itemsService.create,

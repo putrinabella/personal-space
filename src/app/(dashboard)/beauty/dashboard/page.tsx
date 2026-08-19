@@ -2,6 +2,7 @@
 
 import { useBrandsAll } from "@/features/beauty/brands/hooks/useBrandsAll";
 import { useCategoriesAll } from "@/features/beauty/categories/hooks/useCategoriesAll";
+import BeautyItemCard from "@/features/beauty/components/ItemCard";
 import { useConcernsAll } from "@/features/beauty/concerns/hooks/useConcernsAll";
 import { useItemsList } from "@/features/beauty/items/hooks/useItemsList";
 import { useStoresAll } from "@/features/beauty/stores/hooks/useStoresAll";
@@ -228,8 +229,6 @@ export default function SkincareDashboardPage() {
         </div>
       </CardBox>
       <section className="flex flex-col gap-4 md:gap-6">
-        <h2 className="text-body font-black uppercase">Items</h2>
-
         <DataSection
           loading={loadingItems}
           error={errorItems}
@@ -237,11 +236,10 @@ export default function SkincareDashboardPage() {
         />
 
         {!loadingItems && !errorItems && dataItems.length > 0 && (
-          <div className="flex flex-col gap-4 md:gap-6">
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Vero
-            maiores quod, repudiandae temporibus totam esse itaque voluptatum in
-            at vel praesentium architecto id tenetur, expedita sint non deleniti
-            facere impedit.
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {dataItems.map((item: any) => (
+              <BeautyItemCard key={item.id} item={item} />
+            ))}
           </div>
         )}
       </section>

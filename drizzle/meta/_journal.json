@@ -36,6 +36,13 @@
       "when": 1787126592407,
       "tag": "0004_small_ego",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1787129449274,
+      "tag": "0005_yellow_james_howlett",
+      "breakpoints": true
     }
   ]
 }
