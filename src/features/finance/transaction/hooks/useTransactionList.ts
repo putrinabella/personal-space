@@ -29,17 +29,3 @@ export function useTransactionList(
     params,
   });
 }
-
-export function useTransactionList2(page = 1, title?: string, enabled = true) {
-  const params: PaginatedParams = {
-    page,
-    search: title,
-  };
-
-  return useBaseList<TransactionEntry, PaginatedParams>({
-    queryKey: queryKeys.transaction.list(params),
-    fetcher: (p) => transactionService.getPaginated(p),
-    params,
-    enabled,
-  });
-}

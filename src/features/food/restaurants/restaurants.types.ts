@@ -18,7 +18,7 @@ export const defaultRestaurants: RestaurantFormData = {
 
 export const validateRestaurants = (payload: RestaurantFormData): string[] => {
   const errors: string[] = [];
-  if (!payload.name) errors.push("Nama wajib diisi.");
+  if (!payload.name) errors.push("Name is required.");
   if (!payload.address) errors.push("Alamat wajib diisi.");
   return errors;
 };

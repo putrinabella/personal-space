@@ -35,7 +35,7 @@ export const defaultPockets: PocketsFormData = {
 
 export const validatePockets = (payload: PocketsFormData): string[] => {
   const errors: string[] = [];
-  if (!payload.name) errors.push("Nama wajib diisi.");
+  if (!payload.name) errors.push("Name is required.");
   if (!payload.iconSlug) errors.push("Icon wajib diisi.");
   return errors;
 };

@@ -114,8 +114,6 @@ export default function PocketDetailPage({
   }
   return (
     <div className="flex flex-col gap-4 md:gap-8 max-w-7xl mx-auto">
-      {/* Header Halaman Detail Akun */}
-
       <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 w-full">
         <div>
           <span className="text-caption font-bold tracking-[0.2em] uppercase text-base-content/60 mb-0.5 block">
@@ -129,8 +127,6 @@ export default function PocketDetailPage({
           {/* <BalanceOverview amount={dataPocket.currentBalance} /> */}
         </div>
       </header>
-      {/* Section Filter & Search */}
-      {/* <BalanceOverview amount={dataPocket.currentBalance} /> */}
       <BalanceSummarySection
         currentBalance={dataPocket.currentBalance}
         income={totalIncome}
@@ -235,7 +231,6 @@ export default function PocketDetailPage({
         </div>
       </CardBox>
 
-      {/* Section List Transaksi Dikelompokkan Berdasarkan Tanggal */}
       <section className="flex flex-col gap-4 md:gap-6">
         <h2 className="text-body font-black uppercase">Transaction History</h2>
 

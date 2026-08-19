@@ -25,4 +25,5 @@ export const queryKeys = {
   categoriesBeauty: createQueryKeys("categories-beauty"),
   brands: createQueryKeys("brands"),
   concerns: createQueryKeys("concerns"),
+  items: createQueryKeys("items"),
 };

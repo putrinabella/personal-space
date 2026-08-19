@@ -28,7 +28,7 @@ export const defaultCategories: CategoriesFormData = {
 
 export const validateCategories = (payload: CategoriesFormData): string[] => {
   const errors: string[] = [];
-  if (!payload.name) errors.push("Nama wajib diisi.");
+  if (!payload.name) errors.push("Name is required.");
   if (!payload.iconSlug) errors.push("Icon wajib diisi.");
   return errors;
 };

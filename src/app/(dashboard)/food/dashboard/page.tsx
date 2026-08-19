@@ -176,7 +176,7 @@ export default function FoodView() {
               className="px-4 h-11 flex items-center justify-center gap-2 text-sm font-bold flex-1 md:flex-none"
               rounded="xl"
               color="base-300"
-              onClick={resetFilters}
+              onClick={() => resetFilters()}
               pressable
             >
               <ArrowClockwiseIcon weight="bold" size={18} />

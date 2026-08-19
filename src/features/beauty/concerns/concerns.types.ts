@@ -16,6 +16,6 @@ export const defaultConcerns: ConcernsFormData = {
 
 export const validateConcerns = (payload: ConcernsFormData): string[] => {
   const errors: string[] = [];
-  if (!payload.name) errors.push("Nama wajib diisi.");
+  if (!payload.name) errors.push("Name is required.");
   return errors;
 };

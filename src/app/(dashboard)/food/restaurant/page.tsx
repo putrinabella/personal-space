@@ -84,7 +84,7 @@ export default function RestaurantPage() {
             className="px-4 py-2 flex items-center justify-center gap-2 text-base font-bold flex-1"
             rounded="xl"
             color="base-300"
-            onClick={resetFilters}
+            onClick={() => resetFilters()}
             pressable
           >
             <ArrowClockwiseIcon weight="bold" size={18} />
@@ -107,7 +107,7 @@ export default function RestaurantPage() {
             className="px-4 py-2 flex items-center justify-center gap-2 text-sm font-bold flex-1"
             rounded="xl"
             color="base-300"
-            onClick={resetFilters}
+            onClick={() => resetFilters()}
             pressable
           >
             <ArrowClockwiseIcon weight="bold" size={18} />

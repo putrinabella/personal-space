@@ -16,6 +16,6 @@ export const defaultStores: StoresFormData = {
 
 export const validateStores = (payload: StoresFormData): string[] => {
   const errors: string[] = [];
-  if (!payload.name) errors.push("Nama wajib diisi.");
+  if (!payload.name) errors.push("Name is required.");
   return errors;
 };
