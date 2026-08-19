@@ -10,6 +10,7 @@ import {
   MapPinArea,
   ChartPieSlice,
   FlowerLotusIcon,
+  ListHeartIcon,
 } from "@phosphor-icons/react";
 import CardBox from "./CardBox";
 
@@ -34,7 +35,7 @@ export default function DockNavbar() {
         label: "Beauty",
         Icon: FlowerLotusIcon,
       },
-      { path: "/beauty/wishlist", label: "Wishlist", Icon: ChartPieSlice },
+      { path: "/beauty/wishlist", label: "Wishlist", Icon: ListHeartIcon },
       { path: "/beauty/settings", label: "Settings", Icon: GearSix },
     ],
   };

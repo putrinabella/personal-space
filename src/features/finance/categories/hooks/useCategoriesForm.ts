@@ -17,7 +17,7 @@ export function useCategoriesForm(
     entityName: "categories",
     defaultValues: defaultCategories,
     queryKey: queryKeys.categories.detail(categoriesId || ""),
-    invalidateQueryKey: queryKeys.categories.lists(),
+    invalidateQueryKey: queryKeys.categories.all(),
     transformBeforeSubmit: (data: CategoriesFormData) => {
       return {
         ...data,
