@@ -58,21 +58,22 @@ export default function ModalBox({
         onClick={(e) => e.stopPropagation()}
       >
         <CardBox
-          className={`max-h-[80vh] overflow-y-auto p-5 flex flex-col gap-4 border-4 ${className}`}
+          // Mengubah maxHeight menjadi 70vh dan menghilangkan overflow-y-auto dari CardBox
+          className={`max-h-[70vh] p-5 flex flex-col border-4 ${className}`}
           rounded="2xl"
           color={cardColor}
         >
-          {/* Header Modal */}
+          {/* Header Modal (Tetap di atas, tidak ikut terscroll) */}
           {(title || subtitle) && (
-            <div className="flex justify-between items-start mb-1 gap-4">
+            <div className="flex justify-between items-start mb-3 gap-4 shrink-0">
               <div>
                 {subtitle && (
-                  <span className="text-caption font-bold uppercase tracking-widest text-base-content/60 block mb-0.5">
+                  <span className="text-caption font-bold uppercase tracking-widest text-base-content block mb-1">
                     {subtitle}
                   </span>
                 )}
                 {title && (
-                  <h3 className="heading-h4 font-black text-neutral">
+                  <h3 className="heading-h3 font-black text-base-content">
                     {title}
                   </h3>
                 )}
@@ -87,8 +88,10 @@ export default function ModalBox({
             </div>
           )}
 
-          {/* Konten Dinamis */}
-          <div className="flex flex-col gap-3">{children}</div>
+          {/* Konten Dinamis (Area yang bisa di-scroll di dalam child) */}
+          <div className="flex flex-col gap-3 overflow-y-auto pr-1">
+            {children}
+          </div>
         </CardBox>
       </div>
     </div>

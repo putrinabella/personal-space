@@ -411,7 +411,7 @@ import {
 } from "@/db/schema/beauty";
 import { sendPaginatedResponse, sendStandardResponse } from "@/lib/apiResponse";
 import { getHouseholdAuth } from "@/lib/financeAuth";
-import { eq, ilike, isNull, and, desc, count, inArray, sql } from "drizzle-orm";
+import { eq, ilike, isNull, asc, and, count, inArray, sql } from "drizzle-orm";
 import { NextRequest } from "next/server";
 
 // export async function GET(request: NextRequest) {
@@ -661,19 +661,16 @@ export async function GET(request: NextRequest) {
     if (brandId) filters.push(eq(beautyItems.brandId, brandId));
     if (storeId) filters.push(eq(beautyItems.storeId, storeId));
 
-    // Optimasi Filter Concern: Hanya jika ada
     if (concernId) {
       filters.push(
         sql`${beautyItems.id} IN (SELECT item_id FROM ${beautyItemConcerns} WHERE concern_id = ${concernId})`,
       );
     }
 
-    // Optimasi Filter Status: JOIN langsung, bukan subquery
     if (status) {
       filters.push(eq(beautyItemUnits.status, status as any));
     }
 
-    // Optimasi Filter Expiry: Perbandingan langsung
     if (expiryWindow === "expiring_this_month") {
       const now = new Date();
       const start = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-01`;
@@ -685,8 +682,7 @@ export async function GET(request: NextRequest) {
 
     const buildQuery = (isPaginated: boolean = false) => {
       let query = db
-        .selectDistinct({
-          // distinct mencegah duplikasi data akibat join unit
+        .select({
           item: beautyItems,
           category: beautyCategories,
           brand: beautyBrands,
@@ -701,7 +697,14 @@ export async function GET(request: NextRequest) {
         .leftJoin(beautyStores, eq(beautyStores.id, beautyItems.storeId))
         .leftJoin(beautyItemUnits, eq(beautyItemUnits.itemId, beautyItems.id))
         .where(and(...filters))
-        .orderBy(desc(beautyItems.createdAt)) as any;
+        // PERBAIKAN: Gunakan groupBy pada kolom-kolom yang diselect agar fungsi min() di orderBy valid
+        .groupBy(
+          beautyItems.id,
+          beautyCategories.id,
+          beautyBrands.id,
+          beautyStores.id,
+        )
+        .orderBy(asc(sql`min(${beautyItemUnits.expiryDate})`)) as any;
 
       if (isPaginated && page) {
         query = query.limit(perPage).offset((page - 1) * perPage);
@@ -713,7 +716,6 @@ export async function GET(request: NextRequest) {
     const rawItems = await buildQuery(Boolean(page));
     const itemIds = rawItems.map((r: any) => r.item.id);
 
-    // Fetch batch untuk unit & concerns (agar query tetap 3 kali saja, tidak N+1)
     let allUnitsMap: Record<string, any[]> = {};
     let allConcernsMap: Record<string, any[]> = {};
 
@@ -722,9 +724,34 @@ export async function GET(request: NextRequest) {
         .select()
         .from(beautyItemUnits)
         .where(inArray(beautyItemUnits.itemId, itemIds));
+
+      const currentTime = Date.now();
+
       allUnitsMap = allUnits.reduce((acc: any, curr) => {
         if (!acc[curr.itemId]) acc[curr.itemId] = [];
-        acc[curr.itemId].push(curr);
+
+        let paoProgress: number | null = null;
+        if (curr.dateOpened && curr.paoMonths) {
+          const openedDate = new Date(curr.dateOpened);
+          const paoEndDate = new Date(openedDate);
+          paoEndDate.setMonth(paoEndDate.getMonth() + curr.paoMonths);
+
+          const start = openedDate.getTime();
+          const end = paoEndDate.getTime();
+
+          if (end > start) {
+            paoProgress = Math.min(
+              Math.max(((currentTime - start) / (end - start)) * 100, 0),
+              100,
+            );
+          }
+        }
+
+        acc[curr.itemId].push({
+          ...curr,
+          paoProgress: paoProgress !== null ? Math.round(paoProgress) : null,
+        });
+
         return acc;
       }, {});
 
