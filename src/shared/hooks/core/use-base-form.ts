@@ -58,7 +58,7 @@ export function useBaseForm<T>({
         throw new Error("ID atau getDetail tidak tersedia");
 
       const result = await getDetail(id);
-      if (!result) throw new Error("Data tidak ditemukan"); // Tambahkan ini
+      if (!result) throw new Error("Data tidak ditemukan");
       return result;
     },
     enabled: enabled && !!id && !!getDetail,

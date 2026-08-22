@@ -38,7 +38,6 @@ export default function FinancePage() {
     month: monthStr,
   });
 
-  // Ambil elemen pertama dengan aman menggunakan optional chaining (?.) dan fallback objek kosong
   const currentSummary = dataSummary?.[0] || {};
 
   const { data: transactions = [] } = useTransactionAll({

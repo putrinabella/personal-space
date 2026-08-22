@@ -38,7 +38,6 @@ export default function BudgetCard({ budget }: BudgetCardProps) {
 
   return (
     <CardBox className="p-4 flex flex-col gap-2" rounded="2xl">
-      {/* Header: Icon & Nama Kategori */}
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-3">
           <div
@@ -56,7 +55,6 @@ export default function BudgetCard({ budget }: BudgetCardProps) {
         </div>
       </div>
 
-      {/* Spent & Percentage */}
       <div className="flex justify-between items-center text-body mb-0.5">
         <span className="text-base-content/70 font-medium text-xs md:text-sm">
           Spent:{" "}
@@ -76,7 +74,6 @@ export default function BudgetCard({ budget }: BudgetCardProps) {
         </div>
       </div>
 
-      {/* Progress Bar */}
       <div className="w-full bg-base-200 border-2 border-neutral h-3.5 rounded-full overflow-hidden p-0.5">
         <div
           className={`h-full rounded-full transition-all duration-500 ${progressColor}`}
@@ -84,7 +81,6 @@ export default function BudgetCard({ budget }: BudgetCardProps) {
         />
       </div>
 
-      {/* Footer: Remaining & Status */}
       <div className="flex justify-between items-center text-xs pt-1">
         <span className="text-caption">
           Remaining:{" "}

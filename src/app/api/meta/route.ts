@@ -3,7 +3,6 @@ import { db } from "@/db";
 
 export async function GET() {
   try {
-    // Run parallel queries to speed up server delivery execution speeds
     const [allCategories, allCuisines, allDiningType, allTags, allRestaurants] =
       await Promise.all([
         db.query.categories.findMany(),

@@ -3,9 +3,9 @@ import { TransactionEntry } from "@/features/finance/transaction/transaction.typ
 export interface CalendarItem {
   id: string;
   title: string;
-  description?: string; // Tambahkan sebagai alternatif jika dibutuhkan
-  amount: number | string; // Diubah dari amount?: menjadi wajib (menghilangkan tanda ?)
-  type: "income" | "expense" | "neutral" | string; // Diubah dari type?: menjadi wajib
+  description?: string;
+  amount: number | string;
+  type: "income" | "expense" | "neutral" | string;
   badges?: string[];
   iconSlug?: string;
   color?: string;

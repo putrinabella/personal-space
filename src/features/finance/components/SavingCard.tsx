@@ -20,14 +20,12 @@ export default function SavingCard({ saving }: SavingCardProps) {
   const savingName = saving.name || "Saving Goal";
   const pocketName = saving.pocket?.name;
 
-  // Konfigurasi SVG Speedometer (240 derajat)
   const radius = 40;
   const arcLength = 2 * Math.PI * radius * (240 / 360);
   const strokeDashoffset = arcLength - (clampedPercentage / 100) * arcLength;
 
   return (
     <CardBox className="relative px-3 pb-3 pt-7 sm:p-4 mt-3" rounded="2xl">
-      {/* Badge Status Completed di pojok kanan atas */}
       {isCompleted && (
         <div className="absolute top-0 right-4 bg-success/80 border-b-2 border-x-2 border-neutral px-2.5 py-1 rounded-b-xl shadow-sm z-10">
           <div className="flex items-center gap-1 text-caption font-bold">
@@ -37,16 +35,13 @@ export default function SavingCard({ saving }: SavingCardProps) {
         </div>
       )}
 
-      {/* Container Utama: Flex Row di Desktop dengan item-center agar teks rata tengah secara vertikal */}
       <div className="flex flex-col md:flex-row items-center gap-4">
-        {/* Bagian Gauge Speedometer */}
         <div className="relative flex flex-col items-center justify-center shrink-0 pt-2 md:pt-0">
           <svg
             className="w-32 h-20 overflow-visible"
             viewBox="0 0 100 75"
             preserveAspectRatio="xMidYMid meet"
           >
-            {/* Background Track */}
             <path
               d="M 18 62 A 40 40 0 1 1 82 62"
               fill="none"
@@ -56,7 +51,6 @@ export default function SavingCard({ saving }: SavingCardProps) {
               className="text-base-300"
             />
 
-            {/* Progress Path */}
             {clampedPercentage > 0 && (
               <path
                 d="M 18 62 A 40 40 0 1 1 82 62"
@@ -71,7 +65,6 @@ export default function SavingCard({ saving }: SavingCardProps) {
             )}
           </svg>
 
-          {/* Angka Persentase Besar di dalam lengkungan */}
           <div className="absolute inset-0 flex flex-col items-center justify-center pt-2 text-center">
             <span className="text-xl font-header font-black text-base-content leading-tight">
               {percentage.toFixed(0)}%
@@ -79,7 +72,6 @@ export default function SavingCard({ saving }: SavingCardProps) {
           </div>
         </div>
 
-        {/* Bagian Teks: Rata tengah di mobile, rata kiri di desktop dengan posisi center secara vertikal */}
         <div className="flex flex-col justify-center text-center md:text-left w-full gap-1">
           <h3 className="heading-h4 truncate w-full">{savingName}</h3>
 

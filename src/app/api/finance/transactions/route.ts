@@ -38,13 +38,12 @@ export async function GET(request: NextRequest) {
     const perPage = Number(searchParams.get("per_page") ?? 15);
     const search = searchParams.get("search");
 
-    // Parameter filter tambahan
-    const month = searchParams.get("month"); // Format: "YYYY-MM" (misal: "2026-07")
+    const month = searchParams.get("month");
     const accountId = searchParams.get("accountId");
     const pocketId = searchParams.get("pocketId");
     const categoryId = searchParams.get("categoryId");
-    const type = searchParams.get("type"); // misal: "income" atau "expense"
-    const status = searchParams.get("status"); // misal: "completed", "pending", dll
+    const type = searchParams.get("type");
+    const status = searchParams.get("status");
 
     const filters = [eq(financeTransactions.householdId, householdId)];
     filters.push(isNull(financeTransactions.deletedAt));
@@ -57,32 +56,26 @@ export async function GET(request: NextRequest) {
       filters.push(ilike(financeTransactions.description, `%${search}%`));
     }
 
-    // Filter berdasarkan Account ID
     if (accountId) {
       filters.push(eq(financeTransactions.accountId, accountId));
     }
 
-    // Filter berdasarkan Pocket ID
     if (pocketId) {
       filters.push(eq(financeTransactions.pocketId, pocketId));
     }
 
-    // Filter berdasarkan Category ID
     if (categoryId) {
       filters.push(eq(financeTransactions.categoryId, categoryId));
     }
 
-    // Filter berdasarkan Type (income/expense)
     if (type) {
       filters.push(eq(financeTransactions.type, type as any));
     }
 
-    // Filter berdasarkan Status
     if (status) {
       filters.push(eq(financeTransactions.status, status as any));
     }
 
-    // Filter berdasarkan Bulan (Format "YYYY-MM")
     if (month) {
       const startDate = `${month}-01T00:00:00.000Z`;
       const [year, mon] = month.split("-").map(Number);
@@ -94,7 +87,7 @@ export async function GET(request: NextRequest) {
         lte(financeTransactions.date, new Date(endDate) as any),
       );
     }
-    // Base query dengan leftJoin ke account, pocket, dan category
+
     const queryBase = db
       .select({
         id: financeTransactions.id,
@@ -131,7 +124,6 @@ export async function GET(request: NextRequest) {
       .where(and(...filters))
       .orderBy(desc(financeTransactions.date));
 
-    // Jika mencari berdasarkan ID spesifik
     if (id) {
       const [item] = await queryBase.limit(1);
 
@@ -147,7 +139,6 @@ export async function GET(request: NextRequest) {
       return sendStandardResponse(item, "Transaction retrieved successfully.");
     }
 
-    // Jika tanpa pagination
     if (!page) {
       const items = await queryBase;
       return sendStandardResponse(
@@ -156,7 +147,6 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Jika dengan pagination
     const offset = (page - 1) * perPage;
 
     const [items, total] = await Promise.all([
@@ -237,12 +227,10 @@ export async function POST(request: NextRequest) {
       status,
     } = body;
 
-    // Pastikan status default-nya 'completed' jika tidak ada input
     const transactionStatus = status || "completed";
     const numericAmount = Number(amount);
-    const transactionDate = date ? new Date(date) : new Date(); // Simpan referensi tanggal
+    const transactionDate = date ? new Date(date) : new Date();
     const result = await db.transaction(async (tx) => {
-      // 1. Simpan Transaksi
       const [newTransaction] = await tx
         .insert(financeTransactions)
         .values({
@@ -259,25 +247,20 @@ export async function POST(request: NextRequest) {
         })
         .returning();
 
-      // 2. Update Saldo HANYA jika status BUKAN 'cancelled'
       if (transactionStatus !== "cancelled") {
         const adjustment = type === "income" ? numericAmount : -numericAmount;
 
-        // Update Saldo Account
         await tx
           .update(financeAccounts)
           .set({
-            // Tambahkan ::numeric agar database tahu cara menjumlahkan string/numeric
             currentBalance: sql`${financeAccounts.currentBalance} + ${adjustment}::numeric`,
           })
           .where(eq(financeAccounts.id, accountId));
 
-        // Update Saldo Pocket (Jika pocketId ada)
         if (pocketId) {
           await tx
             .update(financePockets)
             .set({
-              // Tambahkan ::numeric
               currentBalance: sql`${financePockets.currentBalance} + ${adjustment}::numeric`,
             })
             .where(eq(financePockets.id, pocketId));
@@ -311,7 +294,6 @@ export async function PUT(req: Request) {
         .where(eq(financeTransactions.id, id))
         .returning();
 
-      // Logika Koreksi Saldo Akun (Kode lama Anda)
       if (oldTransaction.status !== "cancelled" && status === "cancelled") {
         const reverseAdjustment =
           oldTransaction.type === "income"
@@ -353,66 +335,6 @@ export async function PUT(req: Request) {
     return sendStandardResponse(null, err.message, 500, "error");
   }
 }
-// export async function PUT(req: Request) {
-//   try {
-//     const body = await req.json();
-//     const { id, status, amount, type, accountId } = body; // Anda perlu kirim data ini dari frontend
-
-//     const result = await db.transaction(async (tx) => {
-//       // 1. Ambil transaksi lama untuk cek status sebelumnya
-//       const oldTransaction = await tx.query.financeTransactions.findFirst({
-//         where: eq(financeTransactions.id, id),
-//       });
-
-//       if (!oldTransaction) throw new Error("Transaction not found");
-
-//       // 2. Update status transaksi
-//       const [updated] = await tx
-//         .update(financeTransactions)
-//         .set({ status })
-//         .where(eq(financeTransactions.id, id))
-//         .returning();
-
-//       // 3. Logika Koreksi Saldo
-//       // Jika sebelumnya bukan cancelled, dan sekarang jadi cancelled => kembalikan saldo
-//       if (oldTransaction.status !== "cancelled" && status === "cancelled") {
-//         const reverseAdjustment =
-//           oldTransaction.type === "income"
-//             ? -Number(oldTransaction.amount)
-//             : Number(oldTransaction.amount);
-//         await tx
-//           .update(financeAccounts)
-//           .set({
-//             currentBalance: sql`${financeAccounts.currentBalance} + ${reverseAdjustment}`,
-//           })
-//           .where(eq(financeAccounts.id, oldTransaction.accountId));
-//       }
-
-//       // Jika sebelumnya cancelled, dan sekarang jadi completed/pending => potong saldo
-//       else if (
-//         oldTransaction.status === "cancelled" &&
-//         status !== "cancelled"
-//       ) {
-//         const adjustment =
-//           oldTransaction.type === "income"
-//             ? Number(oldTransaction.amount)
-//             : -Number(oldTransaction.amount);
-//         await tx
-//           .update(financeAccounts)
-//           .set({
-//             currentBalance: sql`${financeAccounts.currentBalance} + ${adjustment}`,
-//           })
-//           .where(eq(financeAccounts.id, oldTransaction.accountId));
-//       }
-
-//       return updated;
-//     });
-
-//     return sendStandardResponse(result, "Transaction updated successfully.");
-//   } catch (err: any) {
-//     return sendStandardResponse(null, err.message, 500, "error");
-//   }
-// }
 
 export async function DELETE(req: Request) {
   return (await h()).DELETE(req);
@@ -423,10 +345,9 @@ async function updateMonthlySummary(
   householdId: string,
   transactionDate: Date,
 ) {
-  const month = transactionDate.getMonth() + 1; // 1 - 12
+  const month = transactionDate.getMonth() + 1;
   const year = transactionDate.getFullYear();
 
-  // Hitung total income, expense, dan net balance dari transaksi yang valid (tidak cancelled & tidak deleted)
   const [summaryData] = await tx
     .select({
       totalIncome: sql`coalesce(sum(case when ${financeTransactions.type} = 'income' then ${financeTransactions.amount} else 0 end), 0)`,
@@ -447,9 +368,6 @@ async function updateMonthlySummary(
   const totalExpense = Number(summaryData?.totalExpense ?? 0);
   const netBalance = totalIncome - totalExpense;
 
-  // Lakukan Upsert ke tabel finance_monthly_summaries
-  // Catatan: Pastikan Anda memiliki unique constraint pada (householdId, month, year) di database,
-  // atau gunakan cara cek lalu update/insert manual jika belum ada unique index.
   const existing = await tx.query.financeMonthlySummaries.findFirst({
     where: and(
       eq(financeMonthlySummaries.householdId, householdId),

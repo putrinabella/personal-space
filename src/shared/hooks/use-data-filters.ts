@@ -34,7 +34,6 @@ export function useDataFilters<T extends Record<string, any>>(
     setPage(1);
   };
 
-  // Ubah agar resetFilters bisa menerima override parsial atau total
   const resetFilters = (overrides?: Partial<T>) => {
     setSearchTitle("");
     setFilters(

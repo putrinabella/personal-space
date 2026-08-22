@@ -56,7 +56,7 @@ export default function TransactionCard({ transaction }: TransactionCardProps) {
           </p>
         </div>
       </div>
-      {/* Hanya tampilkan garis dan badge jika minimal ada salah satu data yang tersedia */}
+
       {(transaction.account?.name ||
         transaction.pocket?.name ||
         transaction.category?.name) && (

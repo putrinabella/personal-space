@@ -20,7 +20,6 @@ async function getAuthData() {
   return { user, householdId: result[0]?.householdId };
 }
 
-// Gunakan fungsi internal untuk kedua fungsi yang diekspor
 export async function getHousehold() {
   const data = await getAuthData();
   return data?.householdId || null;

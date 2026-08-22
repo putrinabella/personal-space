@@ -3,7 +3,7 @@
 import * as PhosphorIcons from "@phosphor-icons/react";
 
 interface IconRendererProps {
-  name: string; // Nama icon dalam string (contoh: "Coffee")
+  name: string;
   size?: number;
   className?: string;
   weight?: "thin" | "light" | "regular" | "bold" | "fill" | "duotone";

@@ -25,7 +25,6 @@ export default function CreateBudgetPage() {
 
   const currentYM = getCurrentYearMonth();
 
-  // Set default month & year otomatis saat pertama kali render jika belum ada
   useEffect(() => {
     if (!data.month || !data.year) {
       const [year, month] = currentYM.split("-");

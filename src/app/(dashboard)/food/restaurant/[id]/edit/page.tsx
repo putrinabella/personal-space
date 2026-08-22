@@ -15,7 +15,7 @@ export default function EditRestaurantPage({
   params: Promise<{ id: string }>;
 }) {
   const router = useRouter();
-  const { id } = use(params); // Mengambil ID dari URL
+  const { id } = use(params);
   const { data, setField, handleSubmit, saving, loading } =
     useRestaurantsForm(id);
 

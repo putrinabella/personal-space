@@ -13,7 +13,7 @@ import { PlusIcon } from "@phosphor-icons/react";
 import SavingCard from "@/features/finance/components/SavingCard";
 
 export default function BudgetPage() {
-  const currentYM = getCurrentYearMonth(); // Menghasilkan "YYYY-MM" (misal: "2026-07")
+  const currentYM = getCurrentYearMonth();
 
   const { filters, activeFilters, handleFilterChange } = useDataFilters({
     month: currentYM,

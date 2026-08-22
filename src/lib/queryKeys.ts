@@ -26,4 +26,5 @@ export const queryKeys = {
   brands: createQueryKeys("brands"),
   concerns: createQueryKeys("concerns"),
   items: createQueryKeys("items"),
+  unit: createQueryKeys("unit"),
 };

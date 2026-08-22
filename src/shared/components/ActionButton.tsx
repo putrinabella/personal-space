@@ -14,8 +14,8 @@ type ActionButtonProps = {
   size?: number;
   tooltip?: string;
   isProgress?: boolean;
-  loading?: boolean; // 🆕 Status loading
-  disabled?: boolean; // 🆕 Status disabled manual
+  loading?: boolean;
+  disabled?: boolean;
   progress?: number;
   loadingLabel?: string;
   className?: string;
@@ -32,7 +32,7 @@ const ActionButton = ({
   tooltip,
   isProgress = false,
   loading = false,
-  disabled = false, // 🆕 Destructure disabled
+  disabled = false,
   progress = 0,
   loadingLabel,
   className = "",

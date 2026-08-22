@@ -8,8 +8,7 @@ async function getHandler() {
   return createCrudHandler({
     table: financePockets,
     entity: "Pocket",
-    // searchableColumns: [financePockets.name, financePockets.description],
-    // filterableColumns: ["type", "status"],
+
     searchableColumns: [financePockets.name],
     filterableColumns: ["type"],
     defaultWhere: eq(financePockets.householdId, householdId),

@@ -57,7 +57,7 @@ type FormInputProps = {
   icon?: LucideIcon;
   className?: string;
   helpText?: string;
-  error?: string; // Menangkap pesan validasi
+  error?: string;
   rows?: number;
   dropdownType?: "search" | "select" | "profile";
   searchable?: boolean;
@@ -99,7 +99,7 @@ const FormInput = ({
   icon: Icon,
   className = "",
   helpText,
-  error, // Di-destructure di sini
+  error,
   rows = 4,
   dropdownType,
   disablePast = false,

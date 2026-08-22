@@ -70,7 +70,7 @@ export async function GET(request: NextRequest) {
         cuisine: cuisines,
         diningType: diningType,
         latestLog: latestLogCte,
-        totalLogs: sql<number>`COALESCE(${logCountCte.totalLogs}, 0)`, // Ambil jumlah log
+        totalLogs: sql<number>`COALESCE(${logCountCte.totalLogs}, 0)`,
       })
       .from(foods)
       .leftJoin(latestLogCte, eq(latestLogCte.foodId, foods.id))

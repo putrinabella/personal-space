@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const isNewFood = !!body.isNewFood;
-    const formData = body; // Ambil semua data termasuk yang di dalamnya
+    const formData = body;
 
     const result = await db.transaction(async (tx) => {
       let activeFoodId = formData.foodId;

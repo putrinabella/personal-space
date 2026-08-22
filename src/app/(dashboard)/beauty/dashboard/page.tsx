@@ -4,7 +4,7 @@ import { useBrandsAll } from "@/features/beauty/brands/hooks/useBrandsAll";
 import { useCategoriesAll } from "@/features/beauty/categories/hooks/useCategoriesAll";
 import BeautyItemCard from "@/features/beauty/components/ItemCard";
 import { useConcernsAll } from "@/features/beauty/concerns/hooks/useConcernsAll";
-import { useItemsList } from "@/features/beauty/items/hooks/useItemsList";
+import { useProductList } from "@/features/beauty/product/hooks/useProductList";
 import { useStoresAll } from "@/features/beauty/stores/hooks/useStoresAll";
 import CardBox from "@/shared/components/CardBox";
 import DataSection from "@/shared/components/DataSection";
@@ -41,13 +41,13 @@ export default function SkincareDashboardPage() {
   });
 
   const {
-    data: dataItems,
-    loading: loadingItems,
-    error: errorItems,
+    data: dataProduct,
+    loading: loadingProduct,
+    error: errorProduct,
     lastPage,
     total,
     perPage,
-  } = useItemsList(page, activeFilters);
+  } = useProductList(page, activeFilters);
 
   const { data: dataCategories, isLoading: loadingCategories } =
     useCategoriesAll();
@@ -230,14 +230,14 @@ export default function SkincareDashboardPage() {
       </CardBox>
       <section className="flex flex-col gap-4 md:gap-6">
         <DataSection
-          loading={loadingItems}
-          error={errorItems}
-          data={dataItems}
+          loading={loadingProduct}
+          error={errorProduct}
+          data={dataProduct}
         />
 
-        {!loadingItems && !errorItems && dataItems.length > 0 && (
+        {!loadingProduct && !errorProduct && dataProduct.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {dataItems.map((item: any) => (
+            {dataProduct.map((item: any) => (
               <BeautyItemCard key={item.id} item={item} />
             ))}
           </div>

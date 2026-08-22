@@ -120,7 +120,7 @@ export async function GET(
     const msg = err instanceof Error ? err.message : "Database error";
     return sendStandardResponse(null, msg, 500, "error");
   }
-} // ==========================================
+}
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ type: string }> },
@@ -185,7 +185,7 @@ export async function PUT(
       .update(target.table)
       .set({
         ...updateData,
-        updatedAt: new Date(), // <--- Biarkan backend yang menentukan waktu update
+        updatedAt: new Date(),
       })
       .where(eq(tableWithId.id, id))
       .returning();

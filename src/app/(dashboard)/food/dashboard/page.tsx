@@ -74,7 +74,6 @@ export default function FoodView() {
     data: randomFood,
     refetch: fetchRandom,
     isFetching: loadingRandom,
-    // error: randomError,
   } = useRandomFood(showRandomModal, activeFilters);
 
   const handleRoll = (e?: React.MouseEvent) => {
@@ -108,7 +107,7 @@ export default function FoodView() {
           <CardBox
             className="px-4 py-2 flex items-center gap-2 text-body md:text-base font-bold"
             rounded="xl"
-            color="secondary" // Sesuaikan warna
+            color="secondary"
             onClick={() => setShowRandomModal(true)}
             pressable
           >

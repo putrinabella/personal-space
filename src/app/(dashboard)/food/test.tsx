@@ -20,7 +20,7 @@ export default function FoodView() {
   const {
     data: foodLogs,
     loading,
-    // error,
+
     total,
     lastPage,
     perPage,

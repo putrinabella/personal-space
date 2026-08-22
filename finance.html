@@ -72,7 +72,6 @@
         font-family: "JetBrains Mono", monospace;
       }
 
-      /* ---------- App frame ---------- */
       .app-frame {
         width: 100%;
         max-width: 430px;
@@ -96,7 +95,6 @@
         }
       }
 
-      /* ---------- Topbar ---------- */
       .topbar {
         padding: calc(18px + var(--safe-top)) 20px 14px;
         display: flex;
@@ -150,7 +148,6 @@
         border-radius: 50%;
       }
 
-      /* ---------- Scroll area ---------- */
       .scroll-area {
         flex: 1;
         overflow-y: auto;
@@ -203,7 +200,6 @@
         cursor: pointer;
       }
 
-      /* ---------- Balance card ---------- */
       .balance-card {
         background: var(--ink);
         color: #fff;
@@ -269,7 +265,6 @@
         font-weight: 700;
       }
 
-      /* ---------- Horizontal scroll rows ---------- */
       .hscroll {
         display: flex;
         gap: 14px;
@@ -282,7 +277,6 @@
         display: none;
       }
 
-      /* ---------- Account card ---------- */
       .acct-card {
         scroll-snap-align: start;
         min-width: 168px;
@@ -333,7 +327,6 @@
         margin-left: 3px;
       }
 
-      /* ---------- Pocket card ---------- */
       .pocket-card {
         scroll-snap-align: start;
         min-width: 172px;
@@ -403,7 +396,6 @@
         color: var(--muted);
       }
 
-      /* ---------- Calendar ---------- */
       .cal-wrap {
         border-radius: var(--radius);
         border: var(--line) solid var(--ink);
@@ -563,7 +555,6 @@
         display: inline-block;
       }
 
-      /* ---------- Transactions ---------- */
       .day-group {
         margin-bottom: 16px;
       }
@@ -641,7 +632,6 @@
         color: var(--expense);
       }
 
-      /* ---------- FAB ---------- */
       .fab {
         position: fixed;
         bottom: calc(88px + var(--safe-bottom));
@@ -671,7 +661,6 @@
         position: absolute;
       }
 
-      /* ---------- Bottom nav ---------- */
       .bottom-nav {
         position: absolute;
         left: 0;
@@ -714,7 +703,6 @@
         color: var(--muted);
       }
 
-      /* ---------- Bottom sheet ---------- */
       .sheet-backdrop {
         position: absolute;
         inset: 0;
@@ -977,7 +965,6 @@
     </div>
 
     <script>
-      /* ================= DATA (mock API payloads) ================= */
       const ACCOUNTS = [
         {
           id: "a1",
@@ -1252,7 +1239,6 @@
         viewMonth = 6; // 0-indexed
       let selectedDate = fmtISO(TODAY);
 
-      /* ================= HELPERS ================= */
       function fmtISO(d) {
         return d.toISOString().slice(0, 10);
       }
@@ -1282,7 +1268,6 @@
         return { income, expense, count: txs.length };
       }
 
-      /* ================= RENDER: BALANCE ================= */
       function renderBalance() {
         const total = ACCOUNTS.reduce((s, a) => s + a.currentBalance, 0);
         let monthIncome = 0,
@@ -1302,7 +1287,6 @@
           fmtFull(monthExpense);
       }
 
-      /* ================= RENDER: ACCOUNTS ================= */
       function renderAccounts() {
         const row = document.getElementById("accountsRow");
         row.innerHTML = ACCOUNTS.map(
@@ -1317,7 +1301,6 @@
         ).join("");
       }
 
-      /* ================= RENDER: POCKETS ================= */
       function renderPockets() {
         const row = document.getElementById("pocketsRow");
         row.innerHTML = POCKETS.map((p) => {
@@ -1339,7 +1322,6 @@
         }).join("");
       }
 
-      /* ================= RENDER: CALENDAR ================= */
       const MONTH_NAMES = [
         "January",
         "February",
@@ -1426,7 +1408,6 @@
         renderBalance();
       });
 
-      /* ================= RENDER: RECENT TRANSACTIONS ================= */
       function txCardHTML(t) {
         const cat = CATEGORY[t.categoryId] || {
           icon: "ph-circle",
@@ -1478,7 +1459,6 @@
           .join("");
       }
 
-      /* ================= BOTTOM SHEET ================= */
       const sheet = document.getElementById("bottomSheet");
       const backdrop = document.getElementById("sheetBackdrop");
 
@@ -1504,7 +1484,6 @@
         .addEventListener("click", closeSheet);
       backdrop.addEventListener("click", closeSheet);
 
-      /* ================= FAB / NAV (visual demo) ================= */
       document.getElementById("fabBtn").addEventListener("click", () => {
         openSheet(selectedDate);
         document.getElementById("sheetTitle").textContent = "Add Transaction";
@@ -1520,7 +1499,6 @@
         });
       });
 
-      /* ================= PULL TO REFRESH ================= */
       const scrollArea = document.getElementById("scrollArea");
       const pullIndicator = document.getElementById("pullIndicator");
       let touchStartY = 0,
@@ -1571,7 +1549,6 @@
         { passive: true },
       );
 
-      /* ================= INIT ================= */
       renderBalance();
       renderAccounts();
       renderPockets();

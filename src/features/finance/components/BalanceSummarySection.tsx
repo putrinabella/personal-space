@@ -9,7 +9,7 @@ interface BalanceSummarySectionProps {
   currentBalance?: any;
   income?: any;
   expense?: any;
-  selectedMonth?: string; // Format "YYYY-MM", contoh: "2026-07"
+  selectedMonth?: string;
 }
 
 export default function BalanceSummarySection({
@@ -22,7 +22,6 @@ export default function BalanceSummarySection({
   const [showIncome, setShowIncome] = useState(false);
   const [showExpense, setShowExpense] = useState(false);
 
-  // Ambil nilai langsung dari props terpisah dengan fallback 0
   const currentTotalBalance = Number(currentBalance || 0);
   const currentIncome = Number(income || 0);
   const currentExpense = Number(expense || 0);
@@ -35,7 +34,6 @@ export default function BalanceSummarySection({
       color="base-100"
     >
       <div className="pb-2 border-b-2 border-black/10">
-        {/* --- TAMPILAN MOBILE --- */}
         <div className="flex sm:hidden items-center justify-between gap-2">
           <div className="flex flex-col gap-1 min-w-0">
             <p className="text-caption font-black uppercase tracking-widest text-base-content/70">
@@ -61,7 +59,6 @@ export default function BalanceSummarySection({
           </CardBox>
         </div>
 
-        {/* --- TAMPILAN DESKTOP --- */}
         <div className="hidden sm:flex sm:items-center justify-between gap-2">
           <p className="text-caption font-black uppercase tracking-widest text-base-content/70">
             Total Balance
@@ -88,9 +85,7 @@ export default function BalanceSummarySection({
         </div>
       </div>
 
-      {/* Income & Expense Cards */}
       <div className="grid grid-cols-2 gap-3 md:gap-4">
-        {/* Kotak Income */}
         <div className="bg-success/40 border-2 border-black p-3 md:p-4 rounded-xl flex flex-col justify-between shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
           <div className="flex items-center justify-between">
             <p className="text-caption font-black uppercase tracking-wider text-neutral/70 truncate">
@@ -115,7 +110,6 @@ export default function BalanceSummarySection({
           </div>
         </div>
 
-        {/* Kotak Expense */}
         <div className="bg-secondary/40 border-2 border-black p-3 md:p-4 rounded-xl flex flex-col justify-between shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
           <div className="flex items-center justify-between">
             <p className="text-caption font-black uppercase tracking-wider text-neutral/70 truncate">

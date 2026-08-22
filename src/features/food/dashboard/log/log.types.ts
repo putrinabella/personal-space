@@ -4,7 +4,7 @@ export interface LogFormData {
   ratingHis: number;
   ratingHer: number;
   reviewText: string;
-  dateVisited: string; // Tambahkan ini karena ada di defaultLogs
+  dateVisited: string;
   foodName?: string;
   restaurantId: string;
   categoryId: string;
@@ -14,7 +14,7 @@ export interface LogFormData {
   isFavoriteDrink?: boolean;
   foodId?: string;
 
-  isNewFood?: boolean; // Tambahkan ini
+  isNewFood?: boolean;
 }
 export interface LogEntry extends BaseItem, LogFormData {}
 

@@ -60,7 +60,6 @@ export async function GET(request: NextRequest) {
           totalBalance: String(totalBalanceAllAccounts),
         };
 
-    // Bungkus ke dalam array [ ] agar sesuai dengan ekspektasi hook useBaseAll / SumarriesEntry[]
     return sendStandardResponse(
       [summaryData],
       "Monthly summary retrieved successfully.",

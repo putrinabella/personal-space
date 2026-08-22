@@ -1,5 +1,4 @@
 export const createQueryKeys = (base: string) => ({
-  // all: [base] as const,
   all: (params?: unknown) => [base, "all", params] as const,
   lists: () => [...[base], "list"] as const,
 

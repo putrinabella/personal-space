@@ -10,20 +10,18 @@ import { useCategoriesAll } from "@/features/beauty/categories/hooks/useCategori
 import { useBrandsAll } from "@/features/beauty/brands/hooks/useBrandsAll";
 import { useStoresAll } from "@/features/beauty/stores/hooks/useStoresAll";
 import { useConcernsAll } from "@/features/beauty/concerns/hooks/useConcernsAll";
-import { useItemsAll } from "@/features/beauty/items/hooks/useItemsAll"; // Hook untuk mengambil daftar master produk yang sudah ada
-import { useItemsForm } from "@/features/beauty/items/hooks/useItemsForm";
-
+import { useProductForm } from "@/features/beauty/product/hooks/useProductForm";
+import { useProductAll } from "@/features/beauty/product/hooks/useProductAll";
 export default function CreateBeautyItemUnitPage() {
   const router = useRouter();
   const [mode, setMode] = useState<"existing" | "new">("existing");
-  const { data, setField, handleSubmit, saving } = useItemsForm();
+  const { data, setField, handleSubmit, saving } = useProductForm();
 
-  // Fetch related master data
   const { data: categories, isLoading: loadingCategories } = useCategoriesAll();
   const { data: brands, isLoading: loadingBrands } = useBrandsAll();
   const { data: stores, isLoading: loadingStores } = useStoresAll();
   const { data: concerns, isLoading: loadingConcerns } = useConcernsAll();
-  const { data: existingItems, isLoading: loadingItems } = useItemsAll(); // Daftar produk master yang sudah ada
+  const { data: existingProduct, isLoading: loadingProduct } = useProductAll();
 
   const childCategories = categories.filter(
     (category: any) => category.parentId !== null,
@@ -53,7 +51,6 @@ export default function CreateBeautyItemUnitPage() {
         className="p-4 md:p-6 flex flex-col gap-4 md:gap-6"
         rounded="2xl"
       >
-        {/* Mode Toggle: Existing vs New Product */}
         <div className="flex bg-base-200 p-1 rounded-xl">
           <button
             onClick={() => setMode("existing")}
@@ -69,12 +66,11 @@ export default function CreateBeautyItemUnitPage() {
           </button>
         </div>
 
-        {/* --- KONDISI 1: PILIH PRODUK YANG SUDAH ADA (TAMBAH UNIT/BATCH) --- */}
         {mode === "existing" ? (
           <div className="flex flex-col gap-4">
             <FormInput
               label="Select Product *"
-              options={existingItems.map((item: any) => ({
+              options={existingProduct.map((item: any) => ({
                 label: `${item.name} (${item.brand?.name || "Unknown Brand"})`,
                 value: item.id,
               }))}
@@ -82,13 +78,14 @@ export default function CreateBeautyItemUnitPage() {
               value={data.beautyItemId}
               onChange={(val) => setField("beautyItemId", val)}
               placeholder={
-                loadingItems ? "Loading products..." : "Select existing product"
+                loadingProduct
+                  ? "Loading products..."
+                  : "Select existing product"
               }
-              disabled={loadingItems}
+              disabled={loadingProduct}
             />
           </div>
         ) : (
-          /* --- KONDISI 2: BUAT MASTER PRODUK BARU SEKALIGUS UNIT PERTAMANYA --- */
           <div className="flex flex-col gap-4 p-4 border border-secondary/20 rounded-xl bg-secondary/5">
             <p className="font-bold text-secondary">
               New Product Master Details
@@ -266,7 +263,6 @@ export default function CreateBeautyItemUnitPage() {
           />
         </div>
 
-        {/* Rating khusus unit ini (opsional) */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormInput
             label="Rating (1-5)"
@@ -277,7 +273,6 @@ export default function CreateBeautyItemUnitPage() {
           />
         </div>
 
-        {/* Actions Button */}
         <div className="flex flex-col md:flex-row gap-4 pt-4">
           <CardBox
             className="px-6 py-3 flex items-center justify-center gap-2 font-bold flex-1"

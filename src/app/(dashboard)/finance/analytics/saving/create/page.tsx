@@ -12,7 +12,6 @@ export default function CreateSavingPage() {
   const router = useRouter();
   const { data, setField, handleSubmit, saving } = useSavingForm();
 
-  // Mengambil data pockets untuk pilihan dropdown pocketId
   const { data: dataPockets, isLoading: loadingPockets } = usePocketAll({
     type: "saving",
   });
@@ -24,7 +23,6 @@ export default function CreateSavingPage() {
         className="p-4 md:p-6 flex flex-col gap-4 md:gap-6 bg-base-100 border-2 border-neutral shadow-sm"
         rounded="2xl"
       >
-        {/* Name Saving Goal */}
         <FormInput
           label="Name"
           placeholder="e.g. Emergency Fund"
@@ -33,7 +31,6 @@ export default function CreateSavingPage() {
           required
         />
 
-        {/* Pocket Selection (pocketId) */}
         <FormInput
           label="Pocket"
           required
@@ -48,7 +45,6 @@ export default function CreateSavingPage() {
           disabled={loadingPockets}
         />
 
-        {/* Target Amount */}
         <FormInput
           label="Target Amount"
           type="money"
@@ -58,7 +54,6 @@ export default function CreateSavingPage() {
           required
         />
 
-        {/* Target Date (Opsional) */}
         <FormInput
           type="date"
           label="Target Date"
@@ -66,7 +61,6 @@ export default function CreateSavingPage() {
           onChange={(val) => setField("targetDate", val)}
         />
 
-        {/* Description (Opsional) */}
         <FormInput
           label="Description"
           placeholder="Add a note or description (optional)"
@@ -74,7 +68,6 @@ export default function CreateSavingPage() {
           onChange={(val) => setField("description", val)}
         />
 
-        {/* Action Buttons */}
         <div className="flex flex-col md:flex-row gap-4 pt-4">
           <CardBox
             className="px-6 py-3 flex items-center justify-center gap-2 font-bold flex-1 cursor-pointer"

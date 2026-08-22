@@ -2,19 +2,13 @@ import { financeCategories } from "@/db/schema/finance";
 import { getHouseholdAuth } from "@/lib/financeAuth";
 import { createCrudHandler } from "@/lib/server/crud/createCrudHandler";
 import { eq } from "drizzle-orm";
-// const getHandler = () =>
-//   createFinanceHandler({
-//     table: financeCategories,
-//     entity: "Categories",
-//     searchableColumns: [financeCategories.name],
-//   });
+
 async function getHandler() {
   const { householdId } = await getHouseholdAuth();
   return createCrudHandler({
     table: financeCategories,
     entity: "Categories",
-    // searchableColumns: [financeCategories.name, financeCategories.description],
-    // filterableColumns: ["type", "status"],
+
     searchableColumns: [financeCategories.name],
     filterableColumns: ["type"],
     defaultWhere: eq(financeCategories.householdId, householdId),

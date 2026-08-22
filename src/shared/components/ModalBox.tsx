@@ -26,7 +26,6 @@ export default function ModalBox({
   cardColor = "base-100",
   className = "",
 }: ModalBoxProps) {
-  // Mencegah scroll pada body ketika modal terbuka
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -58,12 +57,10 @@ export default function ModalBox({
         onClick={(e) => e.stopPropagation()}
       >
         <CardBox
-          // Mengubah maxHeight menjadi 70vh dan menghilangkan overflow-y-auto dari CardBox
           className={`max-h-[70vh] p-5 flex flex-col border-4 ${className}`}
           rounded="2xl"
           color={cardColor}
         >
-          {/* Header Modal (Tetap di atas, tidak ikut terscroll) */}
           {(title || subtitle) && (
             <div className="flex justify-between items-start mb-3 gap-4 shrink-0">
               <div>
@@ -88,7 +85,6 @@ export default function ModalBox({
             </div>
           )}
 
-          {/* Konten Dinamis (Area yang bisa di-scroll di dalam child) */}
           <div className="flex flex-col gap-3 overflow-y-auto pr-1">
             {children}
           </div>

@@ -66,7 +66,7 @@ export default function CreateFoodEntryPage() {
           value={data.restaurantId}
           onChange={(val) => {
             setField("restaurantId", val);
-            setField("foodId", ""); // Reset saat restoran ganti
+            setField("foodId", "");
           }}
           placeholder="Select restaurant"
           disabled={loadingRestaurant}
@@ -81,7 +81,7 @@ export default function CreateFoodEntryPage() {
                 value: f.id,
               }))}
               dropdownType="select"
-              value={data.foodId} // Pastikan field ini ada di LogFormData
+              value={data.foodId}
               onChange={(val) => setField("foodId", val)}
               placeholder={loadingFood ? "Loading..." : "Select food"}
             />

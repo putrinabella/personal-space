@@ -27,14 +27,12 @@ export default function CardBox({
 }: CardBoxProps) {
   const isHex = color.startsWith("#");
 
-  // Periksa apakah format mengandung opasitas kustom (contoh: "success/40")
   const hasOpacitySlash = color.includes("/");
 
   let bgClass = "";
   if (isHex) {
     bgClass = "";
   } else if (hasOpacitySlash) {
-    // Jika formatnya seperti "success/40", ubah menjadi kelas Tailwind "bg-success/45" atau gunakan langsung
     bgClass = `bg-${color}`;
   } else if (isDaisyColor(color)) {
     bgClass = bgMap[color as DaisyColor];

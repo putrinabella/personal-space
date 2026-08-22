@@ -8,8 +8,7 @@ async function getHandler() {
   return createCrudHandler({
     table: beautyBrands,
     entity: "Brands",
-    // searchableColumns: [beautyBrands.name, beautyBrands.description],
-    // filterableColumns: ["type", "status"],
+
     searchableColumns: [beautyBrands.name],
     filterableColumns: ["type"],
     defaultWhere: eq(beautyBrands.householdId, householdId),

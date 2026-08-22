@@ -7,7 +7,7 @@ import { formatRupiah } from "@/utils/rupiahFormatter";
 
 interface FinanceCardProps {
   item: any;
-  label?: string; // e.g., "Account" atau "Pocket"
+  label?: string;
 }
 
 export default function FinanceCard({
@@ -18,7 +18,6 @@ export default function FinanceCard({
 
   return (
     <CardBox
-      // 1. Set width yang tetap (w-48 atau min-w-[12rem]) agar semua kartu seragam
       className="p-4 md:p-6 flex flex-col gap-3 w-48 min-w-48 shrink-0"
       rounded="2xl"
       color={item.color}
@@ -36,7 +35,6 @@ export default function FinanceCard({
         </button>
       </div>
 
-      {/* 2. Text container dengan break-words agar teks panjang turun ke bawah */}
       <div className="grow wrap-break-word">
         <h4 className="heading-h4 uppercase leading-tight truncate">
           {item.name}

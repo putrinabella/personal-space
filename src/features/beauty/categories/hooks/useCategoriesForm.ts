@@ -21,7 +21,7 @@ export function useCategoriesForm(
     transformBeforeSubmit: (data: CategoriesFormData) => {
       return {
         ...data,
-        // Jika parentId adalah string kosong, paksa jadi null
+
         parentId:
           data.parentId && data.parentId.trim() !== "" ? data.parentId : null,
       };

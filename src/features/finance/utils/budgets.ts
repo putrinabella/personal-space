@@ -11,7 +11,6 @@ export async function getBudgetsWithProgress(
   month: number,
   year: number,
 ) {
-  // 1. Ambil data budget beserta join ke tabel category
   const budgetsWithCategory = await db
     .select({
       id: financeBudgets.id,
@@ -38,14 +37,11 @@ export async function getBudgetsWithProgress(
       ),
     );
 
-  // 2. Tanggal awal dan akhir bulan untuk kalkulasi & pengambilan transaksi
   const startDate = new Date(year, month - 1, 1);
   const endDate = new Date(year, month, 0, 23, 59, 59);
 
-  // 3. Hitung total spent DAN ambil daftar transaksinya per budget
   const results = await Promise.all(
     budgetsWithCategory.map(async (budgetRow) => {
-      // Query untuk menghitung total pengeluaran & mengambil list transaksi sekaligus
       const [spentResult, transactions] = await Promise.all([
         db
           .select({

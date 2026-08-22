@@ -82,7 +82,7 @@ export default function PocketDetailPage({
   const selectableCategories = dataCategories.filter(
     (category: any) => category.parentId !== null,
   );
-  // Kelompokkan transaksi berdasarkan tanggal (Grouping by Date)
+
   const groupedTransactions = dataTransactions.reduce(
     (acc: Record<string, any[]>, tx: any) => {
       const rawDate = tx.date || tx.createdAt || "Other Date";
@@ -123,9 +123,7 @@ export default function PocketDetailPage({
             {dataPocket.name}
           </h1>
         </div>
-        <div className="w-full sm:w-auto">
-          {/* <BalanceOverview amount={dataPocket.currentBalance} /> */}
-        </div>
+        <div className="w-full sm:w-auto"></div>
       </header>
       <BalanceSummarySection
         currentBalance={dataPocket.currentBalance}
@@ -246,7 +244,6 @@ export default function PocketDetailPage({
             <div className="flex flex-col gap-4 md:gap-6">
               {Object.entries(groupedTransactions).map(([dateLabel, txs]) => (
                 <div key={dateLabel} className="flex flex-col gap-3">
-                  {/* Judul Tanggal / Header Grup */}
                   <div className="flex items-center gap-3">
                     <span className="text-xs font-black uppercase tracking-wider px-3 py-1 bg-base-300 border-2 border-black rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
                       {dateLabel}
@@ -254,7 +251,6 @@ export default function PocketDetailPage({
                     <div className="h-0.5 flex-1 bg-black/10" />
                   </div>
 
-                  {/* Daftar TransactionCard dalam Tanggal Tersebut */}
                   <div className="flex flex-col gap-3">
                     {txs.map((transaction: any) => (
                       <TransactionCard

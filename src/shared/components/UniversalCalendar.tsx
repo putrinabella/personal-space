@@ -38,16 +38,13 @@ export default function UniversalCalendar({
     return `${y}-${m}`;
   };
 
-  // State untuk tanggal yang dipilih user secara manual
   const [manualSelectedDateStr, setManualSelectedDateStr] = useState<
     string | null
   >(null);
   const [isMobileModalOpen, setIsMobileModalOpen] = useState(false);
 
-  // Menentukan selectedDateStr secara reaktif tanpa useEffect (mencegah cascading renders)
   const selectedDateStr = useMemo(() => {
     if (manualSelectedDateStr) {
-      // Pastikan manual selected masih di bulan yang sama dengan currentDate
       const [manYear, manMonth] = manualSelectedDateStr.split("-").map(Number);
       if (manYear === year && manMonth === month + 1) {
         return manualSelectedDateStr;
@@ -67,14 +64,14 @@ export default function UniversalCalendar({
   const prevMonth = () => {
     const newDate = new Date(year, month - 1, 1);
     setCurrentDate(newDate);
-    setManualSelectedDateStr(null); // Reset manual select saat ganti bulan
+    setManualSelectedDateStr(null);
     if (onMonthChange) onMonthChange(formatYearMonth(newDate));
   };
 
   const nextMonth = () => {
     const newDate = new Date(year, month + 1, 1);
     setCurrentDate(newDate);
-    setManualSelectedDateStr(null); // Reset manual select saat ganti bulan
+    setManualSelectedDateStr(null);
     if (onMonthChange) onMonthChange(formatYearMonth(newDate));
   };
 
@@ -115,7 +112,6 @@ export default function UniversalCalendar({
   const selectedDateObj = new Date(selectedDateStr + "T00:00:00");
   const selectedDayData = data[selectedDateStr];
 
-  // Helper untuk merender isi list transaksi menggunakan TransactionCard
   const renderTransactionList = () => {
     if (selectedDayData?.items && selectedDayData.items.length > 0) {
       return (
@@ -139,16 +135,13 @@ export default function UniversalCalendar({
     <div className="w-full flex flex-col gap-3">
       {title && <h2 className="heading-h3 uppercase">{title}</h2>}
 
-      {/* Layout Responsif: Kalender & Detail Transaksi Bersampingan di Desktop */}
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
-        {/* Kolom Kiri: Kalender */}
         <div className="md:col-span-7 w-full">
           <CardBox
             color="base-100"
             rounded="3xl"
             className="p-4 sm:p-5 flex flex-col gap-4 border-4"
           >
-            {/* Header Navigation */}
             <div className="bg-secondary border-2 border-black rounded-2xl p-3 flex items-center justify-between shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
               <button
                 onClick={prevMonth}
@@ -167,7 +160,6 @@ export default function UniversalCalendar({
               </button>
             </div>
 
-            {/* Day Names Row */}
             <div className="grid grid-cols-7 text-center font-black text-neutral/60 text-data">
               {dayLabels.map((day, idx) => (
                 <div key={idx} className="py-1">
@@ -176,7 +168,6 @@ export default function UniversalCalendar({
               ))}
             </div>
 
-            {/* Days Grid */}
             <div className="grid grid-cols-7 gap-1.5 sm:gap-2">
               {Array.from({ length: firstDayIndex }).map((_, idx) => (
                 <div key={`empty-${idx}`} className="h-14 sm:h-16" />
@@ -232,7 +223,6 @@ export default function UniversalCalendar({
               })}
             </div>
 
-            {/* Legend */}
             <div className="flex items-center gap-4 pt-2 px-1 text-caption font-bold text-neutral">
               {legends.map((leg, idx) => (
                 <div key={idx} className="flex items-center gap-1.5">
@@ -244,7 +234,6 @@ export default function UniversalCalendar({
           </CardBox>
         </div>
 
-        {/* Kolom Kanan: Detail Transaksi Bulan/Tanggal Terpilih (Desktop) */}
         <div className="hidden md:block md:col-span-5 w-full">
           <CardBox
             color="base-100"
@@ -269,7 +258,6 @@ export default function UniversalCalendar({
               </div>
             </div>
 
-            {/* Summary Boxes */}
             {selectedDayData?.summary && (
               <div className="grid grid-cols-2 gap-3">
                 {selectedDayData.summary.incomeTotal !== undefined && (
@@ -286,14 +274,6 @@ export default function UniversalCalendar({
                       {formatRupiah(selectedDayData.summary.incomeTotal)}
                     </span>
                   </CardBox>
-                  // <div className="p-3 bg-success/40 border-2 border-black rounded-2xl flex flex-col shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                  //   <span className="text-caption font-bold opacity-70 uppercase">
-                  //     Income
-                  //   </span>
-                  //   <span className="text-body font-black text-base-content">
-                  //     {formatRupiah(selectedDayData.summary.incomeTotal)}
-                  //   </span>
-                  // </div>
                 )}
 
                 {selectedDayData.summary.expenseTotal !== undefined && (
@@ -310,19 +290,10 @@ export default function UniversalCalendar({
                       {formatRupiah(selectedDayData.summary.expenseTotal)}
                     </span>
                   </CardBox>
-                  // <div className="p-3 bg-secondary/40 border-2 border-black rounded-2xl flex flex-col shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                  // <span className="text-caption font-bold opacity-70 uppercase">
-                  //   Expense
-                  // </span>
-                  // <span className="text-body font-black text-base-content">
-                  //   {formatRupiah(selectedDayData.summary.expenseTotal)}
-                  // </span>
-                  // </div>
                 )}
               </div>
             )}
 
-            {/* List Item / Transaksi menggunakan TransactionCard */}
             <div className="flex flex-col gap-3 max-h-85 overflow-y-auto pr-1">
               {renderTransactionList()}
             </div>
@@ -330,7 +301,6 @@ export default function UniversalCalendar({
         </div>
       </div>
 
-      {/* Modal Khusus Tampilan Mobile (< 768px) */}
       {isMobileModalOpen && (
         <div
           className="fixed inset-0 z-50 flex md:hidden items-center justify-center p-4 backdrop-blur-sm bg-black/40 animate-in fade-in duration-200"
@@ -365,7 +335,6 @@ export default function UniversalCalendar({
                 </button>
               </div>
 
-              {/* Summary Mobile */}
               {selectedDayData?.summary && (
                 <div className="grid grid-cols-2 gap-3">
                   {selectedDayData.summary.incomeTotal !== undefined && (
@@ -402,7 +371,6 @@ export default function UniversalCalendar({
                 </div>
               )}
 
-              {/* List Item Mobile menggunakan TransactionCard */}
               <div className="flex flex-col gap-3 mt-1">
                 {renderTransactionList()}
               </div>

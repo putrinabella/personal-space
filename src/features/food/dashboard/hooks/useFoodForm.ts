@@ -9,7 +9,10 @@ export function useFoodForm(foodId?: string) {
     entityName: "food",
     defaultValues: defaultFood,
     queryKey: queryKeys.food.detail(foodId || ""),
-    invalidateQueryKey: queryKeys.food.lists(),
+    invalidateQueryKey: [
+      ...queryKeys.restaurants.all(),
+      ...queryKeys.food.all(),
+    ],
 
     getDetail: async (id) => {
       const data = await foodService.getDetail(id);

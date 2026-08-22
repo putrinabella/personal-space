@@ -37,7 +37,7 @@ export interface PaginatedParams {
   page?: number | string;
   per_page?: number | string;
   search?: string;
-  [key: string]: unknown; // Memungkinkan filter dinamis
+  [key: string]: unknown;
 }
 export interface PageSearchProps {
   searchParams: Promise<PaginatedParams>;

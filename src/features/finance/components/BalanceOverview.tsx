@@ -5,9 +5,9 @@ import CardBox from "@/shared/components/CardBox";
 import { formatRupiah } from "@/utils/rupiahFormatter";
 
 interface BalanceOverviewProps {
-  title?: string; // Judul card, misal: "Total Balance"
-  amount: number; // Nilai nominal saldo
-  subLabel?: string; // Keterangan tambahan di samping judul, misal: "4 Accounts"
+  title?: string;
+  amount: number;
+  subLabel?: string;
 }
 
 export default function BalanceOverview({
@@ -23,7 +23,6 @@ export default function BalanceOverview({
       rounded="2xl"
       color="primary"
     >
-      {/* Sisi Kiri: Judul & SubLabel */}
       <div className="flex flex-col gap-0.5 min-w-0">
         <p className="text-caption font-black uppercase tracking-widest text-base-content/70">
           {title}
@@ -35,7 +34,6 @@ export default function BalanceOverview({
         )}
       </div>
 
-      {/* Sisi Kanan: Nominal Saldo & Tombol Mata */}
       <div className="flex items-center gap-3 shrink-0">
         <h2 className="text-base sm:heading-h3 font-black text-base-content tracking-tight text-right">
           {showTotal ? formatRupiah(amount) : "Rp ••••••••"}

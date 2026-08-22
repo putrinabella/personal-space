@@ -1,6 +1,6 @@
 "use client";
 import { useState, use, useMemo } from "react";
-// import { useRouter } from "next/router";
+
 import { FunnelIcon, ArrowClockwiseIcon } from "@phosphor-icons/react";
 import CardBox from "@/shared/components/CardBox";
 import FormInput from "@/shared/components/FormInput";
@@ -82,7 +82,7 @@ export default function AccountDetailPage({
   const selectableCategories = dataCategories.filter(
     (category: any) => category.parentId !== null,
   );
-  // Kelompokkan transaksi berdasarkan tanggal (Grouping by Date)
+
   const groupedTransactions = dataTransactions.reduce(
     (acc: Record<string, any[]>, tx: any) => {
       const rawDate = tx.date || tx.createdAt || "Other Date";
@@ -114,8 +114,6 @@ export default function AccountDetailPage({
   }
   return (
     <div className="flex flex-col gap-4 md:gap-8 max-w-7xl mx-auto">
-      {/* Header Halaman Detail Akun */}
-
       <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 w-full">
         <div>
           <span className="text-caption font-bold tracking-[0.2em] uppercase text-base-content/60 mb-0.5 block">
@@ -125,12 +123,9 @@ export default function AccountDetailPage({
             {dataAccount.name}
           </h1>
         </div>
-        <div className="w-full sm:w-auto">
-          {/* <BalanceOverview amount={dataAccount.currentBalance} /> */}
-        </div>
+        <div className="w-full sm:w-auto"></div>
       </header>
-      {/* Section Filter & Search */}
-      {/* <BalanceOverview amount={dataAccount.currentBalance} /> */}
+
       <BalanceSummarySection
         currentBalance={dataAccount.currentBalance}
         income={totalIncome}
@@ -235,7 +230,6 @@ export default function AccountDetailPage({
         </div>
       </CardBox>
 
-      {/* Section List Transaksi Dikelompokkan Berdasarkan Tanggal */}
       <section className="flex flex-col gap-4 md:gap-6">
         <h2 className="text-body font-black uppercase">Transaction History</h2>
 
@@ -251,7 +245,6 @@ export default function AccountDetailPage({
             <div className="flex flex-col gap-4 md:gap-6">
               {Object.entries(groupedTransactions).map(([dateLabel, txs]) => (
                 <div key={dateLabel} className="flex flex-col gap-3">
-                  {/* Judul Tanggal / Header Grup */}
                   <div className="flex items-center gap-3">
                     <span className="text-xs font-black uppercase tracking-wider px-3 py-1 bg-base-300 border-2 border-black rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
                       {dateLabel}
@@ -259,7 +252,6 @@ export default function AccountDetailPage({
                     <div className="h-0.5 flex-1 bg-black/10" />
                   </div>
 
-                  {/* Daftar TransactionCard dalam Tanggal Tersebut */}
                   <div className="flex flex-col gap-3">
                     {txs.map((transaction: any) => (
                       <TransactionCard

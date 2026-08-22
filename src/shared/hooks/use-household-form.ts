@@ -61,7 +61,7 @@ export function useHouseholdWithAuthForm<
       return {
         ...transformed,
         householdId: auth.householdId,
-        createdById: auth.userId, // Otomatis mengisi createdById
+        createdById: auth.userId,
       };
     },
   });

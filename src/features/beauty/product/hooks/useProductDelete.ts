@@ -1,17 +1,17 @@
 import { queryKeys } from "@/lib/queryKeys";
-import { itemsService } from "../items.service";
+import { itemsService } from "../product.service";
 import { useBaseDelete } from "@/shared/hooks/core/use-base-delete";
 
-export function useItemsDelete() {
+export function useProductDelete() {
   return useBaseDelete({
-    entityName: "Items",
+    entityName: "Product",
 
     mutationFn: itemsService.delete,
 
     invalidateQueryKey: queryKeys.items.lists(),
 
     messages: {
-      deleteSuccess: "Items deleted successfully",
+      deleteSuccess: "Product deleted successfully",
     },
   });
 }

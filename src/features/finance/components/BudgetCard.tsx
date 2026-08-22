@@ -102,7 +102,6 @@ export default function BudgetCard({ budget }: BudgetCardProps) {
         </div>
       </CardBox>
 
-      {/* MODAL TRANSACTION DETAIL */}
       {isModalOpen && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm bg-black/40 animate-in fade-in duration-200"
@@ -132,7 +131,6 @@ export default function BudgetCard({ budget }: BudgetCardProps) {
                 </button>
               </div>
 
-              {/* Summary Modal Ringkas */}
               <div className="grid grid-cols-2 gap-3">
                 <CardBox
                   className="p-3 flex flex-col w-full"
@@ -163,7 +161,6 @@ export default function BudgetCard({ budget }: BudgetCardProps) {
                 </CardBox>
               </div>
 
-              {/* List Transactions */}
               <div className="flex flex-col gap-3 mt-1">
                 {transactions.length > 0 ? (
                   transactions.map((tx: any) => (

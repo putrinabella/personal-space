@@ -25,12 +25,10 @@ export default function SelectionItem({
     const getChildren = (pid: string) =>
       data.filter((i: any) => i.parentId === pid);
 
-    // Kalau belum ada parent yang aktif, default ke parent pertama
     const activeParentId = expandedParentId ?? parents[0]?.id;
 
     return (
       <div className="flex flex-col gap-3 sm:gap-4">
-        {/* Tab bar parent kategori — dibikin nyatu sama gaya kartu lain (idle putih, aktif tint warna) */}
         <div
           role="tablist"
           className="flex gap-1.5 sm:gap-2 overflow-x-auto snap-x snap-mandatory scrollbar-hide -mx-3 px-3 sm:mx-0 sm:px-0"
@@ -67,7 +65,6 @@ export default function SelectionItem({
           })}
         </div>
 
-        {/* Panel children dari parent yang aktif */}
         {activeParentId && (
           <div
             key={activeParentId}
@@ -99,7 +96,6 @@ export default function SelectionItem({
     );
   }
 
-  // Render Default (untuk Accounts dan lainnya)
   return (
     <div
       className={
@@ -122,7 +118,6 @@ export default function SelectionItem({
   );
 }
 
-// Komponen Item Tunggal
 function RenderItem({ item, viewType, entity, isSelected, onSelect }: any) {
   return (
     <div
@@ -131,7 +126,7 @@ function RenderItem({ item, viewType, entity, isSelected, onSelect }: any) {
         group border-2 border-black transition-all cursor-pointer
         ${
           isSelected
-            ? "bg-secondary/20 border-secondary ring-0 shadow-none" // Gaya saat TERPILIH
+            ? "bg-secondary/20 border-secondary ring-0 shadow-none"
             : "bg-base-100 hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
         }
         ${
@@ -144,7 +139,6 @@ function RenderItem({ item, viewType, entity, isSelected, onSelect }: any) {
       <div
         className={`flex items-center ${viewType === "card" ? "flex-col gap-1.5 sm:gap-2 w-full" : "gap-3 sm:gap-4"}`}
       >
-        {/* Icon: Tetap gunakan warna asli item, tapi tambahkan opasitas jika terpilih */}
         <div
           className={`flex items-center justify-center rounded-md sm:rounded-lg border-2 border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] shrink-0 transition-opacity w-8 h-8 sm:w-9 sm:h-9 ${isSelected ? "opacity-100" : "opacity-90"}`}
           style={{
@@ -154,7 +148,6 @@ function RenderItem({ item, viewType, entity, isSelected, onSelect }: any) {
           <IconRenderer name={item.iconSlug || "Circle"} size={15} />
         </div>
 
-        {/* Info Nama */}
         <div className="flex flex-col items-center w-full">
           <h3
             className={`font-black uppercase text-[10px] sm:text-body leading-tight ${isSelected ? "text-secondary-content" : "text-base-content"}`}

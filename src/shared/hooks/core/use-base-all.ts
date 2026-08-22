@@ -5,7 +5,7 @@ import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 
 interface UseBaseAllProps<T, TParams = any, TError = Error> {
   queryKey: readonly unknown[];
-  // Ubah fetcher agar fleksibel: bisa menerima parameter ATAU tanpa parameter
+
   fetcher: (params?: TParams) => Promise<T[]>;
   params?: TParams;
   enabled?: boolean;
@@ -21,7 +21,7 @@ export function useBaseAll<T, TParams = any, TError = Error>({
 }: UseBaseAllProps<T, TParams, TError>) {
   const query = useQuery({
     queryKey,
-    // Panggil fetcher dengan aman (mengirim params jika ada)
+
     queryFn: () => fetcher(params),
     enabled,
     staleTime: 1000 * 60 * 5,

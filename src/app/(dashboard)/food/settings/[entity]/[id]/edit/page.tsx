@@ -16,7 +16,7 @@ export default function EditPage() {
     | "cuisines"
     | "diningType"
     | "tags";
-  const id = params.id as string; // Ambil ID dari URL
+  const id = params.id as string;
   const { data, setField, handleSubmit, saving } = useEntityForm(entity, id);
   return (
     <div className="flex flex-col gap-4 md:gap-8 max-w-7xl mx-auto">
