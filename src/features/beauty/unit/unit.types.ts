@@ -14,6 +14,7 @@ export interface UnitFormData {
 export interface UnitEntry extends BaseItem, UnitFormData {
   itemId: string;
   productName: string;
+  paoProgress: number;
 }
 
 export const defaultUnit: UnitFormData = {

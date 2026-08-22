@@ -4,7 +4,7 @@ import {
   ProductFormData,
   validateProduct,
 } from "../product.types";
-import { itemsService } from "../product.service";
+import { productService } from "../product.service";
 import { useHouseholdWithAuthForm } from "@/shared/hooks/use-household-form";
 
 export function useProductForm(itemsId?: string, enabled: boolean = true) {
@@ -16,9 +16,9 @@ export function useProductForm(itemsId?: string, enabled: boolean = true) {
     queryKey: queryKeys.items.detail(itemsId || ""),
     invalidateQueryKey: queryKeys.items.all(),
 
-    getDetail: async (id: string) => await itemsService.getDetail(id),
-    createFn: itemsService.create,
-    updateFn: itemsService.update,
+    getDetail: async (id: string) => await productService.getDetail(id),
+    createFn: productService.create,
+    updateFn: productService.update,
     validate: validateProduct,
     redirectTo: "/beauty/dashboard",
     messages: {

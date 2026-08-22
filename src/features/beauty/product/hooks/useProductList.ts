@@ -1,6 +1,6 @@
 import { useBaseList } from "@/shared/hooks/core/use-base-list";
 import { queryKeys } from "@/lib/queryKeys";
-import { itemsService } from "../product.service";
+import { productService } from "../product.service";
 import { PaginatedParams } from "@/shared/types/common";
 import { ProductEntry } from "../product.types";
 
@@ -23,7 +23,7 @@ export function useProductList(page = 1, filters: Partial<ProductParams> = {}) {
 
   return useBaseList<ProductEntry, ProductParams>({
     queryKey: queryKeys.items.list(params),
-    fetcher: (p) => itemsService.getPaginated(p),
+    fetcher: (p) => productService.getPaginated(p),
     params,
   });
 }
