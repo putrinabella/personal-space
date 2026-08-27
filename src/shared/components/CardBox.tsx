@@ -8,7 +8,7 @@ interface CardBoxProps {
   children: React.ReactNode;
   color?: DaisyColor | string;
   rounded?: "full" | "box" | "3xl" | "2xl" | "xl" | "lg" | "md" | "none";
-  shadowSize?: "xs" | "sm" | "md" | "lg";
+  shadowSize?: "xs" | "sm" | "md" | "lg" | "none";
   href?: string;
   onClick?: () => void;
   className?: string;
@@ -57,6 +57,7 @@ export default function CardBox({
     sm: "shadow-[4px_4px_0px_rgba(74,62,61,1)]",
     md: "shadow-[6px_6px_0px_rgba(74,62,61,1)]",
     lg: "shadow-[8px_8px_0px_rgba(74,62,61,1)]",
+    none: "shadow-none",
   };
   const shadowClass = shadowClassMap[shadowSize];
 

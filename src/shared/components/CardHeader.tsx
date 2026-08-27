@@ -6,7 +6,7 @@ import { DaisyColor } from "@/utils/color";
 
 interface CardHeaderProps {
   title: string;
-  description?: string;
+  description?: React.ReactNode;
   icon?: React.ComponentType<{ className?: string; size?: number }>;
   color?: DaisyColor | string;
   rounded?: "full" | "box" | "3xl" | "2xl" | "xl" | "none";

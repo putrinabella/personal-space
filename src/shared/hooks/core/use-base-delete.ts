@@ -42,6 +42,7 @@ export function useBaseDelete({
       if (invalidateQueryKey) {
         await queryClient.invalidateQueries({
           queryKey: invalidateQueryKey,
+          exact: false,
         });
       }
 
@@ -73,7 +74,7 @@ export function useBaseDelete({
       icon: "warning",
       showCancelButton: true,
       showConfirmButton: true,
-      confirmButtonText: "Hapus",
+      confirmButtonText: "Delete",
       confirmButtonColor: "error" as DaisyColor,
       cancelButtonText: "Cancel",
       cancelButtonColor: "base-300" as DaisyColor,

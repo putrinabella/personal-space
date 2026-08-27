@@ -105,12 +105,13 @@ export async function GET(request: NextRequest) {
         .select()
         .from(beautyItemUnits)
         .where(inArray(beautyItemUnits.itemId, itemIds));
-
       const currentTime = Date.now();
+      const today = new Date();
 
       allUnitsMap = allUnits.reduce((acc: any, curr) => {
         if (!acc[curr.itemId]) acc[curr.itemId] = [];
 
+        // 1. Kalkulasi PAO Progress
         let paoProgress: number | null = null;
         if (curr.dateOpened && curr.paoMonths) {
           const openedDate = new Date(curr.dateOpened);
@@ -128,13 +129,39 @@ export async function GET(request: NextRequest) {
           }
         }
 
+        // 2. Kalkulasi Expiry Alert (Expired & Expiring Soon)
+        let isExpired = false;
+        let isExpiringSoon = false;
+
+        if (curr.expiryDate) {
+          const expiryDate = new Date(curr.expiryDate);
+          const diffTime = expiryDate.getTime() - today.getTime();
+          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+          isExpired = diffDays < 0;
+          isExpiringSoon = diffDays >= 0 && diffDays <= 30;
+        }
+
         acc[curr.itemId].push({
           ...curr,
           paoProgress: paoProgress !== null ? Math.round(paoProgress) : null,
+          isExpired,
+          isExpiringSoon,
         });
 
         return acc;
       }, {});
+
+      // 3. Urutkan unit di setiap item berdasarkan expiryDate terdekat (Ascending)
+      Object.keys(allUnitsMap).forEach((itemId) => {
+        allUnitsMap[itemId].sort((a: any, b: any) => {
+          if (!a.expiryDate) return 1; // Jika kosong, taruh di belakang
+          if (!b.expiryDate) return -1;
+          return (
+            new Date(a.expiryDate).getTime() - new Date(b.expiryDate).getTime()
+          );
+        });
+      });
 
       const allItemConcerns = await db
         .select({ itemId: beautyItemConcerns.itemId, concern: beautyConcerns })

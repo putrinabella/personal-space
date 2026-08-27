@@ -2,7 +2,7 @@
 
 import { useBrandsAll } from "@/features/beauty/brands/hooks/useBrandsAll";
 import { useCategoriesAll } from "@/features/beauty/categories/hooks/useCategoriesAll";
-import BeautyItemCard from "@/features/beauty/components/ItemCard";
+import ProductCard from "@/features/beauty/components/ProductCard";
 import { useConcernsAll } from "@/features/beauty/concerns/hooks/useConcernsAll";
 import { useProductList } from "@/features/beauty/product/hooks/useProductList";
 import { useStoresAll } from "@/features/beauty/stores/hooks/useStoresAll";
@@ -101,7 +101,17 @@ export default function SkincareDashboardPage() {
       </header>
       <CardBox className="p-4 md:p-6 flex flex-col gap-4">
         <div className="flex flex-col md:flex-row gap-3 md:items-end">
-          <div className="flex-1">
+          <div className="flex-1 block md:hidden">
+            <FormInput
+              label=""
+              value={searchTitle}
+              onChange={handleSearchChange}
+              placeholder="Type to search..."
+            />
+          </div>
+
+          {/* Search Input untuk Desktop (Label "Search") */}
+          <div className="flex-1 hidden md:block">
             <FormInput
               label="Search"
               value={searchTitle}
@@ -238,7 +248,7 @@ export default function SkincareDashboardPage() {
         {!loadingProduct && !errorProduct && dataProduct.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {dataProduct.map((item: any) => (
-              <BeautyItemCard key={item.id} item={item} />
+              <ProductCard key={item.id} item={item} />
             ))}
           </div>
         )}

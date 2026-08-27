@@ -3,19 +3,18 @@
 import { use } from "react";
 import {
   Package,
-  Tag,
-  Storefront,
-  Sparkle,
-  PencilSimple,
   Star,
   FlowerLotusIcon,
+  ShieldWarning,
 } from "@phosphor-icons/react";
 import CardBox from "@/shared/components/CardBox";
 import CardHeader from "@/shared/components/CardHeader";
 import DataSection from "@/shared/components/DataSection";
 import { useProductDetail } from "@/features/beauty/product/hooks/useProductDetail";
-import { formatDateIndo } from "@/utils/dateFormatter";
-
+import StockAlertBadge from "@/features/beauty/components/StockAlertBadge";
+import MetricStats from "@/shared/components/MetricStats";
+import UnitCard from "@/features/beauty/components/UnitCard";
+import { UNIT_STATUS_CONFIG } from "@/features/beauty/constants/status-option";
 export default function ProductDetailPage({
   params,
 }: {
@@ -34,74 +33,76 @@ export default function ProductDetailPage({
 
   return (
     <div className="flex flex-col gap-4 md:gap-8 max-w-7xl mx-auto pb-12 px-2 sm:px-0">
-      <CardHeader title={product.name} icon={FlowerLotusIcon} color="accent" />
+      <CardHeader
+        title={product.name}
+        icon={FlowerLotusIcon}
+        color="accent"
+        description={
+          <span className="flex flex-row gap-2 uppercase text-caption ">
+            {product.store.store_link ? (
+              <a
+                href={product.store.store_link}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="hover:underline hover:text-primary transition-colors cursor-pointer inline-flex items-center gap-1"
+                title="Visit Store"
+              >
+                {product.brand.name}
+              </a>
+            ) : (
+              <span>{product.brand.name}</span>
+            )}
+
+            {product.brand?.name && product.category?.name && <span>•</span>}
+
+            {product.category?.name && <span>{product.category.name}</span>}
+          </span>
+        }
+      />
 
       <CardBox className="p-4 md:p-6 flex flex-col gap-4" rounded="2xl">
-        {/* Total Units Box */}
-        <div className="flex items-center justify-between p-3 bg-primary/5 rounded-xl">
-          <div className="flex flex-col">
-            <span className="text-caption font-bold uppercase tracking-widest">
-              Total Units
-            </span>
-            <span className="text-caption text-base-content/60">
-              Available in inventory
-            </span>
+        <StockAlertBadge
+          quantity={product.quantity}
+          minimumStock={product.minStock}
+        />
+        <MetricStats
+          items={[
+            {
+              label: "Rating",
+              value: product.rating || "-",
+              icon: <Star size={14} weight="fill" className="text-warning" />,
+            },
+            {
+              label: "Stock",
+              value: product.quantity,
+              icon: (
+                <Package
+                  size={14}
+                  weight="bold"
+                  className="text-base-content/80"
+                />
+              ),
+            },
+            {
+              label: "Min Stock",
+              value: product.minStock,
+              icon: (
+                <ShieldWarning
+                  size={14}
+                  weight="bold"
+                  className="text-error/80"
+                />
+              ),
+            },
+          ]}
+          className="bg-base-200/60 rounded-xl p-2"
+        />{" "}
+        {product.notes && (
+          <div className="p-2 text-base-content bg-base-200/60 rounded-xl text-caption border-l-4 border-primary">
+            &quot;{product.notes}&quot;
           </div>
-          <span className="text-2xl md:text-3xl font-extrabold text-primary">
-            {product.quantity}
-          </span>
-        </div>
-
-        {/* Edit Button */}
-        <CardBox
-          className="px-4 py-2 flex items-center gap-2 text-body font-bold shadow-sm"
-          rounded="xl"
-          color="accent"
-          href={`/beauty/dashboard/edit/${product.id}`}
-          pressable
-        >
-          <PencilSimple weight="bold" size={18} />
-          <span>Edit Product</span>
-        </CardBox>
-
-        {/* Info Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
-          <InfoRow label="Brand" value={product.brand?.name} icon={Tag} />
-          <InfoRow
-            label="Category"
-            value={product.category?.name}
-            icon={Sparkle}
-          />
-          <InfoRow
-            label="Store"
-            value={product.store?.name}
-            icon={Storefront}
-          />
-          <InfoRow
-            label="Min Stock"
-            value={`${product.minStock} Units`}
-            icon={Package}
-          />
-        </div>
-
-        {/* Rating Section */}
-        <div className="flex items-center gap-2 pt-2 border-t border-base-200">
-          <span className="text-caption font-bold uppercase tracking-wider text-base-content/60">
-            Rating:
-          </span>
-          <div className="flex items-center gap-1 text-warning">
-            {Array.from({ length: product.rating || 0 }).map((_, i) => (
-              <Star key={i} weight="fill" size={16} />
-            ))}
-            {(!product.rating || product.rating === 0) && (
-              <span className="text-caption text-base-content/40 italic">
-                No rating
-              </span>
-            )}
-          </div>
-        </div>
-
-        {/* Skin Concerns Section */}
+        )}
         <div className="flex flex-col gap-2 pt-2 border-t border-base-200">
           <span className="text-caption font-bold text-base-content/60 uppercase tracking-wider">
             Skin Concerns
@@ -125,60 +126,22 @@ export default function ProductDetailPage({
         </div>
       </CardBox>
 
-      {/* Associated Units Section */}
-      <div className="flex flex-col gap-4">
-        <h2 className="heading-h2 uppercase tracking-tight px-1">
-          Associated Units ({product.units?.length || 0})
-        </h2>
-
+      <div className="flex flex-col gap-4 ">
+        <div className="flex flex-row justify-between heading-h4 uppercase tracking-tight px-1">
+          <h4>Associated Units </h4>
+          <span className="bg-primary rounded-lg px-2">
+            Total: {product.units?.length || 0}
+          </span>
+        </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {product.units && product.units.length > 0 ? (
-            product.units.map((unit: any) => (
-              <CardBox
-                key={unit.id}
-                className="p-4 flex flex-col gap-3"
-                rounded="2xl"
-              >
-                <div className="flex items-center justify-between">
-                  <span
-                    className={`px-2.5 py-1 rounded-md text-caption font-extrabold uppercase tracking-wider ${
-                      unit.status === "active"
-                        ? "bg-success/20 text-success"
-                        : unit.status === "backup"
-                          ? "bg-info/20 text-info"
-                          : unit.status === "finished"
-                            ? "bg-neutral text-neutral-content"
-                            : "bg-error/20 text-error"
-                    }`}
-                  >
-                    {unit.status}
-                  </span>
-                  <span className="text-body font-bold text-primary">
-                    Rp {Number(unit.price || 0).toLocaleString()}
-                  </span>
-                </div>
-
-                <div className="flex flex-col gap-1 text-caption text-base-content/70">
-                  <div className="flex justify-between">
-                    <span>Purchase Date:</span>
-                    <span className="font-semibold text-data">
-                      {formatDateIndo(unit.purchaseDate)}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Expiry Date:</span>
-                    <span className="font-semibold text-data">
-                      {formatDateIndo(unit.expiryDate)}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>PAO Months:</span>
-                    <span className="font-semibold text-data">
-                      {unit.paoMonths ? `${unit.paoMonths} Months` : "-"}
-                    </span>
-                  </div>
-                </div>
-              </CardBox>
+            product.units.map((unit: any, idx: number) => (
+              <UnitCard
+                key={unit.id || idx}
+                unit={unit}
+                idx={idx}
+                statusConfig={UNIT_STATUS_CONFIG}
+              />
             ))
           ) : (
             <CardBox
@@ -191,25 +154,6 @@ export default function ProductDetailPage({
             </CardBox>
           )}
         </div>
-      </div>
-    </div>
-  );
-}
-
-// Komponen Pembantu Baris Info
-function InfoRow({ label, value, icon: Icon }: any) {
-  return (
-    <div className="flex items-center gap-3">
-      <div className="w-9 h-9 rounded-xl bg-base-200 flex items-center justify-center text-base-content/70 shrink-0">
-        <Icon size={18} />
-      </div>
-      <div className="flex flex-col">
-        <span className="text-caption font-bold text-base-content/50 uppercase tracking-wider">
-          {label}
-        </span>
-        <span className="text-body font-bold text-base-content">
-          {value || "-"}
-        </span>
       </div>
     </div>
   );

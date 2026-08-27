@@ -3,7 +3,11 @@ import { unitService } from "../unit.service";
 import { useHouseholdWithAuthForm } from "@/shared/hooks/use-household-form";
 import { defaultUnit, UnitFormData, validateUnit } from "../unit.types";
 
-export function useUnitForm(unitId?: string, enabled: boolean = true) {
+export function useUnitForm(
+  unitId?: string,
+  enabled: boolean = true,
+  productId?: string,
+) {
   return useHouseholdWithAuthForm<UnitFormData>({
     id: unitId,
     enabled,
@@ -16,7 +20,13 @@ export function useUnitForm(unitId?: string, enabled: boolean = true) {
     createFn: unitService.create,
     updateFn: unitService.update,
     validate: validateUnit,
-    redirectTo: "/beauty/dashboard",
+
+    // Sesuaikan redirectTo dinamis berdasarkan productId jika tersedia,
+    // atau fallback ke halaman dashboard umum jika tidak ada.
+    redirectTo: productId
+      ? `/beauty/dashboard/product/${productId}`
+      : "/beauty/dashboard",
+
     messages: {
       createSuccess: "Unit created successfully",
       updateSuccess: "Unit updated successfully",
