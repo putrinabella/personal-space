@@ -14,8 +14,11 @@ export function useProductForm(itemsId?: string, enabled: boolean = true) {
     entityName: "items",
     defaultValues: defaultProduct,
     queryKey: queryKeys.items.detail(itemsId || ""),
-    invalidateQueryKey: queryKeys.items.all(),
-
+    invalidateQueryKey: [
+      ...queryKeys.categoriesBeauty.all(),
+      ...queryKeys.brands.all(),
+      ...queryKeys.concerns.all(),
+    ],
     getDetail: async (id: string) => await productService.getDetail(id),
     createFn: productService.create,
     updateFn: productService.update,

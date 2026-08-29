@@ -35,30 +35,12 @@ export const beautyBrands = beautySchema.table(
       .references(() => households.id)
       .notNull(),
     name: text("name").notNull(),
+    storeLink: text("store_link"),
     logoUrl: text("logo_url"),
     ...auditColumns,
   },
   (table) => ({
     uniqueBrandPerHousehold: uniqueIndex("idx_beauty_brands_household_name").on(
-      table.householdId,
-      table.name,
-    ),
-  }),
-);
-
-export const beautyStores = beautySchema.table(
-  "beauty_stores",
-  {
-    id: uuid("id").defaultRandom().primaryKey(),
-    householdId: uuid("household_id")
-      .references(() => households.id)
-      .notNull(),
-    name: text("name").notNull(),
-    storeLink: text("store_link"),
-    ...auditColumns,
-  },
-  (table) => ({
-    uniqueStorePerHousehold: uniqueIndex("idx_beauty_stores_household_name").on(
       table.householdId,
       table.name,
     ),
@@ -102,7 +84,6 @@ export const beautyItems = beautySchema.table("beauty_items", {
   brandId: uuid("brand_id")
     .references(() => beautyBrands.id)
     .notNull(),
-  storeId: uuid("store_id").references(() => beautyStores.id),
 
   name: text("name").notNull(),
   minStock: integer("min_stock").default(1).notNull(),
@@ -165,7 +146,6 @@ export const beautyWishlist = beautySchema.table("beauty_wishlist", {
   brandId: uuid("brand_id")
     .references(() => beautyBrands.id)
     .notNull(),
-  storeId: uuid("store_id").references(() => beautyStores.id),
 
   estimatedPrice: numeric("estimated_price", { precision: 15, scale: 2 })
     .default("0")
@@ -209,18 +189,6 @@ export const beautyBrandsRelations = relations(
   }),
 );
 
-export const beautyStoresRelations = relations(
-  beautyStores,
-  ({ one, many }) => ({
-    household: one(households, {
-      fields: [beautyStores.householdId],
-      references: [households.id],
-    }),
-    items: many(beautyItems),
-    wishlistItems: many(beautyWishlist),
-  }),
-);
-
 export const beautyCategoriesRelations = relations(
   beautyCategories,
   ({ one, many }) => ({
@@ -254,10 +222,6 @@ export const beautyItemsRelations = relations(beautyItems, ({ one, many }) => ({
   brand: one(beautyBrands, {
     fields: [beautyItems.brandId],
     references: [beautyBrands.id],
-  }),
-  store: one(beautyStores, {
-    fields: [beautyItems.storeId],
-    references: [beautyStores.id],
   }),
   units: many(beautyItemUnits),
   concerns: many(beautyItemConcerns),
@@ -306,10 +270,6 @@ export const beautyWishlistRelations = relations(beautyWishlist, ({ one }) => ({
   brand: one(beautyBrands, {
     fields: [beautyWishlist.brandId],
     references: [beautyBrands.id],
-  }),
-  store: one(beautyStores, {
-    fields: [beautyWishlist.storeId],
-    references: [beautyStores.id],
   }),
 }));
 

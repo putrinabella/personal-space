@@ -8,7 +8,6 @@ import ProductAlerts from "@/features/beauty/components/ProductAlerts";
 import ProductCard from "@/features/beauty/components/ProductCard";
 import { useConcernsAll } from "@/features/beauty/concerns/hooks/useConcernsAll";
 import { useProductList } from "@/features/beauty/product/hooks/useProductList";
-import { useStoresAll } from "@/features/beauty/stores/hooks/useStoresAll";
 import CardBox from "@/shared/components/CardBox";
 import DataSection from "@/shared/components/DataSection";
 import FormInput from "@/shared/components/FormInput";
@@ -55,7 +54,6 @@ export default function SkincareDashboardPage() {
   const { data: dataCategories, isLoading: loadingCategories } =
     useCategoriesAll();
   const { data: dataBrand, isLoading: loadingBrand } = useBrandsAll();
-  const { data: dataStore, isLoading: loadingStore } = useStoresAll();
   const { data: dataConcern, isLoading: loadingConcern } = useConcernsAll();
 
   const { data, isLoading: loadingAlerts } = useAlertAll();
@@ -76,7 +74,6 @@ export default function SkincareDashboardPage() {
   const activeFilterCount = [
     filters.categoryId,
     filters.brandId,
-    filters.storeId,
     filters.status,
     filters.concernId,
     filters.expiryWindow,
@@ -244,18 +241,7 @@ export default function SkincareDashboardPage() {
                 placeholder="Select brand"
                 disabled={loadingBrand}
               />
-              <FormInput
-                label="Store"
-                options={dataStore.map((store) => ({
-                  label: store.name,
-                  value: store.id,
-                }))}
-                dropdownType="select"
-                value={filters.storeId}
-                onChange={(val) => handleFilterChange("storeId", val)}
-                placeholder="Select store"
-                disabled={loadingStore}
-              />
+
               <FormInput
                 label="Concern"
                 options={dataConcern.map((concern) => ({

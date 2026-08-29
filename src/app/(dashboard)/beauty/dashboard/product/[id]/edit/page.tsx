@@ -50,6 +50,7 @@ export default function EditItemPage({
             onChange={(val) => setField("name", val)}
           />
 
+          {/* Grid rapi 2 kolom untuk Category, Brand, Store, dan Min Stock */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormInput
               label="Category *"
@@ -58,7 +59,7 @@ export default function EditItemPage({
                 value: cat.id,
               }))}
               dropdownType="select"
-              value={data.categoryId || ""}
+              value={data.categoryId}
               onChange={(val) => setField("categoryId", val)}
               placeholder="Select category"
               disabled={loadingCategories}
@@ -70,20 +71,26 @@ export default function EditItemPage({
                 value: brand.id,
               }))}
               dropdownType="select"
-              value={data.brandId || ""}
+              value={data.brandId}
               onChange={(val) => setField("brandId", val)}
               placeholder="Select brand"
               disabled={loadingBrands}
             />
+            <FormInput
+              label="Minimum Stock Warning"
+              type="number"
+              placeholder="1"
+              value={data.minStock}
+              onChange={(val) => setField("minStock", val)}
+            />
+            <FormInput
+              label="Rating (1-5)"
+              type="number"
+              placeholder="e.g. 5"
+              value={data.rating ?? ""}
+              onChange={(val) => setField("rating", val)}
+            />
           </div>
-
-          <FormInput
-            label="Minimum Stock Warning"
-            type="number"
-            placeholder="1"
-            value={data.minStock ?? ""}
-            onChange={(val) => setField("minStock", val)}
-          />
 
           <div className="space-y-2 pt-2">
             <label className="text-sm font-semibold text-base-content/85">

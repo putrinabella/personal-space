@@ -3,7 +3,8 @@ import { BaseItem } from "@/shared/types/base.types";
 export interface BrandsFormData {
   householdId: string;
   name: string;
-  logo_url: string;
+  logoUrl: string;
+  storeLink: string;
 }
 
 export interface BrandsEntry extends BaseItem, BrandsFormData {}
@@ -11,7 +12,8 @@ export interface BrandsEntry extends BaseItem, BrandsFormData {}
 export const defaultBrands: BrandsFormData = {
   householdId: "",
   name: "",
-  logo_url: "",
+  logoUrl: "",
+  storeLink: "",
 };
 
 export const validateBrands = (payload: BrandsFormData): string[] => {

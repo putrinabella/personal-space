@@ -44,9 +44,9 @@ export default function ProductDetailPage({
         color="accent"
         description={
           <span className="flex flex-row gap-2 uppercase text-caption ">
-            {product.store.store_link ? (
+            {product.brand.storeLink ? (
               <a
-                href={product.store.store_link}
+                href={product.brand.storeLink}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}

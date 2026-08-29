@@ -1,7 +1,6 @@
 import { BaseItem } from "@/shared/types/base.types";
 import { CategoriesEntry } from "../categories/categories.types";
 import { BrandsEntry } from "../brands/brands.types";
-import { StoresEntry } from "../stores/stores.types";
 import { ConcernsEntry } from "../concerns/concerns.types";
 import { UnitEntry } from "../unit/unit.types";
 
@@ -42,7 +41,6 @@ export interface ProductEntry extends BaseItem {
   // Relasi
   category: CategoriesEntry;
   brand: BrandsEntry;
-  store: StoresEntry;
   units: UnitEntry[]; // Menggunakan interface dari units.types
   concerns: ConcernsEntry[];
   concernIds: string[];

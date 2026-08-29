@@ -14,6 +14,7 @@ import {
   PencilSimple,
   Eye,
   ShieldWarning,
+  ArrowSquareOut,
 } from "@phosphor-icons/react";
 import { ProductEntry } from "../product/product.types";
 import ActionButton from "@/shared/components/ActionButton";
@@ -134,8 +135,7 @@ export default function ProductCard({ item, onDetailClick }: ProductCardProps) {
             </div>
           </div>
         </div>
-
-        {(item.concerns?.length || item.store?.name) && (
+        {(item.concerns?.length || item.brand?.storeLink) && (
           <div className="flex flex-col gap-3 mt-1">
             {item.concerns && item.concerns.length > 0 && (
               <div className="flex items-center gap-1.5 flex-wrap">
@@ -151,14 +151,28 @@ export default function ProductCard({ item, onDetailClick }: ProductCardProps) {
               </div>
             )}
 
-            {item.store?.name && (
-              <div className="border-t border-base-200 pt-3 flex items-center gap-2 text-caption text-base-content/75">
-                <Storefront
-                  size={14}
-                  weight="bold"
-                  className="shrink-0 text-base-content/50"
-                />
-                <span className="truncate font-medium">{item.store.name}</span>
+            {item.brand?.storeLink && (
+              <div className="border-t border-base-200 pt-3 flex items-center justify-between gap-2 text-caption text-base-content/75">
+                <div className="flex items-center gap-2 min-w-0">
+                  <Storefront
+                    size={14}
+                    weight="bold"
+                    className="shrink-0 text-base-content/50"
+                  />
+                  <span className="truncate font-medium">
+                    {item.brand.name} Store
+                  </span>
+                </div>
+                <a
+                  href={item.brand.storeLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                  className="inline-flex items-center gap-1 shrink-0 px-2 py-1 bg-primary/10 hover:bg-primary/20 text-primary rounded-lg text-caption font-bold transition-colors"
+                >
+                  <span>Visit</span>
+                  <ArrowSquareOut size={12} weight="bold" />
+                </a>
               </div>
             )}
           </div>

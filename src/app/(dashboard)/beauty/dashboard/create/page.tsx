@@ -8,7 +8,6 @@ import { Sparkle, Check, X } from "@phosphor-icons/react";
 import { useRouter } from "next/navigation";
 import { useCategoriesAll } from "@/features/beauty/categories/hooks/useCategoriesAll";
 import { useBrandsAll } from "@/features/beauty/brands/hooks/useBrandsAll";
-import { useStoresAll } from "@/features/beauty/stores/hooks/useStoresAll";
 import { useConcernsAll } from "@/features/beauty/concerns/hooks/useConcernsAll";
 import { useProductForm } from "@/features/beauty/product/hooks/useProductForm";
 import { useProductAll } from "@/features/beauty/product/hooks/useProductAll";
@@ -20,7 +19,6 @@ export default function CreateBeautyItemUnitPage() {
 
   const { data: categories, isLoading: loadingCategories } = useCategoriesAll();
   const { data: brands, isLoading: loadingBrands } = useBrandsAll();
-  const { data: stores, isLoading: loadingStores } = useStoresAll();
   const { data: concerns, isLoading: loadingConcerns } = useConcernsAll();
   const { data: existingProduct, isLoading: loadingProduct } = useProductAll();
 
@@ -133,27 +131,12 @@ export default function CreateBeautyItemUnitPage() {
                 disabled={loadingBrands}
               />
               <FormInput
-                label="Store "
-                options={stores.map((store: any) => ({
-                  label: store.name,
-                  value: store.id,
-                }))}
-                dropdownType="select"
-                value={data.storeId}
-                onChange={(val) => setField("storeId", val)}
-                placeholder="Where did you buy it?"
-                disabled={loadingStores}
-              />
-              <FormInput
                 label="Minimum Stock Warning"
                 type="number"
                 placeholder="1"
                 value={data.minStock}
                 onChange={(val) => setField("minStock", val)}
               />
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormInput
                 label="Rating (1-5)"
                 type="number"

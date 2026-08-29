@@ -4,7 +4,6 @@ import {
   beautyItemUnits,
   beautyCategories,
   beautyBrands,
-  beautyStores,
   beautyItemConcerns,
   beautyConcerns,
 } from "@/db/schema/beauty";
@@ -27,7 +26,6 @@ export async function GET(request: NextRequest) {
 
     const categoryId = searchParams.get("categoryId");
     const brandId = searchParams.get("brandId");
-    const storeId = searchParams.get("storeId");
     const status = searchParams.get("status");
     const concernId = searchParams.get("concernId");
     const expiryWindow = searchParams.get("expiryWindow");
@@ -41,7 +39,6 @@ export async function GET(request: NextRequest) {
     if (search) filters.push(ilike(beautyItems.name, `%${search}%`));
     if (categoryId) filters.push(eq(beautyItems.categoryId, categoryId));
     if (brandId) filters.push(eq(beautyItems.brandId, brandId));
-    if (storeId) filters.push(eq(beautyItems.storeId, storeId));
 
     if (concernId) {
       filters.push(
@@ -68,7 +65,6 @@ export async function GET(request: NextRequest) {
           item: beautyItems,
           category: beautyCategories,
           brand: beautyBrands,
-          store: beautyStores,
         })
         .from(beautyItems)
         .leftJoin(
@@ -76,16 +72,10 @@ export async function GET(request: NextRequest) {
           eq(beautyCategories.id, beautyItems.categoryId),
         )
         .leftJoin(beautyBrands, eq(beautyBrands.id, beautyItems.brandId))
-        .leftJoin(beautyStores, eq(beautyStores.id, beautyItems.storeId))
         .leftJoin(beautyItemUnits, eq(beautyItemUnits.itemId, beautyItems.id))
         .where(and(...filters))
 
-        .groupBy(
-          beautyItems.id,
-          beautyCategories.id,
-          beautyBrands.id,
-          beautyStores.id,
-        )
+        .groupBy(beautyItems.id, beautyCategories.id, beautyBrands.id)
         .orderBy(asc(sql`min(${beautyItemUnits.expiryDate})`)) as any;
 
       if (isPaginated && page) {
@@ -246,7 +236,6 @@ export async function POST(request: NextRequest) {
             categoryId: formData.categoryId,
             createdById: userId,
             brandId: formData.brandId,
-            storeId: formData.storeId || null,
             name: formData.name,
             minStock: formData.minStock ?? 1,
             rating: formData.rating ? Number(formData.rating) : null,
@@ -320,7 +309,6 @@ export async function PUT(req: Request) {
       name,
       categoryId,
       brandId,
-      storeId,
       minStock,
       rating,
       notes,
@@ -338,7 +326,6 @@ export async function PUT(req: Request) {
           name,
           categoryId,
           brandId,
-          storeId: storeId || null,
           minStock: minStock ?? 1,
           rating: rating ? Number(rating) : null,
           notes: notes || null,

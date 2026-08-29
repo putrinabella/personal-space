@@ -77,21 +77,14 @@ export function EntityFields({ entity, data, setField }: any) {
       )}
 
       {entity === "brands" && (
-        <FormInput
-          label="Logo URL"
-          value={("logo_url" in data ? data.logo_url : "") || ""}
-          onChange={(val) => setField("logo_url", val)}
-          placeholder="https://example.com/logo.png"
-        />
-      )}
-
-      {entity === "stores" && (
-        <FormInput
-          label="Store Link"
-          value={("store_link" in data ? data.store_link : "") || ""}
-          onChange={(val) => setField("store_link", val)}
-          placeholder="https://tokopedia.com/store"
-        />
+        <>
+          <FormInput
+            label="Store Link"
+            value={("storeLink" in data ? data.storeLink : "") || ""}
+            onChange={(val) => setField("storeLink", val)}
+            placeholder="https://tokopedia.com/store"
+          />
+        </>
       )}
 
       {(entity === "categories" || entity === "concerns") && (

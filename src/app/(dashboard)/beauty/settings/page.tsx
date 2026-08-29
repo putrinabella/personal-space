@@ -10,12 +10,9 @@ import { Sliders, List, Plus } from "lucide-react";
 import DataRenderer from "@/shared/components/DataRender";
 import ActionButton from "@/shared/components/ActionButton";
 import { SquaresFour } from "@phosphor-icons/react";
-import { useStoresList } from "@/features/beauty/stores/hooks/useStoresList";
 import { useRouter } from "next/navigation";
 import { useCategoriesDelete } from "@/features/beauty/categories/hooks/useCategoriesDelete";
 import { useBrandsDelete } from "@/features/beauty/brands/hooks/useBrandsDelete";
-import { useStoresDelete } from "@/features/beauty/stores/hooks/useStoresDelete";
-
 import DataSection from "@/shared/components/DataSection";
 import { useConcernsDelete } from "@/features/beauty/concerns/hooks/useConcernsDelete";
 import { useConcernsList } from "@/features/beauty/concerns/hooks/useConcernsList";
@@ -24,24 +21,21 @@ const TAB_CONFIG = [
   { id: "brands", label: "Brands" },
   { id: "categories", label: "Categories" },
   { id: "concerns", label: "Concerns" },
-  { id: "stores", label: "Stores" },
 ] as const;
 
 export default function SettingsPage() {
   const router = useRouter();
   const deleteCategories = useCategoriesDelete();
   const deleteBrands = useBrandsDelete();
-  const deleteStores = useStoresDelete();
   const deleteConcerns = useConcernsDelete();
 
   const deleteHandlers = {
     categories: deleteCategories,
     brands: deleteBrands,
-    stores: deleteStores,
     concerns: deleteConcerns,
   };
   const [activeTab, setActiveTab] = useState<
-    "categories" | "brands" | "stores" | "concerns"
+    "categories" | "brands" | "concerns"
   >("concerns");
 
   const [viewType, setViewType] = useState<"list" | "card">("card");
@@ -55,7 +49,6 @@ export default function SettingsPage() {
 
   const brandsQuery = useBrandsList(page, undefined, activeTab === "brands");
 
-  const storesQuery = useStoresList(page, undefined, activeTab === "stores");
   const concernsQuery = useConcernsList(
     page,
     undefined,
@@ -64,7 +57,6 @@ export default function SettingsPage() {
   const queries = {
     categories: categoriesQuery,
     brands: brandsQuery,
-    stores: storesQuery,
     concerns: concernsQuery,
   };
   const activeData = queries[activeTab];
