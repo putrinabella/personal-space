@@ -6,6 +6,8 @@ import {
   Star,
   FlowerLotusIcon,
   ShieldWarning,
+  PencilSimple,
+  Trash,
 } from "@phosphor-icons/react";
 import CardBox from "@/shared/components/CardBox";
 import CardHeader from "@/shared/components/CardHeader";
@@ -15,6 +17,8 @@ import StockAlertBadge from "@/features/beauty/components/StockAlertBadge";
 import MetricStats from "@/shared/components/MetricStats";
 import UnitCard from "@/features/beauty/components/UnitCard";
 import { UNIT_STATUS_CONFIG } from "@/features/beauty/constants/status-option";
+import ActionButton from "@/shared/components/ActionButton";
+import { useProductDelete } from "@/features/beauty/product/hooks/useProductDelete";
 export default function ProductDetailPage({
   params,
 }: {
@@ -22,6 +26,7 @@ export default function ProductDetailPage({
 }) {
   const { id } = use(params);
   const { data: product, loading, error } = useProductDetail(id);
+  const { handleDelete } = useProductDelete();
 
   if (loading || error || !product) {
     return (
@@ -103,25 +108,44 @@ export default function ProductDetailPage({
             &quot;{product.notes}&quot;
           </div>
         )}
-        <div className="flex flex-col gap-2 pt-2 border-t border-base-200">
-          <span className="text-caption font-bold text-base-content/60 uppercase tracking-wider">
-            Skin Concerns
-          </span>
-          <div className="flex flex-wrap gap-1.5">
-            {product.concerns && product.concerns.length > 0 ? (
-              product.concerns.map((concern: any) => (
-                <span
-                  key={concern.id}
-                  className="px-3 py-1 bg-secondary/10 text-secondary rounded-lg text-caption font-bold"
-                >
-                  {concern.name}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2 border-t border-base-200 items-start">
+          <div className="flex flex-col gap-2 md:col-span-2">
+            <span className="text-caption font-bold text-base-content/60 uppercase tracking-wider">
+              Skin Concerns
+            </span>
+            <div className="flex flex-wrap gap-1.5">
+              {product.concerns && product.concerns.length > 0 ? (
+                product.concerns.map((concern: any) => (
+                  <span
+                    key={concern.id}
+                    className="px-3 py-1 bg-secondary/10 text-secondary rounded-lg text-caption font-bold"
+                  >
+                    {concern.name}
+                  </span>
+                ))
+              ) : (
+                <span className="text-caption text-base-content/40 italic">
+                  No concerns listed
                 </span>
-              ))
-            ) : (
-              <span className="text-caption text-base-content/40 italic">
-                No concerns listed
-              </span>
-            )}
+              )}
+            </div>
+          </div>
+
+          <div className="flex items-center justify-end gap-2 md:col-span-1 h-full pt-1">
+            <ActionButton
+              icon={Trash}
+              color="error"
+              size={14}
+              onClick={() => handleDelete(product.id)}
+              tooltip="Delete"
+            />
+            <ActionButton
+              icon={PencilSimple}
+              color="warning"
+              size={14}
+              to={`/beauty/dashboard/product/${product.id}/edit`}
+              tooltip="Edit"
+            />{" "}
           </div>
         </div>
       </CardBox>

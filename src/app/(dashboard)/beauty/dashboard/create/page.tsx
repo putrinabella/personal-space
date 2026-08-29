@@ -12,6 +12,7 @@ import { useStoresAll } from "@/features/beauty/stores/hooks/useStoresAll";
 import { useConcernsAll } from "@/features/beauty/concerns/hooks/useConcernsAll";
 import { useProductForm } from "@/features/beauty/product/hooks/useProductForm";
 import { useProductAll } from "@/features/beauty/product/hooks/useProductAll";
+
 export default function CreateBeautyItemUnitPage() {
   const router = useRouter();
   const [mode, setMode] = useState<"existing" | "new">("existing");
@@ -27,17 +28,18 @@ export default function CreateBeautyItemUnitPage() {
     (category: any) => category.parentId !== null,
   );
 
+  const onSave = async () => {
+    setField("isNewProduct", mode === "new");
+    await handleSubmit();
+  };
+
   const statusOptions = [
     { label: "Active", value: "active" },
     { label: "Backup", value: "backup" },
     { label: "Finished", value: "finished" },
     { label: "Discarded", value: "discarded" },
+    { label: "Expired", value: "expired" },
   ];
-
-  const onSave = async () => {
-    setField("isNewProduct", mode === "new");
-    await handleSubmit();
-  };
 
   return (
     <div className="flex flex-col gap-4 md:gap-8 max-w-7xl mx-auto pb-12">
@@ -51,21 +53,27 @@ export default function CreateBeautyItemUnitPage() {
         className="p-4 md:p-6 flex flex-col gap-4 md:gap-6"
         rounded="2xl"
       >
+        {/* Mode Switcher */}
         <div className="flex bg-base-200 p-1 rounded-xl">
           <button
             onClick={() => setMode("existing")}
-            className={`flex-1 py-2 rounded-lg font-bold transition ${mode === "existing" ? "bg-white shadow" : "opacity-60"}`}
+            className={`flex-1 py-2 rounded-lg font-bold transition ${
+              mode === "existing" ? "bg-white shadow" : "opacity-60"
+            }`}
           >
             Select Existing Product
           </button>
           <button
             onClick={() => setMode("new")}
-            className={`flex-1 py-2 rounded-lg font-bold transition ${mode === "new" ? "bg-white shadow" : "opacity-60"}`}
+            className={`flex-1 py-2 rounded-lg font-bold transition ${
+              mode === "new" ? "bg-white shadow" : "opacity-60"
+            }`}
           >
             Create New Product & Unit
           </button>
         </div>
 
+        {/* Dynamic Section based on Mode */}
         {mode === "existing" ? (
           <div className="flex flex-col gap-4">
             <FormInput
@@ -98,6 +106,7 @@ export default function CreateBeautyItemUnitPage() {
               onChange={(val) => setField("name", val)}
             />
 
+            {/* Grid rapi 2 kolom untuk Category, Brand, Store, dan Min Stock */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormInput
                 label="Category *"
@@ -123,19 +132,41 @@ export default function CreateBeautyItemUnitPage() {
                 placeholder="Select brand"
                 disabled={loadingBrands}
               />
+              <FormInput
+                label="Store "
+                options={stores.map((store: any) => ({
+                  label: store.name,
+                  value: store.id,
+                }))}
+                dropdownType="select"
+                value={data.storeId}
+                onChange={(val) => setField("storeId", val)}
+                placeholder="Where did you buy it?"
+                disabled={loadingStores}
+              />
+              <FormInput
+                label="Minimum Stock Warning"
+                type="number"
+                placeholder="1"
+                value={data.minStock}
+                onChange={(val) => setField("minStock", val)}
+              />
             </div>
 
-            <FormInput
-              label="Minimum Stock Warning"
-              type="number"
-              placeholder="1"
-              value={data.minStock}
-              onChange={(val) => setField("minStock", val)}
-            />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <FormInput
+                label="Rating (1-5)"
+                type="number"
+                placeholder="e.g. 5"
+                value={data.rating ?? ""}
+                onChange={(val) => setField("rating", val)}
+              />
+            </div>
 
+            {/* Skin Concerns Selection */}
             <div className="space-y-2 pt-2">
               <label className="text-sm font-semibold text-base-content/85">
-                Skin Concerns (Optional)
+                Skin Concerns
               </label>
               {loadingConcerns ? (
                 <p className="text-xs text-base-content/50">
@@ -202,77 +233,58 @@ export default function CreateBeautyItemUnitPage() {
 
         <p className="font-bold">Physical Unit / Batch Details</p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Physical Unit Form Fields */}
+        <div className="flex flex-col gap-4">
           <FormInput
             label="Status *"
             options={statusOptions}
             dropdownType="select"
             value={data.status || "active"}
             onChange={(val) => setField("status", val)}
-            searchable={false}
+            placeholder="Select status"
           />
-          <FormInput
-            label="Store (Optional)"
-            options={stores.map((store: any) => ({
-              label: store.name,
-              value: store.id,
-            }))}
-            dropdownType="select"
-            value={data.storeId}
-            onChange={(val) => setField("storeId", val)}
-            placeholder="Where did you buy it?"
-            disabled={loadingStores}
-          />
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormInput
             label="Price"
             type="money"
             placeholder="0"
-            value={data.price}
+            value={data.price ?? ""}
             onChange={(val) => setField("price", val)}
           />
-          <FormInput
-            label="PAO (Period After Opening in Months)"
-            type="number"
-            placeholder="e.g. 12"
-            value={data.paoMonths ?? ""}
-            onChange={(val) => setField("paoMonths", val)}
-          />
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <FormInput
+              label="Purchase Date"
+              type="date"
+              value={data.purchaseDate ? data.purchaseDate.split("T")[0] : ""}
+              onChange={(val) => setField("purchaseDate", val)}
+            />
+            <FormInput
+              label="Expiry Date"
+              type="date"
+              value={data.expiryDate ? data.expiryDate.split("T")[0] : ""}
+              onChange={(val) => setField("expiryDate", val)}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <FormInput
+              label="Date Opened"
+              type="date"
+              value={data.dateOpened ? data.dateOpened.split("T")[0] : ""}
+              onChange={(val) => setField("dateOpened", val)}
+            />
+            <FormInput
+              label="PAO (Period After Opening) in Months"
+              type="number"
+              placeholder="e.g. 12"
+              value={data.paoMonths ?? ""}
+              onChange={(val) => setField("paoMonths", val)}
+            />
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <FormInput
-            label="Purchase Date"
-            type="date"
-            value={data.purchaseDate}
-            onChange={(val) => setField("purchaseDate", val)}
-          />
-          <FormInput
-            label="Expiry Date"
-            type="date"
-            value={data.expiryDate}
-            onChange={(val) => setField("expiryDate", val)}
-          />
-          <FormInput
-            label="Date Opened"
-            type="date"
-            value={data.dateOpened}
-            onChange={(val) => setField("dateOpened", val)}
-          />
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormInput
-            label="Rating (1-5)"
-            type="number"
-            placeholder="e.g. 5"
-            value={data.rating ?? ""}
-            onChange={(val) => setField("rating", val)}
-          />
-        </div>
-
+        {/* Action Buttons */}
         <div className="flex flex-col md:flex-row gap-4 pt-4">
           <CardBox
             className="px-6 py-3 flex items-center justify-center gap-2 font-bold flex-1"

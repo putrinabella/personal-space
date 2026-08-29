@@ -384,17 +384,36 @@ export async function DELETE(req: Request) {
       return sendStandardResponse(null, "Item ID is required.", 400, "error");
     }
 
-    const [deleted] = await db
-      .update(beautyItems)
-      .set({ deletedAt: new Date() })
-      .where(eq(beautyItems.id, id))
-      .returning();
+    // Gunakan transaction agar penghapusan master dan child konsisten
+    const result = await db.transaction(async (tx) => {
+      // 1. Soft delete master produk
+      const [deletedMaster] = await tx
+        .update(beautyItems)
+        .set({ deletedAt: new Date() })
+        .where(eq(beautyItems.id, id))
+        .returning();
 
-    if (!deleted) {
+      if (!deletedMaster) {
+        return null;
+      }
+
+      // 2. Soft delete semua unit anak yang berelasi (menggunakan 'itemId' sesuai skema)
+      await tx
+        .update(beautyItemUnits)
+        .set({ deletedAt: new Date() })
+        .where(eq(beautyItemUnits.itemId, id));
+
+      return deletedMaster;
+    });
+
+    if (!result) {
       return sendStandardResponse(null, "Beauty item not found.", 404, "error");
     }
 
-    return sendStandardResponse(deleted, "Beauty item deleted successfully.");
+    return sendStandardResponse(
+      result,
+      "Beauty item and its units deleted successfully.",
+    );
   } catch (error) {
     return sendStandardResponse(
       null,

@@ -14,7 +14,8 @@ export function useUnitForm(
     entityName: "unit",
     defaultValues: defaultUnit,
     queryKey: queryKeys.unit.detail(unitId || ""),
-    invalidateQueryKey: queryKeys.unit.all(),
+
+    invalidateQueryKey: [...queryKeys.unit.all(), ...queryKeys.alert.all()],
 
     getDetail: async (id: string) => await unitService.getDetail(id),
     createFn: unitService.create,

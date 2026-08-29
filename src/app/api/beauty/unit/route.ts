@@ -1,91 +1,3 @@
-// import { db } from "@/db";
-// import { beautyItemUnits } from "@/db/schema/beauty";
-// import { sendStandardResponse } from "@/lib/apiResponse";
-// import { eq } from "drizzle-orm";
-// import { NextRequest } from "next/server";
-
-// // PUT: Untuk mengupdate Unit tertentu saja
-// export async function PUT(req: NextRequest) {
-//   try {
-//     const body = await req.json();
-//     const {
-//       id,
-//       status,
-//       price,
-//       purchaseDate,
-//       expiryDate,
-//       dateOpened,
-//       paoMonths,
-//     } = body;
-
-//     if (!id) {
-//       return sendStandardResponse(null, "Unit ID is required.", 400, "error");
-//     }
-
-//     const [updatedUnit] = await db
-//       .update(beautyItemUnits)
-//       .set({
-//         status: status || "active",
-//         price: price ? String(price) : "0",
-//         purchaseDate: purchaseDate ? new Date(purchaseDate) : null,
-//         expiryDate: expiryDate ? new Date(expiryDate) : null,
-//         dateOpened: dateOpened ? new Date(dateOpened) : null,
-//         paoMonths: paoMonths ? Number(paoMonths) : null,
-//         updatedAt: new Date(),
-//       })
-//       .where(eq(beautyItemUnits.id, id))
-//       .returning();
-
-//     if (!updatedUnit) {
-//       return sendStandardResponse(
-//         null,
-//         "Beauty item unit not found.",
-//         404,
-//         "error",
-//       );
-//     }
-
-//     return sendStandardResponse(
-//       updatedUnit,
-//       "Beauty item unit updated successfully.",
-//     );
-//   } catch (err: any) {
-//     return sendStandardResponse(null, err.message, 500, "error");
-//   }
-// }
-
-// // DELETE: Untuk menghapus unit fisik tertentu
-// export async function DELETE(req: NextRequest) {
-//   try {
-//     const { searchParams } = new URL(req.url);
-//     const id = searchParams.get("id");
-
-//     if (!id) {
-//       return sendStandardResponse(null, "Unit ID is required.", 400, "error");
-//     }
-
-//     const [deletedUnit] = await db
-//       .delete(beautyItemUnits)
-//       .where(eq(beautyItemUnits.id, id))
-//       .returning();
-
-//     if (!deletedUnit) {
-//       return sendStandardResponse(
-//         null,
-//         "Beauty item unit not found.",
-//         404,
-//         "error",
-//       );
-//     }
-
-//     return sendStandardResponse(
-//       deletedUnit,
-//       "Beauty item unit deleted successfully.",
-//     );
-//   } catch (err: any) {
-//     return sendStandardResponse(null, err.message, 500, "error");
-//   }
-// }
 import { db } from "@/db";
 import { beautyItems, beautyItemUnits } from "@/db/schema/beauty";
 import { sendStandardResponse } from "@/lib/apiResponse";
@@ -210,8 +122,10 @@ export async function DELETE(req: NextRequest) {
       return sendStandardResponse(null, "Unit ID is required.", 400, "error");
     }
 
+    // Ubah dari db.delete menjadi db.update untuk soft delete
     const [deletedUnit] = await db
-      .delete(beautyItemUnits)
+      .update(beautyItemUnits)
+      .set({ deletedAt: new Date() })
       .where(eq(beautyItemUnits.id, id))
       .returning();
 

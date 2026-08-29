@@ -1,7 +1,10 @@
 "use client";
 
+import { AlertEntry } from "@/features/beauty/alert/alert.types";
+import { useAlertAll } from "@/features/beauty/alert/hooks/useAlertAll";
 import { useBrandsAll } from "@/features/beauty/brands/hooks/useBrandsAll";
 import { useCategoriesAll } from "@/features/beauty/categories/hooks/useCategoriesAll";
+import ProductAlerts from "@/features/beauty/components/ProductAlerts";
 import ProductCard from "@/features/beauty/components/ProductCard";
 import { useConcernsAll } from "@/features/beauty/concerns/hooks/useConcernsAll";
 import { useProductList } from "@/features/beauty/product/hooks/useProductList";
@@ -55,6 +58,9 @@ export default function SkincareDashboardPage() {
   const { data: dataStore, isLoading: loadingStore } = useStoresAll();
   const { data: dataConcern, isLoading: loadingConcern } = useConcernsAll();
 
+  const { data, isLoading: loadingAlerts } = useAlertAll();
+  const alertData = data as unknown as AlertEntry;
+
   const parentCategories = dataCategories.filter(
     (category: any) => category.parentId == null,
   );
@@ -77,6 +83,23 @@ export default function SkincareDashboardPage() {
     filters.stockStatus,
   ].filter(Boolean).length;
 
+  const expiredUnits = alertData?.expiredUnits ?? [];
+  const expiringSoon = alertData?.expiringSoon ?? [];
+  const paoWarning = alertData?.paoWarning ?? [];
+  const totalAlerts =
+    expiredUnits.length + expiringSoon.length + paoWarning.length;
+
+  const activeCardsCount = [expiredUnits, expiringSoon, paoWarning].filter(
+    (items) => items.length > 0,
+  ).length;
+
+  const alertGridClass = `grid gap-4 ${
+    activeCardsCount === 1
+      ? "grid-cols-1"
+      : activeCardsCount === 2
+        ? "grid-cols-1 md:grid-cols-2"
+        : "grid-cols-1 md:grid-cols-3"
+  }`;
   return (
     <div className="flex flex-col gap-4 md:gap-8 max-w-7xl mx-auto">
       <header className="flex items-center justify-between gap-4">
@@ -99,6 +122,17 @@ export default function SkincareDashboardPage() {
           <span className="hidden sm:block">Add Product</span>
         </CardBox>
       </header>
+      {/* Calculate how many cards will be active */}
+      {!loadingAlerts && totalAlerts > 0 && (
+        <ProductAlerts
+          loadingAlerts={loadingAlerts}
+          totalAlerts={totalAlerts}
+          alertGridClass={alertGridClass}
+          expiredUnits={expiredUnits}
+          expiringSoon={expiringSoon}
+          paoWarning={paoWarning}
+        />
+      )}
       <CardBox className="p-4 md:p-6 flex flex-col gap-4">
         <div className="flex flex-col md:flex-row gap-3 md:items-end">
           <div className="flex-1 block md:hidden">

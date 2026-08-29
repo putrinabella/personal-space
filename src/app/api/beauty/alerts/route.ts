@@ -10,6 +10,7 @@ export async function GET(_request: NextRequest) {
   try {
     const { householdId } = await getHouseholdAuth();
 
+    // Langsung query dari beautyItemUnits sebagai tabel utama
     const unitsWithItems = await db
       .select({
         unit: beautyItemUnits,
@@ -23,14 +24,14 @@ export async function GET(_request: NextRequest) {
         and(
           eq(beautyItems.householdId, householdId),
           isNull(beautyItems.deletedAt),
-          sql`${beautyItemUnits.status} IN ('active', 'backup')`,
+          // Hanya ambil status yang masih relevan untuk dicek alert-nya
+          sql`${beautyItemUnits.status} IN ('active', 'backup', 'expired')`,
         ),
       )
       .orderBy(asc(beautyItemUnits.expiryDate));
 
-    const now = new Date();
-    // Reset jam ke 00:00:00 untuk akurasi perhitungan hari
-    now.setHours(0, 0, 0, 0);
+    const today = new Date();
+    const currentTime = today.getTime();
 
     const expiredUnits: any[] = [];
     const expiringSoon: any[] = [];
@@ -38,73 +39,99 @@ export async function GET(_request: NextRequest) {
     const calendarEvents: any[] = [];
 
     unitsWithItems.forEach(({ unit, item, brand }) => {
+      // Struktur data dengan tipe eksplisit agar paoProgress bisa diisi number
+      const transformedData = {
+        ...item,
+        brand,
+        unit: {
+          ...unit,
+          paoProgress: null as number | null, // <-- Perbaikan tipe di sini
+          isExpired: false,
+          isExpiringSoon: false,
+          daysLeft: 0,
+        },
+      };
+
+      // 1. Kalkulasi Expiry Alert
       if (unit.expiryDate) {
-        const expDate = new Date(unit.expiryDate);
-        expDate.setHours(0, 0, 0, 0);
+        const expiryDate = new Date(unit.expiryDate);
+        const diffTime = expiryDate.getTime() - today.getTime();
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-        const diffTime = expDate.getTime() - now.getTime();
-        const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+        const isExpired = diffDays < 0;
+        const isExpiringSoon = diffDays >= 0 && diffDays <= 30;
 
-        calendarEvents.push({
-          id: unit.id,
-          title: `${item.name} (${brand?.name || "No Brand"})`,
-          date: unit.expiryDate.toISOString().split("T")[0],
-          type: "expiry",
-          daysLeft: diffDays,
-        });
+        transformedData.unit.isExpired = isExpired;
+        transformedData.unit.isExpiringSoon = isExpiringSoon;
+        transformedData.unit.daysLeft = diffDays;
 
-        const unitWithDetails = { ...unit, item, brand, daysLeft: diffDays };
+        const dateString = isNaN(expiryDate.getTime())
+          ? ""
+          : expiryDate.toISOString().split("T")[0];
 
-        // KONDISI 1: Jika sudah expired (daysLeft < 0)
-        if (diffDays < 0) {
-          expiredUnits.push(unitWithDetails);
+        if (dateString) {
+          calendarEvents.push({
+            id: unit.id,
+            title: `${item.name} (${brand?.name || "No Brand"})`,
+            date: dateString,
+            type: "expiry",
+            daysLeft: diffDays,
+          });
         }
-        // KONDISI 2: Mendekati expired (antara 0 sampai 30 hari ke depan)
-        else if (diffDays <= 30) {
-          expiringSoon.push(unitWithDetails);
+
+        if (isExpired) {
+          expiredUnits.push(transformedData);
+        } else if (isExpiringSoon) {
+          expiringSoon.push(transformedData);
         }
       }
 
-      // Cek PAO (Period After Opening)
+      // 2. Kalkulasi PAO Alert
       if (unit.dateOpened && unit.paoMonths) {
         const openedDate = new Date(unit.dateOpened);
         const paoEndDate = new Date(openedDate);
         paoEndDate.setMonth(paoEndDate.getMonth() + unit.paoMonths);
-        paoEndDate.setHours(0, 0, 0, 0);
 
-        const diffTime = paoEndDate.getTime() - now.getTime();
-        const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
-        const totalDuration = paoEndDate.getTime() - openedDate.getTime();
-        const elapsed = now.getTime() - openedDate.getTime();
-        const progress = Math.min(
-          Math.max((elapsed / totalDuration) * 100, 0),
-          100,
-        );
+        const start = openedDate.getTime();
+        const end = paoEndDate.getTime();
 
-        calendarEvents.push({
-          id: unit.id,
-          title: `PAO Habis: ${item.name}`,
-          date: paoEndDate.toISOString().split("T")[0],
-          type: "pao",
-          daysLeft: diffDays,
-        });
+        let paoProgress = 0;
+        if (end > start) {
+          paoProgress = Math.min(
+            Math.max(((currentTime - start) / (end - start)) * 100, 0),
+            100,
+          );
+        }
 
-        if (diffDays <= 14 || progress >= 85) {
-          paoWarning.push({
-            ...unit,
-            item,
-            brand,
-            progress: Math.round(progress),
+        transformedData.unit.paoProgress = Math.round(paoProgress);
+
+        const diffTime = end - currentTime;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        const dateString = isNaN(paoEndDate.getTime())
+          ? ""
+          : paoEndDate.toISOString().split("T")[0];
+
+        if (dateString) {
+          calendarEvents.push({
+            id: unit.id,
+            title: `PAO Habis: ${item.name}`,
+            date: dateString,
+            type: "pao",
             daysLeft: diffDays,
           });
+        }
+
+        if (diffDays <= 14 || paoProgress >= 85) {
+          paoWarning.push(transformedData);
         }
       }
     });
 
     return sendStandardResponse(
       {
-        expiredUnits, // <-- Kelompok yang sudah lewat tanggal expired-nya
-        expiringSoon, // <-- Kelompok yang masih akan expired (0-30 hari)
+        expiredUnits,
+        expiringSoon,
         paoWarning,
         calendarEvents,
       },

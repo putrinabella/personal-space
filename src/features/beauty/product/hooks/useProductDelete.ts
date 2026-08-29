@@ -9,7 +9,7 @@ export function useProductDelete() {
     mutationFn: productService.delete,
 
     invalidateQueryKey: queryKeys.items.lists(),
-
+    redirectTo: "/beauty/dashboard",
     messages: {
       deleteSuccess: "Product deleted successfully",
     },

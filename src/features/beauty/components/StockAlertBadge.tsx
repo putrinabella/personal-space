@@ -17,7 +17,7 @@ export default function StockAlertBadge({
 
   if (isOutOfStock) {
     return (
-      <div className="relative flex flex-row gap-2 items-center justify-center align-middle py-1 bg-error/80 rounded-lg text-data">
+      <div className="relative flex flex-row gap-2 items-center justify-center align-middle py-1 bg-error/80 rounded-lg text-caption font-bold uppercase">
         <XCircle size={14} weight="bold" />
         <span>Out of Stock</span>
       </div>
@@ -26,7 +26,7 @@ export default function StockAlertBadge({
 
   if (isLowStock) {
     return (
-      <div className="relative flex flex-row gap-2 items-center justify-center align-middle py-1 bg-warning/80 rounded-lg text-data">
+      <div className="relative flex flex-row gap-2 items-center justify-center align-middle py-1 bg-warning/80 rounded-lg text-caption font-bold uppercase">
         <Warning size={14} weight="bold" />
         <span>Low Stock</span>
       </div>
