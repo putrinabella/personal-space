@@ -10,7 +10,8 @@ export function useBrandsForm(brandsId?: string, enabled: boolean = true) {
     entityName: "brands",
     defaultValues: defaultBrands,
     queryKey: queryKeys.brands.detail(brandsId || ""),
-    invalidateQueryKey: queryKeys.brands.lists(),
+
+    invalidateQueryKey: [...queryKeys.brands.all(), ...queryKeys.brands.list()],
 
     getDetail: async (id: string) => await brandsService.getDetail(id),
     createFn: brandsService.create,

@@ -1,0 +1,2 @@
+ALTER TABLE "beauty"."beauty_wishlist" ADD COLUMN "category_id" uuid NOT NULL;--> statement-breakpoint
+ALTER TABLE "beauty"."beauty_wishlist" ADD CONSTRAINT "beauty_wishlist_category_id_beauty_categories_id_fk" FOREIGN KEY ("category_id") REFERENCES "beauty"."beauty_categories"("id") ON DELETE no action ON UPDATE no action;

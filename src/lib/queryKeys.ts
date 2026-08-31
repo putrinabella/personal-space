@@ -28,4 +28,5 @@ export const queryKeys = {
   items: createQueryKeys("items"),
   unit: createQueryKeys("unit"),
   alert: createQueryKeys("alert"),
+  wishlist: createQueryKeys("wishlist"),
 };

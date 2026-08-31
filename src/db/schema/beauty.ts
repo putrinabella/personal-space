@@ -146,6 +146,9 @@ export const beautyWishlist = beautySchema.table("beauty_wishlist", {
   brandId: uuid("brand_id")
     .references(() => beautyBrands.id)
     .notNull(),
+  categoryId: uuid("category_id")
+    .references(() => beautyCategories.id)
+    .notNull(),
 
   estimatedPrice: numeric("estimated_price", { precision: 15, scale: 2 })
     .default("0")
@@ -270,6 +273,10 @@ export const beautyWishlistRelations = relations(beautyWishlist, ({ one }) => ({
   brand: one(beautyBrands, {
     fields: [beautyWishlist.brandId],
     references: [beautyBrands.id],
+  }),
+  categories: one(beautyCategories, {
+    fields: [beautyWishlist.categoryId],
+    references: [beautyCategories.id],
   }),
 }));
 

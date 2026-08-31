@@ -59,13 +59,13 @@ export default function ProductCard({ item, onDetailClick }: ProductCardProps) {
         <div className="flex flex-row justify-between items-start w-full gap-4">
           <div className="flex flex-col items-start min-w-0 flex-1 gap-1">
             {(item.brand?.name || item.category?.name) && (
-              <span className="text-caption uppercase tracking-wider truncate w-full font-bold text-base-content/50">
+              <p className="text-caption font-semibold uppercase tracking-wide text-base-content truncate w-full">
                 {[item.brand?.name, item.category?.name]
                   .filter(Boolean)
                   .join(" • ")}
-              </span>
+              </p>
             )}
-            <h3 className="heading-h3 text-base-content group-hover:text-primary transition-colors line-clamp-2 w-full font-extrabold tracking-tight">
+            <h3 className="font-extrabold tracking-tight text-base-content group-hover:text-accent transition-colors truncate w-full">
               {item.name}
             </h3>
           </div>
@@ -168,7 +168,7 @@ export default function ProductCard({ item, onDetailClick }: ProductCardProps) {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={(e) => e.stopPropagation()}
-                  className="inline-flex items-center gap-1 shrink-0 px-2 py-1 bg-primary/10 hover:bg-primary/20 text-primary rounded-lg text-caption font-bold transition-colors"
+                  className="inline-flex items-center gap-1 shrink-0 px-2 py-1 bg-primary/10 hover:bg-primary/20 text-base-content rounded-lg text-caption font-bold transition-colors"
                 >
                   <span>Visit</span>
                   <ArrowSquareOut size={12} weight="bold" />

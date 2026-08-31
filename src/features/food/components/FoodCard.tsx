@@ -23,7 +23,7 @@ export const FoodCard = ({ food, onDetailClick }: FoodCardProps) => {
       rounded="2xl"
       color="base-100"
     >
-      {food.restaurant?.isFavoriteRestaurant && (
+      {(food.isFavoriteFood || food.isFavoriteDrink) && (
         <div className="absolute top-0 right-4 bg-error text-error-content px-2 py-1 rounded-b-lg shadow-sm z-10">
           <Heart weight="fill" size={14} />
         </div>
