@@ -23,7 +23,6 @@ export default function ProductAlerts({
   }
   return (
     <div className={alertGridClass}>
-      {/* Expired Products */}
       {expiredUnits.length > 0 && (
         <CardBox className="p-4 flex flex-col gap-3" rounded="2xl">
           <div className="flex items-center justify-between">
@@ -55,7 +54,7 @@ export default function ProductAlerts({
           </div>
         </CardBox>
       )}
-      {/* Expiring Soon */}
+
       {expiringSoon.length > 0 && (
         <CardBox className="p-4 flex flex-col gap-3" rounded="2xl">
           <div className="flex items-center justify-between">
@@ -87,7 +86,7 @@ export default function ProductAlerts({
           </div>
         </CardBox>
       )}
-      {/* PAO Warning */}
+
       {paoWarning.length > 0 && (
         <CardBox className="p-4 flex flex-col gap-3" rounded="2xl">
           <div className="flex items-center justify-between">
