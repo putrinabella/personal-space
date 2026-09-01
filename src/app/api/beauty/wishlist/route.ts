@@ -141,9 +141,9 @@ export async function POST(request: NextRequest) {
           .insert(beautyItems)
           .values({
             householdId,
-            categoryId: body.categoryId || wishlistItem.categoryId, // Fallback ke categoryId wishlist jika tidak diisi saat pembelian
+            categoryId: body.categoryId || wishlistItem.categoryId,
             createdById: userId,
-            brandId: wishlistItem.brandId,
+            brandId: wishlistItem.brandId, // Langsung gunakan karena sudah pasti string (not null)
             name: wishlistItem.name,
             minStock: body.minStock ?? 1,
             rating: body.rating ? Number(body.rating) : null,

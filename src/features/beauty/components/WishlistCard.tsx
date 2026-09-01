@@ -5,51 +5,41 @@ import MetricStats from "@/shared/components/MetricStats";
 import ModalBox from "@/shared/components/ModalBox";
 import { formatDateIndo } from "@/utils/dateFormatter";
 import { formatRupiah } from "@/utils/rupiahFormatter";
-import { ArrowSquareOut, ShoppingCartSimple } from "@phosphor-icons/react";
+import {
+  ArrowSquareOut,
+  PencilSimple,
+  ShoppingCartSimple,
+} from "@phosphor-icons/react";
 import { useState } from "react";
 import { WishlistEntry } from "../wishlist/wishlist.types";
+import ActionButton from "@/shared/components/ActionButton";
 
 interface WishlistCardProps {
-  item: {
-    id: string;
-    name: string;
-    estimatedPrice: string | number;
-    priority: "High" | "Medium" | "Low";
-    storeLink?: string | null;
-    reason?: string | null;
-    createdAt: string;
-    brand: {
-      id: string;
-      name: string;
-      storeLink?: string | null;
-    };
-    category: {
-      id: string;
-      name: string;
-    };
-  };
-  onPurchaseSubmit?: (formData: any) => void; // Handler saat submit form pembelian
-  onEditSubmit?: (formData: any) => void; // Handler saat submit form edit
-
+  item: WishlistEntry;
   onDetailClick?: (item: WishlistEntry) => void;
 }
 
 export default function WishlistCard({
   item,
-  onPurchaseSubmit,
-  onEditSubmit,
+  onDetailClick,
 }: WishlistCardProps) {
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [isPurchaseModalOpen, setIsPurchaseModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const activeStoreLink = item.storeLink || item.brand.storeLink;
   const formatedPrice = formatRupiah(item.estimatedPrice);
 
+  const handleCardClick = () => {
+    if (onDetailClick) {
+      onDetailClick(item);
+    } else {
+      setIsModalOpen(true);
+    }
+  };
+
   return (
     <>
-      {/* CARD UTAMA: Klik card untuk membuka modal Edit */}
       <CardBox
-        onClick={() => setIsEditModalOpen(true)}
+        onClick={handleCardClick}
         pressable={true}
         className="group relative p-5 flex flex-col gap-4 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 border border-base-200 overflow-hidden w-full text-left cursor-pointer"
         rounded="2xl"
@@ -88,14 +78,8 @@ export default function WishlistCard({
           className="bg-base-200/60 rounded-xl p-2"
         />
 
-        {(item.reason || activeStoreLink || item.createdAt) && (
+        {(activeStoreLink || item.createdAt) && (
           <div className="flex flex-col gap-3 mt-1">
-            {item.reason && (
-              <div className="p-3 text-base-content bg-base-200/60 rounded-xl text-caption border-l-4 border-primary italic">
-                &quot;{item.reason}&quot;
-              </div>
-            )}
-
             {(activeStoreLink || item.createdAt) && (
               <div className="border-t border-base-200 pt-3 flex items-center justify-between gap-3 text-caption text-base-content/75">
                 {item.createdAt && (
@@ -119,85 +103,55 @@ export default function WishlistCard({
             )}
           </div>
         )}
-
-        {/* TOMBOL TRIGGER: Membuka modal form pembelian (Mark as Purchased) */}
-        <button
-          onClick={(e) => {
-            e.stopPropagation(); // Mencegah modal edit ikut terbuka saat tombol dibeli diklik
-            setIsPurchaseModalOpen(true);
-          }}
-          className="mt-2 w-full flex items-center justify-center gap-2 py-2 px-4 bg-primary text-primary-content hover:bg-primary/90 font-bold rounded-xl text-caption transition-colors cursor-pointer"
-        >
-          <ShoppingCartSimple size={16} weight="bold" />
-          <span>Mark as Purchased</span>
-        </button>
       </CardBox>
-
-      {/* MODAL 1: Form Edit Wishlist */}
       <ModalBox
-        isOpen={isEditModalOpen}
-        onClose={() => setIsEditModalOpen(false)}
-        title="Edit Wishlist Item"
-        subtitle={`${item.brand.name} • ${item.name}`}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title={item.name}
+        subtitle={
+          item.brand?.name
+            ? `${item.brand.name} • ${item.category?.name || "Skincare"}`
+            : item.category?.name
+        }
         maxWidth="xl"
       >
-        <div className="flex flex-col gap-4 py-2">
-          {/* Tempatkan form input edit wishlist di sini */}
-          <p className="text-caption text-base-content/70">
-            Form untuk mengubah detail wishlist (Nama, Harga Estimasi,
-            Prioritas, dll).
-          </p>
-          <div className="flex justify-end gap-2 mt-4">
-            <button
-              onClick={() => setIsEditModalOpen(false)}
-              className="px-4 py-2 rounded-xl text-caption font-bold bg-base-200 hover:bg-base-300"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={() => {
-                onEditSubmit?.(item);
-                setIsEditModalOpen(false);
-              }}
-              className="px-4 py-2 rounded-xl text-caption font-bold bg-primary text-primary-content"
-            >
-              Save Changes
-            </button>
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center justify-between bg-base-200/60 p-3 rounded-xl">
+            <span className="text-caption font-bold text-base-content/70">
+              Manage Product Data
+            </span>
+            <div className="flex gap-2">
+              <ActionButton
+                icon={PencilSimple}
+                color="warning"
+                size={14}
+                to={`/beauty/wishlist/${item.id}/edit`}
+              />
+              <ActionButton
+                icon={ShoppingCartSimple}
+                color="secondary"
+                size={14}
+                to={`/beauty/wishlist/${item.id}/purchase`}
+              />
+            </div>
           </div>
-        </div>
-      </ModalBox>
-
-      {/* MODAL 2: Form Mark as Purchased (Pindah ke Inventaris) */}
-      <ModalBox
-        isOpen={isPurchaseModalOpen}
-        onClose={() => setIsPurchaseModalOpen(false)}
-        title="Confirm Purchase"
-        subtitle={`Pindahkan "${item.name}" ke inventaris produk aktif`}
-        maxWidth="xl"
-      >
-        <div className="flex flex-col gap-4 py-2">
-          {/* Tempatkan form input pembelian (Harga Aktual, Tanggal Beli, Tanggal Kedaluwarsa, dll) */}
-          <p className="text-caption text-base-content/70">
-            Item ini akan dihapus dari wishlist dan dicatat sebagai stok produk
-            baru di inventaris Anda.
-          </p>
-          <div className="flex justify-end gap-2 mt-4">
-            <button
-              onClick={() => setIsPurchaseModalOpen(false)}
-              className="px-4 py-2 rounded-xl text-caption font-bold bg-base-200 hover:bg-base-300"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={() => {
-                onPurchaseSubmit?.(item);
-                setIsPurchaseModalOpen(false);
-              }}
-              className="px-4 py-2 rounded-xl text-caption font-bold bg-primary text-primary-content"
-            >
-              Confirm Purchase
-            </button>
-          </div>
+          <MetricStats
+            items={[
+              {
+                label: "Est. Price",
+                value: formatedPrice || "-",
+              },
+              {
+                label: "Category",
+                value: item.category.name || "-",
+              },
+              {
+                label: "Priority",
+                value: item.priority || "-",
+              },
+            ]}
+            className="bg-base-200/60 rounded-xl p-2"
+          />
         </div>
       </ModalBox>
     </>
