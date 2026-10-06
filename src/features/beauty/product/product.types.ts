@@ -16,6 +16,7 @@ export interface ProductFormData {
   rating?: number;
   notes?: string;
   concernIds?: string[];
+  barcode?: string;
 
   // Properti opsional untuk skenario pembuatan Product + Unit sekaligus
   isNewProduct?: boolean;
@@ -37,6 +38,7 @@ export interface ProductEntry extends BaseItem {
   minStock: number;
   rating?: number | null;
   notes?: string | null;
+  barcode?: string;
 
   // Relasi
   category: CategoriesEntry;
@@ -56,6 +58,7 @@ export const defaultProduct: ProductFormData = {
   minStock: 1,
   notes: "",
   concernIds: [],
+  barcode: "", // <-- Tambahkan ini agar state barcode terinisialisasi dengan benar!
   status: "active",
   price: 0,
   purchaseDate: "",

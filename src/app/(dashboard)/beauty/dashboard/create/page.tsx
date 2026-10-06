@@ -4,18 +4,30 @@ import { useState } from "react";
 import CardBox from "@/shared/components/CardBox";
 import CardHeader from "@/shared/components/CardHeader";
 import FormInput from "@/shared/components/FormInput";
-import { Sparkle, Check, X } from "@phosphor-icons/react";
+import { Sparkle, Check, X, Camera } from "@phosphor-icons/react";
 import { useRouter } from "next/navigation";
 import { useCategoriesAll } from "@/features/beauty/categories/hooks/useCategoriesAll";
 import { useBrandsAll } from "@/features/beauty/brands/hooks/useBrandsAll";
 import { useConcernsAll } from "@/features/beauty/concerns/hooks/useConcernsAll";
 import { useProductForm } from "@/features/beauty/product/hooks/useProductForm";
 import { useProductAll } from "@/features/beauty/product/hooks/useProductAll";
+import { useBarcodeScanner } from "@/features/beauty/product/hooks/useBarcodeScanner";
+import BarcodeScannerModal from "@/shared/components/BarcodeScannerModal";
 
 export default function CreateBeautyItemUnitPage() {
   const router = useRouter();
   const [mode, setMode] = useState<"existing" | "new">("existing");
+
   const { data, setField, handleSubmit, saving } = useProductForm();
+
+  // Menggunakan custom hook barcode scanner
+  const {
+    isScannerOpen,
+    setIsScannerOpen,
+    scannedProductInfo,
+    handleExistingScan,
+    handleNewScan,
+  } = useBarcodeScanner({ setField, setMode });
 
   const { data: categories, isLoading: loadingCategories } = useCategoriesAll();
   const { data: brands, isLoading: loadingBrands } = useBrandsAll();
@@ -38,6 +50,10 @@ export default function CreateBeautyItemUnitPage() {
     { label: "Discarded", value: "discarded" },
     { label: "Expired", value: "expired" },
   ];
+
+  const selectedProductObj =
+    existingProduct.find((item: any) => item.id === data.beautyItemId) ||
+    scannedProductInfo;
 
   return (
     <div className="flex flex-col gap-4 md:gap-8 max-w-7xl mx-auto pb-12">
@@ -74,28 +90,122 @@ export default function CreateBeautyItemUnitPage() {
         {/* Dynamic Section based on Mode */}
         {mode === "existing" ? (
           <div className="flex flex-col gap-4">
-            <FormInput
-              label="Select Product *"
-              options={existingProduct.map((item: any) => ({
-                label: `${item.name} (${item.brand?.name || "Unknown Brand"})`,
-                value: item.id,
-              }))}
-              dropdownType="select"
-              value={data.beautyItemId}
-              onChange={(val) => setField("beautyItemId", val)}
-              placeholder={
-                loadingProduct
-                  ? "Loading products..."
-                  : "Select existing product"
-              }
-              disabled={loadingProduct}
-            />
+            <div className="flex flex-col gap-2">
+              <label className="text-sm font-semibold text-base-content/85">
+                Barcode *
+              </label>
+
+              <CardBox
+                className="w-full py-4 flex items-center justify-center gap-2 font-bold text-base shadow-sm"
+                rounded="xl"
+                color="secondary"
+                onClick={() => setIsScannerOpen(true)}
+                pressable
+                shadowSize="md"
+              >
+                <Camera size={22} weight="bold" />
+                <span>
+                  {selectedProductObj
+                    ? `Selected: ${selectedProductObj.name} (Tap to Re-scan)`
+                    : "Tap Here to Scan Barcode"}
+                </span>
+              </CardBox>
+
+              <div className="flex justify-between items-center text-xs px-1">
+                <span className="text-base-content/60">
+                  {selectedProductObj
+                    ? "Product successfully matched."
+                    : "Scan package barcode to auto-select from list below."}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const manualInput = document.getElementById(
+                      "manual-select-input",
+                    );
+                    if (manualInput) manualInput.classList.toggle("hidden");
+                  }}
+                  className="text-secondary font-semibold hover:underline"
+                >
+                  {selectedProductObj ? "Change selection" : "Select Manually"}
+                </button>
+              </div>
+
+              <div id="manual-select-input" className="hidden pt-1">
+                <FormInput
+                  label="Select Product *"
+                  options={existingProduct.map((item: any) => ({
+                    label: `${item.name} (${item.brand?.name || "Unknown Brand"})`,
+                    value: item.id,
+                  }))}
+                  dropdownType="select"
+                  value={data.beautyItemId}
+                  onChange={(val) => setField("beautyItemId", val)}
+                  placeholder={
+                    loadingProduct
+                      ? "Loading products..."
+                      : "Select existing product"
+                  }
+                  disabled={loadingProduct}
+                />
+              </div>
+            </div>
           </div>
         ) : (
           <div className="flex flex-col gap-4 p-4 border border-secondary/20 rounded-xl bg-secondary/5">
             <p className="font-bold text-secondary">
               New Product Master Details
             </p>
+            <div className="flex flex-col gap-2">
+              <label className="text-sm font-semibold text-base-content/85">
+                Barcode *
+              </label>
+
+              <CardBox
+                className="w-full py-4 flex items-center justify-center gap-2 font-bold text-base shadow-sm"
+                rounded="xl"
+                color="secondary"
+                onClick={() => setIsScannerOpen(true)}
+                pressable
+                shadowSize="md"
+              >
+                <Camera size={22} weight="bold" />
+                <span>
+                  {data.barcode
+                    ? `Barcode: ${data.barcode} (Tap to Re-scan)`
+                    : "Tap Here to Scan Barcode"}
+                </span>
+              </CardBox>
+
+              <div className="flex justify-between items-center text-xs px-1">
+                <span className="text-base-content/60">
+                  {data.barcode
+                    ? "Barcode successfully captured."
+                    : "Camera not working? Enter manually."}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const manualInput = document.getElementById(
+                      "manual-barcode-input",
+                    );
+                    if (manualInput) manualInput.classList.toggle("hidden");
+                  }}
+                  className="text-secondary font-semibold hover:underline"
+                >
+                  {data.barcode ? "Edit Barcode" : "Type manually"}
+                </button>
+              </div>
+
+              <div id="manual-barcode-input" className="hidden pt-1">
+                <FormInput
+                  label="Barcode"
+                  placeholder="Type barcode number here..."
+                  value={data.barcode || ""}
+                  onChange={(val) => setField("barcode", val)}
+                />
+              </div>
+            </div>
 
             <FormInput
               label="Product Name *"
@@ -104,7 +214,6 @@ export default function CreateBeautyItemUnitPage() {
               onChange={(val) => setField("name", val)}
             />
 
-            {/* Grid rapi 2 kolom untuk Category, Brand, Store, dan Min Stock */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormInput
                 label="Category *"
@@ -146,7 +255,6 @@ export default function CreateBeautyItemUnitPage() {
               />
             </div>
 
-            {/* Skin Concerns Selection */}
             <div className="space-y-2 pt-2">
               <label className="text-sm font-semibold text-base-content/85">
                 Skin Concerns
@@ -216,7 +324,6 @@ export default function CreateBeautyItemUnitPage() {
 
         <p className="font-bold">Physical Unit / Batch Details</p>
 
-        {/* Physical Unit Form Fields */}
         <div className="flex flex-col gap-4">
           <FormInput
             label="Status *"
@@ -267,7 +374,6 @@ export default function CreateBeautyItemUnitPage() {
           </div>
         </div>
 
-        {/* Action Buttons */}
         <div className="flex flex-col md:flex-row gap-4 pt-4">
           <CardBox
             className="px-6 py-3 flex items-center justify-center gap-2 font-bold flex-1"
@@ -295,6 +401,24 @@ export default function CreateBeautyItemUnitPage() {
           </CardBox>
         </div>
       </CardBox>
+
+      {/* Modal Scanner */}
+      <BarcodeScannerModal
+        isOpen={isScannerOpen}
+        onClose={() => setIsScannerOpen(false)}
+        title={
+          mode === "existing"
+            ? "Scan Existing Product"
+            : "Scan New Product Barcode"
+        }
+        onScanSuccess={(code) => {
+          if (mode === "existing") {
+            handleExistingScan(code);
+          } else {
+            handleNewScan(code);
+          }
+        }}
+      />
     </div>
   );
 }
