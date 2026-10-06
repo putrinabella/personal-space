@@ -22,9 +22,11 @@ async function getHandler() {
     defaultWhere: eq(beautyWasteHistory.householdId, householdId),
   });
 }
+
 export async function GET(req: Request) {
   return (await getHandler()).GET(req);
 }
+
 export async function POST(request: NextRequest) {
   try {
     const { householdId } = await getHouseholdAuth();
@@ -36,7 +38,7 @@ export async function POST(request: NextRequest) {
     }
 
     const result = await db.transaction(async (tx) => {
-      // Ambil data unit, item, dan brand terkait
+      // 1. Ambil data unit, item, category, dan brand terkait
       const [unitData] = await tx
         .select({
           unitId: beautyItemUnits.id,
@@ -44,6 +46,7 @@ export async function POST(request: NextRequest) {
           expiryDate: beautyItemUnits.expiryDate,
           itemName: beautyItems.name,
           itemId: beautyItems.id,
+          categoryId: beautyItems.categoryId, // <-- TAMBAHKAN INI
           brandId: beautyBrands.id,
           brandName: beautyBrands.name,
           householdId: beautyItems.householdId,
@@ -62,13 +65,14 @@ export async function POST(request: NextRequest) {
         throw new Error("Beauty unit item not found.");
       }
 
-      // Masukkan ke tabel beauty_waste_history
+      // 2. Masukkan ke tabel beauty_waste_history
       const [newWaste] = await tx
         .insert(beautyWasteHistory)
         .values({
           householdId,
           itemId: unitData.itemId,
           brandId: unitData.brandId,
+          categoryId: unitData.categoryId, // <-- TAMBAHKAN INI
           brandNameSnapshot: unitData.brandName,
           name: unitData.itemName,
           price: unitData.price,
@@ -78,7 +82,7 @@ export async function POST(request: NextRequest) {
         })
         .returning();
 
-      // Ubah status unit menjadi 'discarded' atau hapus unit fisik dari inventory aktif
+      // 3. Ubah status unit menjadi 'discarded'
       await tx
         .update(beautyItemUnits)
         .set({ status: "discarded", updatedAt: new Date() })

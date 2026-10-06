@@ -1,9 +1,6 @@
 import { createCrudService } from "@/shared/service/createCrudService";
-import { BrandsEntry } from "./waste.types";
+import { WasteEntry } from "./waste.types";
 
-export const brandsService = createCrudService<BrandsEntry>(
-  "/api/beauty/brands",
-  {
-    tag: "brands",
-  },
-);
+export const wasteService = createCrudService<WasteEntry>("/api/beauty/waste", {
+  tag: "waste",
+});

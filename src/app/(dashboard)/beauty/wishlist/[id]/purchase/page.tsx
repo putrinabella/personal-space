@@ -7,7 +7,7 @@ import { ShoppingCartSimple, Check, X } from "@phosphor-icons/react";
 import { useRouter, useParams } from "next/navigation";
 import { useCategoriesAll } from "@/features/beauty/categories/hooks/useCategoriesAll";
 import { useWishlistPurchase } from "@/features/beauty/wishlist/hooks/useWishlistPurchase";
-import { useBrandsAll } from "@/features/beauty/waste/hooks/useWasteAll";
+import { useBrandsAll } from "@/features/beauty/brands/hooks/useBrandsAll";
 
 export default function PurchaseWishlistPage() {
   const router = useRouter();

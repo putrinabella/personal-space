@@ -11,9 +11,10 @@ import {
 } from "@phosphor-icons/react";
 import ActionButton from "@/shared/components/ActionButton";
 import { useUnitDelete } from "../unit/hooks/useUnitDelete";
+import { UnitEntry } from "../unit/unit.types";
 
 interface UnitCardProps {
-  unit: any;
+  unit: UnitEntry;
   idx: number;
   statusConfig: Record<string, { label: string; className: string }>;
 }
@@ -58,14 +59,14 @@ export default function UnitCard({ unit, idx, statusConfig }: UnitCardProps) {
       {isExpired && (
         <div className="flex items-center gap-2 px-3 py-1.5 bg-error/15 border border-error/30 rounded-xl text-error text-[11px] font-bold">
           <XCircle size={15} weight="bold" />
-          <span>Expired! The expiration date has passed.</span>
+          <span>Expired {Math.abs(unit.daysLeft)} days ago!</span>
         </div>
       )}
 
       {!isExpired && isExpiringSoon && (
         <div className="flex items-center gap-2 px-3 py-1.5 bg-warning/15 border border-warning/30 rounded-xl text-warning-content text-[11px] font-bold">
           <Warning size={15} weight="bold" className="text-warning" />
-          <span>Expiring Soon (&le; 30 days left)</span>
+          <span>Expiring in {unit.daysLeft} days</span>
         </div>
       )}
 

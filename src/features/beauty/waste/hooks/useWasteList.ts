@@ -1,19 +1,19 @@
 import { useBaseList } from "@/shared/hooks/core/use-base-list";
 import { queryKeys } from "@/lib/queryKeys";
-import { brandsService } from "../waste.service";
+import { wasteService } from "../waste.service";
 import { PaginatedParams } from "@/shared/types/common";
-import { BrandsEntry } from "../waste.types";
+import { WasteEntry } from "../waste.types";
 
-export function useBrandsList(page = 1, title?: string, enabled = true) {
+export function useWasteList(page = 1, title?: string, enabled = true) {
   const params: PaginatedParams = {
     page,
     per_page: 1000,
     search: title,
   };
 
-  return useBaseList<BrandsEntry, PaginatedParams>({
-    queryKey: queryKeys.brands.list(params),
-    fetcher: (p) => brandsService.getPaginated(p),
+  return useBaseList<WasteEntry, PaginatedParams>({
+    queryKey: queryKeys.waste.list(params),
+    fetcher: (p) => wasteService.getPaginated(p),
     params,
     enabled,
   });

@@ -6,10 +6,8 @@ import ModalBox from "@/shared/components/ModalBox";
 import { formatRupiah } from "@/utils/rupiahFormatter";
 import {
   Storefront,
-  Sparkle,
   Star,
   Package,
-  CheckCircle,
   ClockCountdown,
   PencilSimple,
   Eye,
@@ -31,7 +29,7 @@ export default function ProductCard({ item, onDetailClick }: ProductCardProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const units = item.units || [];
-  const activeUnitsCount = units.filter((u) => u.status === "active").length;
+  // const activeUnitsCount = units.filter((u) => u.status === "active").length;
   const backupUnitsCount = units.filter((u) => u.status === "backup").length;
 
   const numericPrice =
@@ -71,14 +69,14 @@ export default function ProductCard({ item, onDetailClick }: ProductCardProps) {
           </div>
 
           <div className="flex flex-col items-end gap-1.5 shrink-0 pt-0.5">
-            {activeUnitsCount > 0 && (
+            {/* {activeUnitsCount > 0 && (
               <span
                 className={`inline-flex items-center gap-1 px-2.5 py-0.5 text-caption font-bold rounded-lg ${UNIT_STATUS_CONFIG.active.className}`}
               >
                 <CheckCircle size={12} weight="bold" />
                 {activeUnitsCount} Active
               </span>
-            )}
+            )} */}
             {backupUnitsCount > 0 && (
               <span
                 className={`inline-flex items-center gap-1 px-2.5 py-0.5 text-caption font-bold rounded-lg ${UNIT_STATUS_CONFIG.backup.className}`}
@@ -137,7 +135,7 @@ export default function ProductCard({ item, onDetailClick }: ProductCardProps) {
         </div>
         {(item.concerns?.length || item.brand?.storeLink) && (
           <div className="flex flex-col gap-3 mt-1">
-            {item.concerns && item.concerns.length > 0 && (
+            {/* {item.concerns && item.concerns.length > 0 && (
               <div className="flex items-center gap-1.5 flex-wrap">
                 {item.concerns.map((concern) => (
                   <span
@@ -149,7 +147,7 @@ export default function ProductCard({ item, onDetailClick }: ProductCardProps) {
                   </span>
                 ))}
               </div>
-            )}
+            )} */}
 
             {item.brand?.storeLink && (
               <div className="border-t border-base-200 pt-3 flex items-center justify-between gap-2 text-caption text-base-content/75">

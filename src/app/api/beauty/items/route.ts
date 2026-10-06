@@ -74,7 +74,6 @@ export async function GET(request: NextRequest) {
         .leftJoin(beautyBrands, eq(beautyBrands.id, beautyItems.brandId))
         .leftJoin(beautyItemUnits, eq(beautyItemUnits.itemId, beautyItems.id))
         .where(and(...filters))
-
         .groupBy(beautyItems.id, beautyCategories.id, beautyBrands.id)
         .orderBy(asc(sql`min(${beautyItemUnits.expiryDate})`)) as any;
 
@@ -119,15 +118,17 @@ export async function GET(request: NextRequest) {
           }
         }
 
-        // 2. Kalkulasi Expiry Alert (Expired & Expiring Soon)
+        // 2. Kalkulasi Expiry Alert & Days Left
         let isExpired = false;
         let isExpiringSoon = false;
+        let daysLeft: number | null = null;
 
         if (curr.expiryDate) {
           const expiryDate = new Date(curr.expiryDate);
           const diffTime = expiryDate.getTime() - today.getTime();
           const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
+          daysLeft = diffDays;
           isExpired = diffDays < 0;
           isExpiringSoon = diffDays >= 0 && diffDays <= 30;
         }
@@ -137,6 +138,7 @@ export async function GET(request: NextRequest) {
           paoProgress: paoProgress !== null ? Math.round(paoProgress) : null,
           isExpired,
           isExpiringSoon,
+          daysLeft, // <-- Properti daysLeft ditambahkan di sini
         });
 
         return acc;
@@ -179,10 +181,10 @@ export async function GET(request: NextRequest) {
         units: allUnitsMap[row.item.id] || [],
         quantity: (allUnitsMap[row.item.id] || []).length,
         concerns: itemConcerns,
-        // Tambahkan baris ini agar form edit (concernIds) otomatis mendeteksi ID-nya
         concernIds: itemConcerns.map((c: any) => c.id),
       };
     });
+
     if (id) {
       if (formattedItems.length === 0) {
         return sendStandardResponse(
@@ -194,12 +196,14 @@ export async function GET(request: NextRequest) {
       }
       return sendStandardResponse(formattedItems[0], "Success");
     }
+
     if (!page) return sendStandardResponse(formattedItems, "Success");
 
     const [total] = await db
       .select({ count: count() })
       .from(beautyItems)
       .where(and(...filters));
+
     return sendPaginatedResponse({
       requestUrl: request.url,
       items: formattedItems,

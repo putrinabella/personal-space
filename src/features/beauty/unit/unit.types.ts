@@ -15,6 +15,9 @@ export interface UnitEntry extends BaseItem, UnitFormData {
   itemId: string;
   productName: string;
   paoProgress: number;
+  daysLeft: number;
+  isExpired: boolean;
+  isExpiringSoon: boolean;
 }
 
 export const defaultUnit: UnitFormData = {

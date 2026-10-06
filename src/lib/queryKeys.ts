@@ -29,4 +29,5 @@ export const queryKeys = {
   unit: createQueryKeys("unit"),
   alert: createQueryKeys("alert"),
   wishlist: createQueryKeys("wishlist"),
+  waste: createQueryKeys("waste"),
 };

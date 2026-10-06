@@ -1,17 +1,17 @@
 import { queryKeys } from "@/lib/queryKeys";
-import { brandsService } from "../waste.service";
+import { wasteService } from "../waste.service";
 import { useBaseDelete } from "@/shared/hooks/core/use-base-delete";
 
-export function useBrandsDelete() {
+export function useWasteDelete() {
   return useBaseDelete({
-    entityName: "Brands",
+    entityName: "Waste",
 
-    mutationFn: brandsService.delete,
+    mutationFn: wasteService.delete,
 
-    invalidateQueryKey: queryKeys.brands.lists(),
+    invalidateQueryKey: queryKeys.waste.lists(),
 
     messages: {
-      deleteSuccess: "Brand deleted successfully",
+      deleteSuccess: "Waste deleted successfully",
     },
   });
 }

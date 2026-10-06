@@ -84,7 +84,7 @@ export const beautyItems = beautySchema.table("beauty_items", {
   brandId: uuid("brand_id")
     .references(() => beautyBrands.id)
     .notNull(),
-
+  barcode: text("barcode"),
   name: text("name").notNull(),
   minStock: integer("min_stock").default(1).notNull(),
   rating: integer("rating"),
@@ -172,6 +172,11 @@ export const beautyWasteHistory = beautySchema.table("beauty_waste_history", {
   brandId: uuid("brand_id").references(() => beautyBrands.id, {
     onDelete: "set null",
   }),
+
+  categoryId: uuid("category_id")
+    .references(() => beautyCategories.id)
+    .notNull(),
+
   brandNameSnapshot: text("brand_name_snapshot").notNull(),
   name: text("name").notNull(),
   price: numeric("price", { precision: 15, scale: 2 }).notNull(),

@@ -1,26 +1,26 @@
 import { queryKeys } from "@/lib/queryKeys";
-import { defaultBrands, BrandsFormData, validateBrands } from "../waste.types";
-import { brandsService } from "../waste.service";
+import { defaultWaste, WasteFormData, validateWaste } from "../waste.types";
+import { wasteService } from "../waste.service";
 import { useHouseholdForm } from "@/shared/hooks/use-household-form";
 
-export function useBrandsForm(brandsId?: string, enabled: boolean = true) {
-  return useHouseholdForm<BrandsFormData>({
-    id: brandsId,
+export function useWasteForm(wasteId?: string, enabled: boolean = true) {
+  return useHouseholdForm<WasteFormData>({
+    id: wasteId,
     enabled,
-    entityName: "brands",
-    defaultValues: defaultBrands,
-    queryKey: queryKeys.brands.detail(brandsId || ""),
-    invalidateQueryKey: queryKeys.brands.lists(),
+    entityName: "waste",
+    defaultValues: defaultWaste,
+    queryKey: queryKeys.waste.detail(wasteId || ""),
+    invalidateQueryKey: queryKeys.waste.lists(),
 
-    getDetail: async (id: string) => await brandsService.getDetail(id),
-    createFn: brandsService.create,
-    updateFn: brandsService.update,
-    validate: validateBrands,
+    getDetail: async (id: string) => await wasteService.getDetail(id),
+    createFn: wasteService.create,
+    updateFn: wasteService.update,
+    validate: validateWaste,
     redirectTo: "/beauty/settings",
     messages: {
-      createSuccess: "Brand created successfully",
-      updateSuccess: "Brand updated successfully",
-      fetchError: "Failed to load brand data",
+      createSuccess: "Waste created successfully",
+      updateSuccess: "Waste updated successfully",
+      fetchError: "Failed to load waste data",
     },
   });
 }

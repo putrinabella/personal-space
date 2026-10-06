@@ -57,6 +57,13 @@
       "when": 1788161280103,
       "tag": "0007_fast_scarecrow",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1788319797284,
+      "tag": "0008_silky_sir_ram",
+      "breakpoints": true
     }
   ]
 }
